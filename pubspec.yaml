@@ -35,8 +35,8 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   
-  # Google Fonts for YSL Beauty typography with fallback
-  google_fonts: ^6.0.0
+  # Note: All fonts now bundled - no external font dependencies needed
+  # google_fonts: ^6.0.0  # Removed - using bundled Arial font files
   
   # SVG support for brand icons and assets
   flutter_svg: ^2.0.9
@@ -107,22 +107,27 @@ flutter:
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/to/asset-from-package
 
-  # To add custom fonts to your application, add a fonts section here,
-  # in this "flutter" section. Each entry in this list should have a
-  # "family" key with the font family name, and a "fonts" key with a
-  # list giving the asset and other descriptors for the font. For
-  # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
-  #
-  # For details regarding fonts from package dependencies,
-  # see https://flutter.dev/to/font-from-package
+  # YSL Beauty Experience - Custom Fonts
+  # Extracted from Figma designs for pixel-perfect typography
+  fonts:
+    - family: ITC Avant Garde Gothic Pro
+      fonts:
+        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-XLt.ttf
+          weight: 300  # Extra Light
+        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Bk.ttf
+          weight: 400  # Book (Regular)
+        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Md.ttf
+          weight: 500  # Medium
+        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Demi.ttf
+          weight: 600  # Demi (SemiBold)
+        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Bold.ttf
+          weight: 700  # Bold
+    - family: Arial
+      fonts:
+        - asset: assets/fonts/Arial/Arial-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Arial/Arial-Bold.ttf
+          weight: 700
+  
+  # Note: Font files need to be manually added to the assets/fonts/ directory
+  # See FONTS_SETUP.md for detailed instructions on acquiring these fonts

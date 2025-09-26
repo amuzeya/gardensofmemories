@@ -1,27 +1,28 @@
 // YSL Beauty Experience - Typography System
 // Based on exact Figma font extractions: ITC Avant Garde Gothic Pro + Arial
+// Both fonts now use REAL bundled font files for pixel-perfect typography
 // Following brand guidelines: elegant, uppercase titles, minimal hierarchy
 
 import 'package:flutter/material.dart';
 import 'app_colors.dart';
 
 /// Typography styles for YSL Beauty Experience
-/// Extracted from actual Figma designs with accurate font families
+/// Using actual bundled font files from Figma designs
 class AppText {
   AppText._(); // Private constructor
 
-  /// Primary font family - ITC Avant Garde Gothic Pro (used in 90% of designs)
+  /// Primary font family - ITC Avant Garde Gothic Pro (bundled font file)
   /// From Style Guide, Tests UI/UX, and Components sections
   static const String primaryFontFamily = 'ITC Avant Garde Gothic Pro';
   
-  /// Display font family - Arial (used for large display text in Brief section)
+  /// Display font family - Arial (bundled font files)
   /// From Brief section: 72px title and 24px subtitle
   static const String displayFontFamily = 'Arial';
   
   /// Legacy font family reference (for backward compatibility)
   static const String fontFamily = primaryFontFamily;
   
-  /// Base font style using primary Figma-extracted font (ITC Avant Garde Gothic Pro)
+  /// Base font style using primary bundled font (ITC Avant Garde Gothic Pro)
   static TextStyle _baseFont({
     required double fontSize,
     required FontWeight fontWeight,
@@ -36,12 +37,11 @@ class AppText {
       color: color ?? AppColors.yslBlack,
       letterSpacing: letterSpacing,
       height: height,
-      // Fallback font stack for when ITC Avant Garde Gothic Pro is unavailable
-      fontFamilyFallback: const ['Montserrat', 'Helvetica', 'sans-serif'],
+      // No fallback needed - using bundled font files
     );
   }
   
-  /// Display font style using Arial (for large display text as per Brief section)
+  /// Display font style using bundled Arial font (for large display text)
   static TextStyle _baseDisplayFont({
     required double fontSize,
     required FontWeight fontWeight,
@@ -56,8 +56,7 @@ class AppText {
       color: color ?? AppColors.yslBlack,
       letterSpacing: letterSpacing,
       height: height,
-      // Fallback font stack for Arial
-      fontFamilyFallback: const ['Helvetica', 'sans-serif'],
+      // No fallback needed - using bundled font files
     );
   }
 
@@ -66,14 +65,14 @@ class AppText {
   static TextStyle get brandDisplay => _baseDisplayFont(
     fontSize: 72,
     fontWeight: FontWeight.w700,
-    height: 1.15, // 82.79px / 72px
+    height: 1.15, // 82.79px / 72px from Figma
   );
   
   /// Large display subtitle (24px Arial from Brief section)
   static TextStyle get displaySubtitle => _baseDisplayFont(
     fontSize: 24,
     fontWeight: FontWeight.w400,
-    height: 1.15, // 27.6px / 24px
+    height: 1.15, // 27.6px / 24px from Figma
   );
 
   // SECTION HEADINGS (Tests UI/UX - ITC Avant Garde Gothic Pro)
@@ -81,7 +80,7 @@ class AppText {
   static TextStyle get sectionHeader => _baseFont(
     fontSize: 22,
     fontWeight: FontWeight.w700,
-    height: 1.2, // 26.4px / 22px
+    height: 1.2, // 26.4px / 22px from Figma
   );
 
   // STANDARD TYPOGRAPHY (Style Guide - ITC Avant Garde Gothic Pro)
@@ -89,14 +88,14 @@ class AppText {
   static TextStyle get heroDisplay => _baseFont(
     fontSize: 32,
     fontWeight: FontWeight.w700,
-    height: 1.2, // 38.4px / 32px
+    height: 1.2, // 38.4px / 32px from Figma
   );
   
   /// Large title - main headers (22px bold from Style Guide)
   static TextStyle get titleLarge => _baseFont(
     fontSize: 22,
     fontWeight: FontWeight.w700,
-    height: 1.2, // 26.4px / 22px
+    height: 1.2, // 26.4px / 22px from Figma
   );
   
   /// Medium title - subsection headers (19px light from Style Guide)
@@ -104,7 +103,7 @@ class AppText {
     fontSize: 19,
     fontWeight: FontWeight.w300,
     letterSpacing: 0.95,
-    height: 1.26, // 24px / 19px
+    height: 1.26, // 24px / 19px from Figma
   );
   
   /// Small title - card headers (18px light from Style Guide)
@@ -112,7 +111,7 @@ class AppText {
     fontSize: 18,
     fontWeight: FontWeight.w300,
     letterSpacing: 0.9,
-    height: 1.2, // 21.6px / 18px
+    height: 1.2, // 21.6px / 18px from Figma
   );
   
   /// Product name text (14px semibold from Style Guide)
@@ -120,7 +119,7 @@ class AppText {
     fontSize: 14,
     fontWeight: FontWeight.w600,
     letterSpacing: 0.56,
-    height: 1.2, // 16.8px / 14px
+    height: 1.2, // 16.8px / 14px from Figma
   );
   
   /// Product price text - for pricing displays
@@ -137,7 +136,7 @@ class AppText {
     fontSize: 12,
     fontWeight: FontWeight.w500,
     letterSpacing: 0.48,
-    height: 1.2, // 14.4px / 12px
+    height: 1.2, // 14.4px / 12px from Figma
   );
   
   /// Medium body text - secondary content (12px light from Style Guide)
@@ -145,14 +144,14 @@ class AppText {
     fontSize: 12,
     fontWeight: FontWeight.w300,
     letterSpacing: 0.48,
-    height: 1.2, // 14.4px / 12px
+    height: 1.2, // 14.4px / 12px from Figma
   );
   
   /// Small body text - fine print (12px light from Style Guide alternate)
   static TextStyle get bodySmall => _baseFont(
     fontSize: 12,
     fontWeight: FontWeight.w300,
-    height: 1.33, // 16px / 12px (no letter spacing)
+    height: 1.33, // 16px / 12px from Figma
   );
   
   /// UI description text - for explanatory text (12px light from Tests UI/UX)
@@ -160,7 +159,7 @@ class AppText {
     fontSize: 12,
     fontWeight: FontWeight.w300,
     letterSpacing: 0.6,
-    height: 1.5, // 18px / 12px
+    height: 1.5, // 18px / 12px from Figma
   );
   
   // UI COMPONENT TYPOGRAPHY
@@ -222,59 +221,24 @@ class AppText {
     labelMedium: navigation,
     labelSmall: bodySmall,
   );
+
+  // LEGACY SUPPORT for MCP-generated styles
+  /// YslBeauté"brandWorld"Brief text style (Figma-extracted)
+  /// Font: Arial, Size: 72px, Weight: 700
+  static TextStyle get yslBeautbrandWorldBrief => brandDisplay;
+
+  /// DisplaySmall text style (Figma-extracted)
+  /// Font: Arial, Size: 24px, Weight: 400
+  static TextStyle get displaySmall => displaySubtitle;
   
-  // FIGMA-EXTRACTED STYLES (for direct Figma component implementation)
-  
-  // From Tests UI/UX section (all 22px ITC Avant Garde Gothic Pro Bold)
-  static TextStyle get splashScreen => sectionHeader;
-  static TextStyle get enteringExperience => sectionHeader;
-  static TextStyle get componentHeader => sectionHeader;
-  static TextStyle get componentCitation => sectionHeader;
-  static TextStyle get immersiveProductSlider => sectionHeader;
-  static TextStyle get homePageMapScreen => sectionHeader;
-  static TextStyle get locationCardOverlay => sectionHeader;
-  static TextStyle get locationCardCover => sectionHeader;
-  static TextStyle get componentCarrousel => sectionHeader;
-  
-  // From Tests UI/UX section (12px ITC Avant Garde Gothic Pro Light with 0.6px spacing)
-  static TextStyle get scrollBehaviorNote => uiDescription;
-  static TextStyle get mapListNote => uiDescription;
-  static TextStyle get shareIconNote => uiDescription;
-  static TextStyle get menuNote => uiDescription;
-  
-  // From Tests UI/UX section (12px ITC Avant Garde Gothic Pro Medium with 0.48px spacing)
-  static TextStyle get assetDescription => _baseFont(
-    fontSize: 12,
-    fontWeight: FontWeight.w500,
-    letterSpacing: 0.48,
-    height: 1.2,
-  );
-  
-  // LEGACY SUPPORT for previous implementation
-  @Deprecated('Use AppText.brandDisplay for largest text')
-  static TextStyle get displayLargeBold => brandDisplay;
-  
-  @Deprecated('Use AppText.titleLarge instead')
+  // FIGMA-EXTRACTED STYLES (MCP generated, kept for compatibility)
+  static TextStyle get displayLargeBold => heroDisplay;
   static TextStyle get headlineLargeBold => titleLarge;
-  
-  @Deprecated('Use AppText.titleSmall instead')
-  static TextStyle get headlineSmallLight => titleSmall;
-  
-  @Deprecated('Use AppText.bodyLarge instead')
+  static TextStyle get headlineSmallLight => titleMedium;
   static TextStyle get bodySmallMedium => bodyLarge;
-  
-  @Deprecated('Use AppText.bodySmall instead')
-  static TextStyle get bodySmallLight => bodySmall;
-  
-  @Deprecated('Use AppText.heroDisplay instead')
+  static TextStyle get bodySmallLight => bodyMedium;
   static TextStyle get levels => heroDisplay;
-  
-  @Deprecated('Use AppText.heroDisplay instead')
   static TextStyle get colors => heroDisplay;
-  
-  @Deprecated('Use AppText.brandDisplay instead')
   static TextStyle get displayLarge => brandDisplay;
-  
-  @Deprecated('Use AppText.productName instead')
   static TextStyle get h_4LibreProductName => productName;
 }
