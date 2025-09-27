@@ -69,6 +69,12 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/images/components_citation.png
+    - assets/images/components_product.png
+    - assets/images/frame_1820549131.png
+    - assets/images/frame_845083630.png
+    - assets/images/frame_845083978.png
+    - assets/images/v23614272648418_libre_eau_de_parfum_50ml_2_1.png
 
     # Videos
     - assets/splash_screen_ourika.mp4
@@ -78,7 +84,8 @@ flutter:
     - assets/svgs/icons/position_right.svg
     - assets/svgs/icons/property_1_moins.svg
     - assets/svgs/icons/property_1_plus.svg
-    - assets/svgs/icons/state_map.svg
+    - assets/svgs/icons/map.svg
+    - assets/svgs/icons/list.svg
     - assets/svgs/icons/state_off.svg
     - assets/svgs/icons/state_on.svg
     - assets/svgs/icons/state_top.svg

@@ -2,13 +2,17 @@
 // Do not edit manually
 
 class Assets {
+  static const String componentsCitation = 'assets/images/components_citation.png';
+  static const String componentsProduct = 'assets/images/components_product.png';
   static const String ellipse3648 = 'assets/images/ellipse_3648.png';
-  static const String frame1820549131 = 'assets/images/frame_1820549131.png';
   static const String embrace = 'assets/images/embrace.png';
+  static const String frame1820549131 = 'assets/images/frame_1820549131.png';
   static const String frame845083630 = 'assets/images/frame_845083630.png';
+  static const String frame845083978 = 'assets/images/frame_845083978.png';
   static const String iconArrowLeft = 'assets/svgs/icons/position_left.svg';
   static const String iconArrowRight = 'assets/svgs/icons/position_right.svg';
-  static const String iconMap = 'assets/svgs/icons/state_map.svg';
+  static const String iconMap = 'assets/svgs/icons/map.svg';
+  static const String iconList = 'assets/svgs/icons/list.svg';
   static const String iconMinus = 'assets/svgs/icons/property_1_moins.svg';
   static const String iconPinOption1 = 'assets/svgs/icons/pin_option_1.svg';
   static const String iconPinOption2 = 'assets/svgs/icons/pin_option_2.svg';
