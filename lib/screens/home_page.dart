@@ -22,6 +22,7 @@ import '../widgets/ysl_carousel.dart';
 import '../widgets/ysl_location_slider.dart';
 import '../widgets/ysl_content_card.dart';
 import '../widgets/ysl_offer_card.dart';
+import '../widgets/ysl_map_background.dart';
 
 class HomePageScreen extends StatefulWidget {
   const HomePageScreen({super.key});
@@ -84,25 +85,23 @@ class _HomePageScreenState extends State<HomePageScreen> {
     return Scaffold(
       backgroundColor: AppColors.yslWhite,
       appBar: YslAppBarVariants.version5(),
-      body: SizedBox.expand(
-        child: FutureBuilder<_HomeData>(
-          future: _future,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState != ConnectionState.done) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            if (snapshot.hasError || !snapshot.hasData) {
-              return Center(
-                child: Text(
-                  'Failed to load home: ${snapshot.error}',
-                  style: AppText.bodyMedium.copyWith(color: AppColors.yslBlack),
-                ),
-              );
-            }
-            final data = snapshot.data!;
-            return _buildBody(context, data);
-          },
-        ),
+      body: FutureBuilder<_HomeData>(
+        future: _future,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState != ConnectionState.done) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasError || !snapshot.hasData) {
+            return Center(
+              child: Text(
+                'Failed to load home: ${snapshot.error}',
+                style: AppText.bodyMedium.copyWith(color: AppColors.yslBlack),
+              ),
+            );
+          }
+          final data = snapshot.data!;
+          return _buildBody(context, data);
+        },
       ),
     );
   }
@@ -125,19 +124,20 @@ class _HomePageScreenState extends State<HomePageScreen> {
     // Map locations to widget data
     final yslLocations = data.locations.map(toYslLocationData).toList(growable: false);
 
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          if (firstOffer != null)
-            YslExclusiveOfferBanner(
-              text: firstOffer.text,
-              subText: null,
-              onTap: () {},
-            ),
+    return ListView(
+      padding: EdgeInsets.zero,
+      children: [
+        if (firstOffer != null)
+          YslExclusiveOfferBanner(
+            text: firstOffer.text,
+            subText: null,
+            onTap: () {},
+          ),
 
-          // Hero Carousel
-          Padding(
+        // Hero Carousel (fixed height)
+        SizedBox(
+          height: 372,
+          child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 12),
             child: YslCarousel(
               items: carouselItems,
@@ -146,82 +146,72 @@ class _HomePageScreenState extends State<HomePageScreen> {
               backgroundColor: AppColors.yslWhite,
             ),
           ),
+        ),
 
-          // Map background area with Location Slider overlay
-          // Placeholder map area for now (to be replaced with actual map integration)
-          SizedBox(
-            height: 260,
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                // Map placeholder
-                Container(
-                  color: Colors.grey.shade200,
-                  child: Center(
-                    child: Text(
-                      'MAP: Marrakech\n(${data.map.lat.toStringAsFixed(4)}, ${data.map.lng.toStringAsFixed(4)})  z=${data.map.zoom.toStringAsFixed(0)}',
-                      style: AppText.bodySmall.copyWith(color: AppColors.yslBlack),
-                      textAlign: TextAlign.center,
-                    ),
+        // Map background area with Location Slider overlay
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.9,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              // Real OSM map background
+              YslMapBackground(config: data.map, locations: data.locations),
+
+              // Slider aligned to bottom
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  color: Colors.transparent,
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: YslLocationSlider(
+                    locations: yslLocations,
+                    height: 165,
+                    cardWidth: 300,
+                    cardSpacing: 12,
+                    showNavigationArrows: true,
+                    backgroundColor: Colors.transparent,
+                    showCardBorders: true,
                   ),
                 ),
+              ),
+            ],
+          ),
+        ),
 
-                // Slider aligned to bottom
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    color: Colors.transparent,
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: YslLocationSlider(
-                      locations: yslLocations,
-                      height: 165,
-                      cardWidth: 300,
-                      cardSpacing: 12,
-                      showNavigationArrows: true,
-                      backgroundColor: Colors.transparent,
-                      showCardBorders: true,
-                    ),
-                  ),
-                ),
-              ],
+        const SizedBox(height: 16),
+
+        // Content section (first card if any)
+        if (data.cards.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: YslContentCard(
+              subtitle: data.cards.first.subtitle,
+              title: data.cards.first.title,
+              buttonText: data.cards.first.buttonText,
+              onButtonPressed: () {},
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 28),
             ),
           ),
 
-          const SizedBox(height: 16),
+        const SizedBox(height: 16),
 
-          // Content section (first card if any)
-          if (data.cards.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: YslContentCard(
-                subtitle: data.cards.first.subtitle,
-                title: data.cards.first.title,
-                buttonText: data.cards.first.buttonText,
-                onButtonPressed: () {},
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 28),
-              ),
+        // Product highlight using YslOfferCard
+        if (data.products.isNotEmpty)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: YslOfferCard(
+              title: 'FEATURED PRODUCT',
+              subtitle: data.products.first.name.toUpperCase(),
+              description: data.products.first.description,
+              buttonText: 'SHOP NOW',
+              onButtonPressed: () {},
+              isExclusive: true,
+              padding: const EdgeInsets.all(16),
             ),
+          ),
 
-          const SizedBox(height: 16),
-
-          // Product highlight using YslOfferCard
-          if (data.products.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: YslOfferCard(
-                title: 'FEATURED PRODUCT',
-                subtitle: data.products.first.name.toUpperCase(),
-                description: data.products.first.description,
-                buttonText: 'SHOP NOW',
-                onButtonPressed: () {},
-                isExclusive: true,
-                padding: const EdgeInsets.all(16),
-              ),
-            ),
-
-          const SizedBox(height: 24),
-        ],
-      ),
+        const SizedBox(height: 24),
+      ],
     );
   }
 }

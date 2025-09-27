@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:video_player/video_player.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text.dart';
@@ -93,13 +92,6 @@ class _YslCarouselState extends State<YslCarousel> {
   }
 
   void _initializeVideoControllers() {
-    // On web, avoid creating video controllers to prevent asset fetch and
-    // media decode errors for unsupported formats and to keep the render
-    // pipeline stable (MouseTracker assertions).
-    if (kIsWeb) {
-      return;
-    }
-
     for (int i = 0; i < widget.items.length; i++) {
       final item = widget.items[i];
       if (item.videoPath != null) {
@@ -107,11 +99,21 @@ class _YslCarouselState extends State<YslCarousel> {
         _videoControllers[i] = controller;
         _videoStates[i] = false; // Initially not playing
         controller.initialize().then((_) {
-          if (i == _currentIndex && mounted) {
-            controller.play();
+          if (!mounted) return;
+          if (i == _currentIndex) {
             controller.setLooping(true);
+            // For Web autoplay, keep muted by default; user can unmute via controls overlay if desired.
+            controller.setVolume(0.0);
+            controller.play();
             setState(() {
               _videoStates[i] = true;
+            });
+          }
+        }).catchError((error, stack) {
+          // Initialization failed (404, codec unsupported, etc.). Keep stable UI and surface error later.
+          if (mounted) {
+            setState(() {
+              _videoStates[i] = false;
             });
           }
         });
@@ -316,28 +318,15 @@ class _YslCarouselState extends State<YslCarousel> {
 
   Widget _buildMediaWidget(int index, YslCarouselItem item) {
     if (item.videoPath != null) {
-      // On web, inline video can cause render pipeline re-entrancy and pointer assertions.
-      // Show a lightweight placeholder instead to keep the carousel stable.
-      if (kIsWeb) {
-        return Container(
-          color: Colors.black12,
-          child: Center(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: const [
-                Icon(Icons.play_circle_outline, color: AppColors.yslBlack, size: 28),
-                SizedBox(width: 8),
-                Text(
-                  'Video (web preview)',
-                  style: TextStyle(color: AppColors.yslBlack),
-                ),
-              ],
-            ),
-          ),
-        );
-      }
       final controller = _videoControllers[index];
-      if (controller?.value.isInitialized == true) {
+      if (controller == null) {
+        return _buildVideoErrorBox('Video controller not available');
+      }
+      final value = controller.value;
+      if (value.hasError) {
+        return _buildVideoErrorBox(value.errorDescription ?? 'Video failed to initialize');
+      }
+      if (value.isInitialized) {
         return Container(
           width: double.infinity,
           decoration: const BoxDecoration(
@@ -348,7 +337,7 @@ class _YslCarouselState extends State<YslCarousel> {
               SizedBox(
                 width: double.infinity,
                 child: AspectRatio(
-                  aspectRatio: controller!.value.aspectRatio,
+                  aspectRatio: controller.value.aspectRatio,
                   child: VideoPlayer(controller),
                 ),
               ),
@@ -404,15 +393,30 @@ class _YslCarouselState extends State<YslCarousel> {
       );
     }
 
+    return _buildVideoErrorBox('No media provided');
+  }
+
+  Widget _buildVideoErrorBox(String message) {
     return Container(
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: Colors.grey.shade200,
         borderRadius: BorderRadius.zero,
       ),
-      child: const Icon(
-        Icons.error_outline,
-        color: AppColors.yslBlack,
-        size: 48,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.error_outline, color: AppColors.yslBlack),
+          const SizedBox(width: 8),
+          Flexible(
+            child: Text(
+              message,
+              style: AppText.bodySmall.copyWith(color: AppColors.yslBlack),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
       ),
     );
   }

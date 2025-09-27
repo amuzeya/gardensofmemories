@@ -53,7 +53,7 @@ class YSLBeautyApp extends StatelessWidget {
           //   return MaterialPageRoute(builder: (_) => const SplashScreen());
           case '/home':
             return MaterialPageRoute(
-              builder: (_) => const home.HomePageScreen(),
+              builder: (_) => home.HomePageScreen(),
             );
           case '/dev-data':
             return MaterialPageRoute(

@@ -43,6 +43,8 @@ dependencies:
   
   # Video player for splash screen background video
   video_player: ^2.8.2
+  flutter_map: ^6.1.0
+  latlong2: ^0.9.0
 
 dev_dependencies:
   flutter_test:
