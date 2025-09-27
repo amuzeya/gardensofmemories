@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:video_player/video_player.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text.dart';
@@ -308,6 +309,26 @@ class _YslCarouselState extends State<YslCarousel> {
 
   Widget _buildMediaWidget(int index, YslCarouselItem item) {
     if (item.videoPath != null) {
+      // On web, inline video can cause render pipeline re-entrancy and pointer assertions.
+      // Show a lightweight placeholder instead to keep the carousel stable.
+      if (kIsWeb) {
+        return Container(
+          color: Colors.black12,
+          child: Center(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: const [
+                Icon(Icons.play_circle_outline, color: AppColors.yslBlack, size: 28),
+                SizedBox(width: 8),
+                Text(
+                  'Video (web preview)',
+                  style: TextStyle(color: AppColors.yslBlack),
+                ),
+              ],
+            ),
+          ),
+        );
+      }
       final controller = _videoControllers[index];
       if (controller?.value.isInitialized == true) {
         return Container(
