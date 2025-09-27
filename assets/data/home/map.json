@@ -1,0 +1,6 @@
+{
+  "center": { "lat": 31.629472, "lng": -7.981084 },
+  "zoom": 12.0,
+  "tile": "osm",
+  "note": "Center on Marrakech; zoom tuned for initial home view"
+}

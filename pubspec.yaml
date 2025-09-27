@@ -75,6 +75,14 @@ flutter:
     - assets/svgs/icons/
     - assets/svgs/icons/pin_a.svg
     - assets/svgs/logos/
+    - assets/data/
+    - "assets/Ourika Gardens (Activity)/"
+    - "assets/Jardin Majorelle (Activity)/"
+    - "assets/Cafe Le Studio (Activity)/"
+    - "assets/La Mamounia (Accomodation)/"
+    - "assets/YSL Museum (Activity)/"
+    - "assets/Fragrance (Product Feature) /"
+    - "assets/UI Assets/"
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

@@ -1,0 +1,31 @@
+{
+  "items": [
+    {
+      "id": "car_vid_ourika",
+      "type": "video",
+      "videoPath": "assets/Ourika Gardens (Activity)/ourika 1.mp4",
+      "introText": "DISCOVER",
+      "title": "GARDENS OF MEMORIES",
+      "subtitle": "MARRAKECH COLLECTION",
+      "paragraph": "From video to image – experience the versatility of our carousel component with mixed media content."
+    },
+    {
+      "id": "car_img_embrace",
+      "type": "image",
+      "imagePath": "assets/Fragrance (Product Feature) /Dua in the desert.jpg",
+      "introText": "LUXURY",
+      "title": "PREMIUM FRAGRANCES",
+      "subtitle": "CRAFTED EXCELLENCE",
+      "paragraph": "Discover the art of perfumery through our exclusive collection of luxury fragrances, each telling a unique story."
+    },
+    {
+      "id": "car_img_product",
+      "type": "image",
+      "imagePath": "assets/images/components_product.png",
+      "introText": "NEW",
+      "title": "YSL EXCLUSIVES",
+      "subtitle": "LIMITED RELEASE",
+      "paragraph": "Explore limited-release pieces curated for the bold and refined."
+    }
+  ]
+}

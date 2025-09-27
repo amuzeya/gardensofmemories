@@ -1,0 +1,16 @@
+{
+  "cards": [
+    {
+      "id": "content_intro",
+      "subtitle": "YOUR BEAUTY JOURNEY",
+      "title": "CURATED EXPERIENCES",
+      "buttonText": "EXPLORE"
+    },
+    {
+      "id": "content_map_hint",
+      "subtitle": "MAP VIEW",
+      "title": "PINNED LOCATIONS IN MARRAKECH",
+      "buttonText": "VIEW ALL"
+    }
+  ]
+}

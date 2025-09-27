@@ -1,0 +1,24 @@
+{
+  "products": [
+    {
+      "id": "libre_edp_50",
+      "name": "Libre Eau de Parfum 50ml",
+      "subtitle": "Iconic Floral Lavender",
+      "description": "A grand floral fragrance with Moroccan orange blossom and French lavender.",
+      "image": "assets/Fragrance (Product Feature) /Dua in the desert.jpg",
+      "price": 102.00,
+      "currency": "EUR",
+      "url": "https://www.yslbeauty.fr/fragrance/libre"
+    },
+    {
+      "id": "exclusive_set_01",
+      "name": "Exclusive Gift Set",
+      "subtitle": "Limited Edition",
+      "description": "A curated selection of YSL Beauty favorites in an exclusive set.",
+      "image": "assets/images/components_product.png",
+      "price": 149.00,
+      "currency": "EUR",
+      "url": "https://www.yslbeauty.fr"
+    }
+  ]
+}
