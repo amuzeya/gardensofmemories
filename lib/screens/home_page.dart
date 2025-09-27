@@ -84,23 +84,25 @@ class _HomePageScreenState extends State<HomePageScreen> {
     return Scaffold(
       backgroundColor: AppColors.yslWhite,
       appBar: YslAppBarVariants.version5(),
-      body: FutureBuilder<_HomeData>(
-        future: _future,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState != ConnectionState.done) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          if (snapshot.hasError || !snapshot.hasData) {
-            return Center(
-              child: Text(
-                'Failed to load home: ${snapshot.error}',
-                style: AppText.bodyMedium.copyWith(color: AppColors.yslBlack),
-              ),
-            );
-          }
-          final data = snapshot.data!;
-          return _buildBody(context, data);
-        },
+      body: SizedBox.expand(
+        child: FutureBuilder<_HomeData>(
+          future: _future,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState != ConnectionState.done) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (snapshot.hasError || !snapshot.hasData) {
+              return Center(
+                child: Text(
+                  'Failed to load home: ${snapshot.error}',
+                  style: AppText.bodyMedium.copyWith(color: AppColors.yslBlack),
+                ),
+              );
+            }
+            final data = snapshot.data!;
+            return _buildBody(context, data);
+          },
+        ),
       ),
     );
   }

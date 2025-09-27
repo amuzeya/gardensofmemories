@@ -8,10 +8,10 @@ import 'screens/home_page.dart' as home;
 void main() {
   // Ensure Flutter bindings are initialized
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Set system UI overlay style for web/mobile consistency
   SystemChrome.setSystemUIOverlayStyle(AppTheme.yslLightOverlay);
-  
+
   runApp(const YSLBeautyApp());
 }
 
@@ -23,7 +23,7 @@ class YSLBeautyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'YSL Beauty Brand Experience',
-      
+
       // YSL Beauty themes with forced font family
       theme: AppTheme.lightTheme.copyWith(
         textTheme: AppTheme.lightTheme.textTheme.apply(
@@ -34,28 +34,38 @@ class YSLBeautyApp extends StatelessWidget {
         ),
       ),
       darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.light, // Default to light theme per brand guidelines
-      
+      themeMode: ThemeMode.light,
+      // Default to light theme per brand guidelines
+
       // Remove debug banner for production-ready appearance
       debugShowCheckedModeBanner: false,
-      
+
       // Routing configuration
-      initialRoute: '/components', // Start with component library for development
+      initialRoute: '/home',
+      // Start with component library for development
       onGenerateRoute: (RouteSettings settings) {
         switch (settings.name) {
-          case '/components':
-            return MaterialPageRoute(builder: (_) => const ComponentLibraryScreen());
+          // case '/components':
+          //   return MaterialPageRoute(
+          //     builder: (_) => const ComponentLibraryScreen(),
+          //   );
           // case '/':
           //   return MaterialPageRoute(builder: (_) => const SplashScreen());
-case '/home':
-return MaterialPageRoute(builder: (_) => const home.HomePageScreen());
+          case '/home':
+            return MaterialPageRoute(
+              builder: (_) => const home.HomePageScreen(),
+            );
           case '/dev-data':
-            return MaterialPageRoute(builder: (_) => const DataValidationScreen());
+            return MaterialPageRoute(
+              builder: (_) => const DataValidationScreen(),
+            );
           default:
-            return MaterialPageRoute(builder: (_) => const ComponentLibraryScreen());
+            return MaterialPageRoute(
+              builder: (_) => const ComponentLibraryScreen(),
+            );
         }
       },
-      
+
       // Web-specific configurations for responsive design
       builder: (context, child) {
         return child!;
@@ -63,4 +73,3 @@ return MaterialPageRoute(builder: (_) => const home.HomePageScreen());
     );
   }
 }
-
