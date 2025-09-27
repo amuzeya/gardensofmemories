@@ -93,6 +93,13 @@ class _YslCarouselState extends State<YslCarousel> {
   }
 
   void _initializeVideoControllers() {
+    // On web, avoid creating video controllers to prevent asset fetch and
+    // media decode errors for unsupported formats and to keep the render
+    // pipeline stable (MouseTracker assertions).
+    if (kIsWeb) {
+      return;
+    }
+
     for (int i = 0; i < widget.items.length; i++) {
       final item = widget.items[i];
       if (item.videoPath != null) {
