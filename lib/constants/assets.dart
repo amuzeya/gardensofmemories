@@ -4,6 +4,7 @@
 class Assets {
   static const String ellipse3648 = 'assets/images/ellipse_3648.png';
   static const String frame1820549131 = 'assets/images/frame_1820549131.png';
+  static const String embrace = 'assets/images/embrace.png';
   static const String frame845083630 = 'assets/images/frame_845083630.png';
   static const String iconArrowLeft = 'assets/svgs/icons/position_left.svg';
   static const String iconArrowRight = 'assets/svgs/icons/position_right.svg';
@@ -32,6 +33,7 @@ class Assets {
   static const String logoYslVersion1 = 'assets/svgs/logos/version_1.svg';
   static const String logoYslVersion2 = 'assets/svgs/logos/version_2.svg';
   static const String logoYslVersion5 = 'assets/svgs/logos/version_version5.svg';
+  static const String pinYslLogos = 'assets/svgs/icons/pinysl-logos.svg';
   static const String productLibreParfum = 'assets/images/v23614272648418_libre_eau_de_parfum_50ml_2_1.png';
   static const String stateA = 'assets/images/state_a.png';
   static const String stateB = 'assets/images/state_b.png';

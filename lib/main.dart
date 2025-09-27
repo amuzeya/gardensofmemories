@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'theme/app_theme.dart';
-import 'pages/app_root.dart';
+import 'screens/splash_screen.dart';
 
 void main() {
   // Ensure Flutter bindings are initialized
@@ -30,8 +30,8 @@ class YSLBeautyApp extends StatelessWidget {
       // Remove debug banner for production-ready appearance
       debugShowCheckedModeBanner: false,
       
-      // App root page
-      home: const AppRoot(),
+      // Splash screen - immersive brand entry point
+      home: const SplashScreen(),
       
       // Web-specific configurations for responsive design
       builder: (context, child) {
