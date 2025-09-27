@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'theme/app_theme.dart';
 import 'screens/component_library_screen.dart';
+import 'screens/data_validation_screen.dart';
+import 'screens/home_page.dart' as home;
 
 void main() {
   // Ensure Flutter bindings are initialized
@@ -45,8 +47,10 @@ class YSLBeautyApp extends StatelessWidget {
             return MaterialPageRoute(builder: (_) => const ComponentLibraryScreen());
           // case '/':
           //   return MaterialPageRoute(builder: (_) => const SplashScreen());
-          // case '/home':
-          //   return MaterialPageRoute(builder: (_) => const HomePageScreen());
+case '/home':
+return MaterialPageRoute(builder: (_) => const home.HomePageScreen());
+          case '/dev-data':
+            return MaterialPageRoute(builder: (_) => const DataValidationScreen());
           default:
             return MaterialPageRoute(builder: (_) => const ComponentLibraryScreen());
         }

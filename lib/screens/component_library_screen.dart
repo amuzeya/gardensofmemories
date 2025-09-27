@@ -78,6 +78,18 @@ class _ComponentLibraryScreenState extends State<ComponentLibraryScreen> {
         ),
         onPressed: () => Navigator.of(context).pop(),
       ),
+      actions: [
+        IconButton(
+          tooltip: 'Home page',
+          icon: const Icon(Icons.home, color: AppColors.yslBlack),
+          onPressed: () => Navigator.of(context).pushNamed('/home'),
+        ),
+        IconButton(
+          tooltip: 'Data validation',
+          icon: const Icon(Icons.bug_report, color: AppColors.yslBlack),
+          onPressed: () => Navigator.of(context).pushNamed('/dev-data'),
+        ),
+      ],
     );
   }
 

@@ -76,6 +76,13 @@ flutter:
     - assets/svgs/icons/pin_a.svg
     - assets/svgs/logos/
     - assets/data/
+    - assets/data/home/offers.json
+    - assets/data/home/map.json
+    - assets/data/home/locations.json
+    - assets/data/home/carousel.json
+    - assets/data/home/content.json
+    - assets/data/home/products.json
+    - assets/data/home/quotes.json
     - "assets/Ourika Gardens (Activity)/"
     - "assets/Jardin Majorelle (Activity)/"
     - "assets/Cafe Le Studio (Activity)/"
