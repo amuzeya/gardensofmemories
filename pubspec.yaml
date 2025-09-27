@@ -69,38 +69,10 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
-    - assets/images/components_citation.png
-    - assets/images/components_product.png
-    - assets/images/embrace.png
-    - assets/images/fe9f39e0f744fc911c5572914aae341d69b71efd.jpg
-    - assets/images/frame_1820549131.png
-    - assets/images/frame_845083589.png
-    - assets/images/frame_845083630.png
-    - assets/images/frame_845083978.png
-    - assets/images/v23614272648418_libre_eau_de_parfum_50ml_2_1.png
+    - assets/svgs/
+    - assets/svgs/icons/
+    - assets/svgs/logos/
     - assets/splash_screen_ourika.mp4
-    - assets/svgs/icons/list.svg
-    - assets/svgs/icons/map.svg
-    - assets/svgs/icons/pin_option_1.svg
-    - assets/svgs/icons/pin_option_2.svg
-    - assets/svgs/icons/pinysl-logos.svg
-    - assets/svgs/icons/position_left.svg
-    - assets/svgs/icons/position_right.svg
-    - assets/svgs/icons/property_1_moins.svg
-    - assets/svgs/icons/property_1_plus.svg
-    - assets/svgs/icons/sounds.svg
-    - assets/svgs/icons/state_off.svg
-    - assets/svgs/icons/state_on.svg
-    - assets/svgs/icons/state_top.svg
-    - assets/svgs/icons/video.svg
-    - assets/svgs/icons/volumestate=on.svg
-    - assets/svgs/logos/state_logo_beaut_off.svg
-    - assets/svgs/logos/state_logo_beaut_on.svg
-    - assets/svgs/logos/state_monogramme_beaut_off.svg
-    - assets/svgs/logos/state_monogramme_beaut_on.svg
-    - assets/svgs/logos/version_1.svg
-    - assets/svgs/logos/version_2.svg
-    - assets/svgs/logos/version_version5.svg
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
@@ -113,23 +85,22 @@ flutter:
   # YSL Beauty Experience - Custom Fonts
   # Extracted from Figma designs for pixel-perfect typography
   fonts:
-    - family: ITC Avant Garde Gothic Pro
-      fonts:
-        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-XLt.ttf
-          weight: 300  # Extra Light
-        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Bk.ttf
-          weight: 400  # Book (Regular)
-        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Md.ttf
-          weight: 500  # Medium
-        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Demi.ttf
-          weight: 600  # Demi (SemiBold)
-        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Bold.ttf
-          weight: 700  # Bold
     - family: Arial
       fonts:
         - asset: assets/fonts/Arial/Arial-Regular.ttf
-          weight: 400
         - asset: assets/fonts/Arial/Arial-Bold.ttf
+          weight: 700
+    - family: ITC Avant Garde Gothic Pro
+      fonts:
+        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-XLt.ttf
+          weight: 300
+        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Bk.ttf
+          weight: 400
+        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Md.ttf
+          weight: 500
+        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Demi.ttf
+          weight: 600
+        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Bold.ttf
           weight: 700
   
   # Note: Font files need to be manually added to the assets/fonts/ directory

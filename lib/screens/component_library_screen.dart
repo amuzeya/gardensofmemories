@@ -10,6 +10,7 @@ import '../widgets/ysl_button.dart';
 import '../widgets/ysl_content_card.dart';
 import '../widgets/ysl_offer_card.dart';
 import '../widgets/ysl_exclusive_offer_banner.dart';
+import '../widgets/ysl_app_bar.dart';
 
 /// YSL Beauty Experience Component Library Screen
 /// Features:
@@ -212,6 +213,11 @@ class _ComponentLibraryScreenState extends State<ComponentLibraryScreen> {
         
         // Exclusive Offer Banner Component
         _buildOfferBannerComponent(),
+        
+        const SizedBox(height: 32),
+        
+        // App Bar Component
+        _buildAppBarComponent(),
         
         const SizedBox(height: 32),
         
@@ -826,6 +832,306 @@ class _ComponentLibraryScreenState extends State<ComponentLibraryScreen> {
           },
         ),
       ],
+    );
+  }
+
+  Widget _buildAppBarComponent() {
+    return _buildComponentCard(
+      title: 'YSL APP BAR VARIANTS',
+      status: 'READY',
+      description: 'Premium app bar component with YSL BEAUTÉ logo and customizable action icons. Features white background, centered logo, and 7 predefined variants including Figma designs and additional configurations.',
+      component: _buildAppBarDemo(),
+      figmaLinks: [
+        'Header Component: node-id=40000152-9744',
+        'Original 5 Figma variants + 2 additional variants',
+        'Versions 6 & 7 use menu.svg and optimized icon combinations',
+      ],
+    );
+  }
+
+  Widget _buildAppBarDemo() {
+    return Column(
+      children: [
+        // App Bar Demo Container
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.grey.shade300,
+              width: 1,
+            ),
+            borderRadius: BorderRadius.zero,
+          ),
+          child: Column(
+            children: [
+              // Version 1: Volume + Close
+              Container(
+                margin: const EdgeInsets.all(8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'VERSION 1: VOLUME + CLOSE',
+                      style: TextStyle(
+                        fontFamily: 'ITC Avant Garde Gothic Pro',
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey.shade700,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      height: 56,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey.shade200,
+                          width: 1,
+                        ),
+                      ),
+                      child: YslAppBarVariants.version1(
+                        onVolumeToggle: () => _showSnackBar('Volume toggled - Version 1'),
+                        onClose: () => _showSnackBar('Close pressed - Version 1'),
+                        onLogoTap: () => _showSnackBar('YSL logo tapped - Version 1'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const Divider(height: 1),
+
+              // Version 2: Menu + Volume + Share
+              Container(
+                margin: const EdgeInsets.all(8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'VERSION 2: MENU + VOLUME + SHARE',
+                      style: TextStyle(
+                        fontFamily: 'ITC Avant Garde Gothic Pro',
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey.shade700,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      height: 56,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey.shade200,
+                          width: 1,
+                        ),
+                      ),
+                      child: YslAppBarVariants.version2(
+                        onMenu: () => _showSnackBar('Menu opened - Version 2'),
+                        onVolumeToggle: () => _showSnackBar('Volume toggled - Version 2'),
+                        onShare: () => _showSnackBar('Share pressed - Version 2'),
+                        onLogoTap: () => _showSnackBar('YSL logo tapped - Version 2'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const Divider(height: 1),
+
+              // Version 3: Back + Settings
+              Container(
+                margin: const EdgeInsets.all(8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'VERSION 3: BACK + SETTINGS',
+                      style: TextStyle(
+                        fontFamily: 'ITC Avant Garde Gothic Pro',
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey.shade700,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      height: 56,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey.shade200,
+                          width: 1,
+                        ),
+                      ),
+                      child: YslAppBarVariants.version3(
+                        onBack: () => _showSnackBar('Back pressed - Version 3'),
+                        onSettings: () => _showSnackBar('Settings opened - Version 3'),
+                        onLogoTap: () => _showSnackBar('YSL logo tapped - Version 3'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const Divider(height: 1),
+
+              // Version 4: Menu + Map
+              Container(
+                margin: const EdgeInsets.all(8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'VERSION 4: MENU + MAP',
+                      style: TextStyle(
+                        fontFamily: 'ITC Avant Garde Gothic Pro',
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey.shade700,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      height: 56,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey.shade200,
+                          width: 1,
+                        ),
+                      ),
+                      child: YslAppBarVariants.version4(
+                        onMenu: () => _showSnackBar('Menu opened - Version 4'),
+                        onMap: () => _showSnackBar('Map opened - Version 4'),
+                        onLogoTap: () => _showSnackBar('YSL logo tapped - Version 4'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const Divider(height: 1),
+
+              // Version 5: Logo only
+              Container(
+                margin: const EdgeInsets.all(8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'VERSION 5: LOGO ONLY (MINIMAL)',
+                      style: TextStyle(
+                        fontFamily: 'ITC Avant Garde Gothic Pro',
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey.shade700,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      height: 56,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey.shade200,
+                          width: 1,
+                        ),
+                      ),
+                      child: YslAppBarVariants.version5(
+                        onLogoTap: () => _showSnackBar('YSL logo tapped - Version 5'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const Divider(height: 1),
+
+              // Version 6: Menu (SVG) + Volume + Share
+              Container(
+                margin: const EdgeInsets.all(8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'VERSION 6: MENU (SVG) + VOLUME + SHARE',
+                      style: TextStyle(
+                        fontFamily: 'ITC Avant Garde Gothic Pro',
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey.shade700,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      height: 56,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey.shade200,
+                          width: 1,
+                        ),
+                      ),
+                      child: YslAppBarVariants.version6(
+                        onMenu: () => _showSnackBar('Menu opened - Version 6'),
+                        onVolumeToggle: () => _showSnackBar('Volume toggled - Version 6'),
+                        onShare: () => _showSnackBar('Share pressed - Version 6'),
+                        onLogoTap: () => _showSnackBar('YSL logo tapped - Version 6'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const Divider(height: 1),
+
+              // Version 7: Sound + Share only
+              Container(
+                margin: const EdgeInsets.all(8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'VERSION 7: SOUND + SHARE ONLY',
+                      style: TextStyle(
+                        fontFamily: 'ITC Avant Garde Gothic Pro',
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey.shade700,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Container(
+                      height: 56,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey.shade200,
+                          width: 1,
+                        ),
+                      ),
+                      child: YslAppBarVariants.version7(
+                        onVolumeToggle: () => _showSnackBar('Volume toggled - Version 7'),
+                        onShare: () => _showSnackBar('Share pressed - Version 7'),
+                        onLogoTap: () => _showSnackBar('YSL logo tapped - Version 7'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: AppColors.yslBlack,
+      ),
     );
   }
 
