@@ -103,7 +103,17 @@ class _HomePageScreenState extends State<HomePageScreen>
         ),
       ),
       actions: [
-        // Additional actions can be added here
+        // Component library navigation
+        IconButton(
+          icon: const Icon(
+            Icons.widgets,
+            color: AppColors.yslBlack,
+          ),
+          onPressed: () {
+            Navigator.of(context).pushNamed('/components');
+          },
+          tooltip: 'Component Library',
+        ),
         IconButton(
           icon: const Icon(
             Icons.more_vert,
