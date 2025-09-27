@@ -12,6 +12,7 @@ import '../widgets/ysl_offer_card.dart';
 import '../widgets/ysl_exclusive_offer_banner.dart';
 import '../widgets/ysl_app_bar.dart';
 import '../widgets/ysl_header_v2.dart';
+import '../widgets/ysl_carousel.dart';
 
 /// YSL Beauty Experience Component Library Screen
 /// Features:
@@ -224,6 +225,11 @@ class _ComponentLibraryScreenState extends State<ComponentLibraryScreen> {
         
         // Header V2 Component
         _buildHeaderV2Component(),
+        
+        const SizedBox(height: 32),
+        
+        // Carousel Component
+        _buildCarouselComponent(),
         
         const SizedBox(height: 32),
         
@@ -1320,6 +1326,200 @@ class _ComponentLibraryScreenState extends State<ComponentLibraryScreen> {
         ),
       ],
     );
+  }
+
+  Widget _buildCarouselComponent() {
+    return _buildComponentCard(
+      title: 'YSL CAROUSEL',
+      status: 'READY',
+      description: 'Premium carousel component supporting images and videos with rich text content. Features YSL black/white indicators, auto-play, smooth transitions, and 3 predefined variants.',
+      component: _buildCarouselDemo(),
+      figmaLinks: [
+        'Carousel Component: node-id=40000155-11205',
+        'Slider Indicators: node-id=40000152-9853',
+      ],
+    );
+  }
+
+  Widget _buildCarouselDemo() {
+    final sampleItems = [
+      const YslCarouselItem(
+        imagePath: 'assets/images/embrace.png',
+        introText: 'DISCOVER',
+        title: 'GARDENS OF MEMORIES',
+        subtitle: 'MARRAKECH COLLECTION',
+        paragraph: 'Experience the enchanting beauty of Marrakech through our exclusive fragrance collection inspired by the iconic Majorelle Gardens.',
+      ),
+      const YslCarouselItem(
+        imagePath: 'assets/images/components_product.png',
+        introText: 'EXPLORE',
+        title: 'LIBRE EAU DE PARFUM',
+        subtitle: 'FREEDOM IN A BOTTLE',
+        paragraph: 'The scent of freedom. A statement of personal liberation and the tension between the burning of ginger and the softness of lavender.',
+      ),
+      const YslCarouselItem(
+        imagePath: 'assets/images/frame_845083978.png',
+        introText: 'LUXURY',
+        title: 'YSL BEAUTY ESSENTIALS',
+        subtitle: 'PREMIUM COLLECTION',
+        paragraph: 'Discover our curated selection of luxury beauty products that define the YSL aesthetic and embody French elegance.',
+      ),
+    ];
+
+    return Column(
+      children: [
+        // Product Showcase Variant
+        Container(
+          margin: const EdgeInsets.only(bottom: 32),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.grey.shade300,
+              width: 1,
+            ),
+            borderRadius: BorderRadius.zero,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  'PRODUCT SHOWCASE CAROUSEL',
+                  style: TextStyle(
+                    fontFamily: 'ITC Avant Garde Gothic Pro',
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey.shade700,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+              YslCarouselVariants.productShowcase(sampleItems),
+            ],
+          ),
+        ),
+
+        // Experience Showcase Variant
+        Container(
+          margin: const EdgeInsets.only(bottom: 32),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.grey.shade300,
+              width: 1,
+            ),
+            borderRadius: BorderRadius.zero,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  'EXPERIENCE SHOWCASE CAROUSEL',
+                  style: TextStyle(
+                    fontFamily: 'ITC Avant Garde Gothic Pro',
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey.shade700,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+              YslCarouselVariants.experienceShowcase(sampleItems),
+            ],
+          ),
+        ),
+
+        // Compact Showcase Variant
+        Container(
+          margin: const EdgeInsets.only(bottom: 32),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.grey.shade300,
+              width: 1,
+            ),
+            borderRadius: BorderRadius.zero,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  'COMPACT SHOWCASE CAROUSEL',
+                  style: TextStyle(
+                    fontFamily: 'ITC Avant Garde Gothic Pro',
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey.shade700,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+              YslCarouselVariants.compactShowcase(sampleItems),
+            ],
+          ),
+        ),
+
+        // Video Showcase Variant
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.grey.shade300,
+              width: 1,
+            ),
+            borderRadius: BorderRadius.zero,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  'VIDEO SHOWCASE CAROUSEL',
+                  style: TextStyle(
+                    fontFamily: 'ITC Avant Garde Gothic Pro',
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey.shade700,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+              _buildVideoCarouselDemo(),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildVideoCarouselDemo() {
+    final videoSampleItems = [
+      const YslCarouselItem(
+        videoPath: 'assets/splash_screen_ourika.mp4',
+        introText: 'IMMERSIVE',
+        title: 'OURIKA VALLEY',
+        subtitle: 'CINEMATIC EXPERIENCE',
+        paragraph: 'Journey through the stunning landscapes of the Ourika Valley, where YSL Beauty finds inspiration in the natural beauty of Morocco.',
+      ),
+      const YslCarouselItem(
+        imagePath: 'assets/images/embrace.png',
+        introText: 'DISCOVER',
+        title: 'GARDENS OF MEMORIES',
+        subtitle: 'MARRAKECH COLLECTION',
+        paragraph: 'From video to image - experience the versatility of our carousel component with mixed media content.',
+      ),
+      const YslCarouselItem(
+        imagePath: 'assets/images/components_product.png',
+        introText: 'LUXURY',
+        title: 'PREMIUM FRAGRANCES',
+        subtitle: 'CRAFTED EXCELLENCE',
+        paragraph: 'Discover the art of perfumery through our exclusive collection of luxury fragrances, each telling a unique story.',
+      ),
+    ];
+
+    return YslCarouselVariants.videoFocused(videoSampleItems);
   }
 
   Widget _buildUpcomingSection() {
