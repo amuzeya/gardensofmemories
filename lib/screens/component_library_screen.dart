@@ -13,6 +13,7 @@ import '../widgets/ysl_exclusive_offer_banner.dart';
 import '../widgets/ysl_app_bar.dart';
 import '../widgets/ysl_header_v2.dart';
 import '../widgets/ysl_carousel.dart';
+import '../widgets/ysl_settings_card.dart';
 
 /// YSL Beauty Experience Component Library Screen
 /// Features:
@@ -30,6 +31,7 @@ class ComponentLibraryScreen extends StatefulWidget {
 
 class _ComponentLibraryScreenState extends State<ComponentLibraryScreen> {
   YslToggleOption _toggleValue = YslToggleOption.map;
+  YslToggleOption _settingsToggleValue = YslToggleOption.map;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +59,7 @@ class _ComponentLibraryScreenState extends State<ComponentLibraryScreen> {
     return AppBar(
       backgroundColor: AppColors.yslWhite,
       elevation: 1,
-      shadowColor: AppColors.yslBlack.withOpacity(0.1),
+      shadowColor: AppColors.yslBlack.withValues(alpha: 0.1),
       title: Text(
         'YSL COMPONENT LIBRARY',
         style: AppText.titleMedium.copyWith(
@@ -230,6 +232,11 @@ class _ComponentLibraryScreenState extends State<ComponentLibraryScreen> {
         
         // Carousel Component
         _buildCarouselComponent(),
+        
+        const SizedBox(height: 32),
+        
+        // Settings Card Component
+        _buildSettingsCardComponent(),
         
         const SizedBox(height: 32),
         
@@ -1520,6 +1527,141 @@ class _ComponentLibraryScreenState extends State<ComponentLibraryScreen> {
     ];
 
     return YslCarouselVariants.videoFocused(videoSampleItems);
+  }
+
+  Widget _buildSettingsCardComponent() {
+    return _buildComponentCard(
+      title: 'YSL SETTINGS CARD',
+      status: 'READY',
+      description: 'Settings card component with integrated YSL toggle switch. Features clean typography, flexible content layout, and YSL brand styling. Includes multiple predefined variants for common use cases.',
+      component: _buildSettingsCardDemo(),
+      figmaLinks: [
+        'Settings Card: node-id=40000153-15230',
+        'Toggle Integration: Reuses existing toggle component',
+      ],
+    );
+  }
+
+  Widget _buildSettingsCardDemo() {
+    return Column(
+      children: [
+        // Figma Exact Variant
+        Container(
+          margin: const EdgeInsets.only(bottom: 20),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.grey.shade300,
+              width: 1,
+            ),
+            borderRadius: BorderRadius.zero,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  'FIGMA EXACT - LOCATION SERVICES',
+                  style: TextStyle(
+                    fontFamily: 'ITC Avant Garde Gothic Pro',
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey.shade700,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+              YslSettingsCardVariants.figmaExact(
+                selectedOption: _settingsToggleValue,
+                onToggleChanged: (value) {
+                  setState(() {
+                    _settingsToggleValue = value;
+                  });
+                },
+              ),
+            ],
+          ),
+        ),
+
+        // Map Preferences Variant
+        Container(
+          margin: const EdgeInsets.only(bottom: 20),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.grey.shade300,
+              width: 1,
+            ),
+            borderRadius: BorderRadius.zero,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  'MAP PREFERENCES VARIANT',
+                  style: TextStyle(
+                    fontFamily: 'ITC Avant Garde Gothic Pro',
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey.shade700,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+              YslSettingsCardVariants.mapPreferences(
+                selectedOption: _settingsToggleValue,
+                onToggleChanged: (value) {
+                  setState(() {
+                    _settingsToggleValue = value;
+                  });
+                },
+              ),
+            ],
+          ),
+        ),
+
+        // Full Width Variant
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.grey.shade300,
+              width: 1,
+            ),
+            borderRadius: BorderRadius.zero,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  'FULL WIDTH VARIANT',
+                  style: TextStyle(
+                    fontFamily: 'ITC Avant Garde Gothic Pro',
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey.shade700,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+              YslSettingsCardVariants.fullWidth(
+                title: 'Display Preferences',
+                description: 'Choose your preferred method for viewing YSL Beauty content and experiences.',
+                toggleLabel: 'View Mode',
+                selectedOption: _settingsToggleValue,
+                onToggleChanged: (value) {
+                  setState(() {
+                    _settingsToggleValue = value;
+                  });
+                },
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 
   Widget _buildUpcomingSection() {
