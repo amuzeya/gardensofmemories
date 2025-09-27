@@ -11,6 +11,7 @@ import '../widgets/ysl_content_card.dart';
 import '../widgets/ysl_offer_card.dart';
 import '../widgets/ysl_exclusive_offer_banner.dart';
 import '../widgets/ysl_app_bar.dart';
+import '../widgets/ysl_header_v2.dart';
 
 /// YSL Beauty Experience Component Library Screen
 /// Features:
@@ -218,6 +219,11 @@ class _ComponentLibraryScreenState extends State<ComponentLibraryScreen> {
         
         // App Bar Component
         _buildAppBarComponent(),
+        
+        const SizedBox(height: 32),
+        
+        // Header V2 Component
+        _buildHeaderV2Component(),
         
         const SizedBox(height: 32),
         
@@ -1132,6 +1138,187 @@ class _ComponentLibraryScreenState extends State<ComponentLibraryScreen> {
         content: Text(message),
         backgroundColor: AppColors.yslBlack,
       ),
+    );
+  }
+
+  Widget _buildHeaderV2Component() {
+    return _buildComponentCard(
+      title: 'YSL HEADER V2',
+      status: 'READY',
+      description: 'Vertical header component with YSL BEAUTÉ logo on top and customizable title below. Perfect for screen headers and content sections. Features 5 predefined variants.',
+      component: _buildHeaderV2Demo(),
+      figmaLinks: [
+        'Header-V2 Component: node-id=40000311-21716',
+        'Gardens of Memories variant included',
+      ],
+    );
+  }
+
+  Widget _buildHeaderV2Demo() {
+    return Column(
+      children: [
+        // Gardens of Memories (Figma exact)
+        Container(
+          margin: const EdgeInsets.only(bottom: 20),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.grey.shade300,
+              width: 1,
+            ),
+            borderRadius: BorderRadius.zero,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  'GARDENS OF MEMORIES (FIGMA EXACT)',
+                  style: TextStyle(
+                    fontFamily: 'ITC Avant Garde Gothic Pro',
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey.shade700,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+              YslHeaderV2Variants.gardensOfMemories(),
+            ],
+          ),
+        ),
+
+        // Experience Header
+        Container(
+          margin: const EdgeInsets.only(bottom: 20),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.grey.shade300,
+              width: 1,
+            ),
+            borderRadius: BorderRadius.zero,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  'EXPERIENCE HEADER',
+                  style: TextStyle(
+                    fontFamily: 'ITC Avant Garde Gothic Pro',
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey.shade700,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+              YslHeaderV2Variants.experienceHeader(
+                title: 'MARRAKECH COLLECTION',
+              ),
+            ],
+          ),
+        ),
+
+        // Hero Header
+        Container(
+          margin: const EdgeInsets.only(bottom: 20),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.grey.shade300,
+              width: 1,
+            ),
+            borderRadius: BorderRadius.zero,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  'HERO HEADER',
+                  style: TextStyle(
+                    fontFamily: 'ITC Avant Garde Gothic Pro',
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey.shade700,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+              YslHeaderV2Variants.heroHeader(
+                title: 'LIBRE COLLECTION',
+              ),
+            ],
+          ),
+        ),
+
+        // Product Header
+        Container(
+          margin: const EdgeInsets.only(bottom: 20),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.grey.shade300,
+              width: 1,
+            ),
+            borderRadius: BorderRadius.zero,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  'PRODUCT HEADER',
+                  style: TextStyle(
+                    fontFamily: 'ITC Avant Garde Gothic Pro',
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey.shade700,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+              YslHeaderV2Variants.productHeader(
+                productName: 'LIBRE EAU DE PARFUM',
+              ),
+            ],
+          ),
+        ),
+
+        // Compact Header
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.grey.shade300,
+              width: 1,
+            ),
+            borderRadius: BorderRadius.zero,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  'COMPACT HEADER',
+                  style: TextStyle(
+                    fontFamily: 'ITC Avant Garde Gothic Pro',
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey.shade700,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+              YslHeaderV2Variants.compactHeader(
+                title: 'BEAUTY ESSENTIALS',
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
