@@ -11,9 +11,12 @@ class Assets {
   static const String frame845083978 = 'assets/images/frame_845083978.png';
   static const String iconArrowLeft = 'assets/svgs/icons/position_left.svg';
   static const String iconArrowRight = 'assets/svgs/icons/position_right.svg';
-  static const String iconMap = 'assets/svgs/icons/map.svg';
   static const String iconList = 'assets/svgs/icons/list.svg';
+  static const String iconMap = 'assets/svgs/icons/map.svg';
   static const String iconMinus = 'assets/svgs/icons/property_1_moins.svg';
+  static const String iconPinA = 'assets/svgs/icons/pin_a.svg';
+  static const String iconPinB = 'assets/svgs/icons/pin_b.svg';
+  static const String iconPinC = 'assets/svgs/icons/pin_c.svg';
   static const String iconPinOption1 = 'assets/svgs/icons/pin_option_1.svg';
   static const String iconPinOption2 = 'assets/svgs/icons/pin_option_2.svg';
   static const String iconPlus = 'assets/svgs/icons/property_1_plus.svg';

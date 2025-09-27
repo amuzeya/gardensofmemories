@@ -597,20 +597,23 @@ class _YslCarouselState extends State<YslCarousel> {
         
         const Spacer(),
         
-        // Slide counter
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          decoration: BoxDecoration(
-            border: Border.all(color: AppColors.yslBlack, width: 1),
-            borderRadius: BorderRadius.zero,
-          ),
-          child: Text(
-            '${_currentIndex + 1} / ${widget.items.length}',
-            style: const TextStyle(
-              color: AppColors.yslBlack,
-              fontSize: 12,
-              fontFamily: 'ITC Avant Garde Gothic Pro',
-              fontWeight: FontWeight.w500,
+        // Slide counter - flexible to prevent overflow
+        Flexible(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            decoration: BoxDecoration(
+              border: Border.all(color: AppColors.yslBlack, width: 1),
+              borderRadius: BorderRadius.zero,
+            ),
+            child: Text(
+              '${_currentIndex + 1}/${widget.items.length}',
+              style: const TextStyle(
+                color: AppColors.yslBlack,
+                fontSize: 11,
+                fontFamily: 'ITC Avant Garde Gothic Pro',
+                fontWeight: FontWeight.w500,
+              ),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ),

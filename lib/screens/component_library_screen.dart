@@ -14,6 +14,8 @@ import '../widgets/ysl_app_bar.dart';
 import '../widgets/ysl_header_v2.dart';
 import '../widgets/ysl_carousel.dart';
 import '../widgets/ysl_settings_card.dart';
+import '../widgets/ysl_location_card.dart';
+import '../widgets/ysl_location_slider.dart';
 
 /// YSL Beauty Experience Component Library Screen
 /// Features:
@@ -237,6 +239,16 @@ class _ComponentLibraryScreenState extends State<ComponentLibraryScreen> {
         
         // Settings Card Component
         _buildSettingsCardComponent(),
+        
+        const SizedBox(height: 32),
+        
+        // Location Card Component
+        _buildLocationCardComponent(),
+        
+        const SizedBox(height: 32),
+        
+        // Location Slider Component
+        _buildLocationSliderComponent(),
         
         const SizedBox(height: 32),
         
@@ -1664,14 +1676,438 @@ class _ComponentLibraryScreenState extends State<ComponentLibraryScreen> {
     );
   }
 
+  Widget _buildLocationCardComponent() {
+    return _buildComponentCard(
+      title: 'YSL LOCATION CARD',
+      status: 'READY',
+      description: 'Location display card component featuring store/boutique information with images. Includes SVG pin variations (pin_a.svg, pin_b.svg, pin_c.svg), distance indicators, status badges, and YSL brand styling. Perfect for store locators and location-based features.',
+      component: _buildLocationCardDemo(),
+      figmaLinks: [
+        'Location Card: node-id=40000153-17589',
+        'Image Asset: Automatically exported from Figma',
+      ],
+    );
+  }
+
+  Widget _buildLocationCardDemo() {
+    return Column(
+      children: [
+        // Figma Exact Variant
+        Container(
+          margin: const EdgeInsets.only(bottom: 20),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.grey.shade300,
+              width: 1,
+            ),
+            borderRadius: BorderRadius.zero,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  'FIGMA EXACT - PIN A VARIATION',
+                  style: TextStyle(
+                    fontFamily: 'ITC Avant Garde Gothic Pro',
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey.shade700,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+              YslLocationCardVariants.figmaExact(
+                pinVariation: PinVariation.pinA,
+                onTap: () => _showSnackBar('Location card tapped: YSL Beauty Store - Pin A'),
+              ),
+            ],
+          ),
+        ),
+
+        // Store Variant
+        Container(
+          margin: const EdgeInsets.only(bottom: 20),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.grey.shade300,
+              width: 1,
+            ),
+            borderRadius: BorderRadius.zero,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  'STORE VARIANT - PIN A',
+                  style: TextStyle(
+                    fontFamily: 'ITC Avant Garde Gothic Pro',
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey.shade700,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+              YslLocationCardVariants.store(
+                name: 'YSL Beauty Marrakech',
+                address: 'Experience the ultimate luxury beauty destination with exclusive YSL collections and expert beauty consultations.',
+                city: 'Marrakech',
+                distance: '1.2 km',
+                isOpen: true,
+                pinVariation: PinVariation.pinA,
+                onTap: () => _showSnackBar('Location tapped: YSL Beauty Marrakech - Pin A'),
+              ),
+            ],
+          ),
+        ),
+
+        // Boutique Variant
+        Container(
+          margin: const EdgeInsets.only(bottom: 20),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.grey.shade300,
+              width: 1,
+            ),
+            borderRadius: BorderRadius.zero,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  'BOUTIQUE VARIANT - PIN B',
+                  style: TextStyle(
+                    fontFamily: 'ITC Avant Garde Gothic Pro',
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey.shade700,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+              YslLocationCardVariants.boutique(
+                name: 'YSL Libre Experience',
+                address: 'Immerse yourself in the world of YSL Libre with personalized fragrance consultations and exclusive limited editions.',
+                city: 'Paris',
+                distance: '0.8 km',
+                isOpen: true,
+                pinVariation: PinVariation.pinB,
+                onTap: () => _showSnackBar('Boutique tapped: YSL Libre Experience - Pin B'),
+              ),
+            ],
+          ),
+        ),
+
+        // Experience Variant
+        Container(
+          margin: const EdgeInsets.only(bottom: 20),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.grey.shade300,
+              width: 1,
+            ),
+            borderRadius: BorderRadius.zero,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  'EXPERIENCE VARIANT - PIN C',
+                  style: TextStyle(
+                    fontFamily: 'ITC Avant Garde Gothic Pro',
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey.shade700,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+              YslLocationCardVariants.experience(
+                name: 'Gardens of Memories Pop-up',
+                address: 'Step into the enchanting world of YSL Beauty inspired by the iconic Marrakech gardens and discover limited edition collections.',
+                city: 'Marrakech',
+                distance: '2.1 km',
+                isOpen: false,
+                pinVariation: PinVariation.pinC,
+                onTap: () => _showSnackBar('Experience tapped: Gardens of Memories - Pin C'),
+              ),
+            ],
+          ),
+        ),
+
+        // Compact Variant
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.grey.shade300,
+              width: 1,
+            ),
+            borderRadius: BorderRadius.zero,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  'COMPACT VARIANT - PIN B',
+                  style: TextStyle(
+                    fontFamily: 'ITC Avant Garde Gothic Pro',
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey.shade700,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+              YslLocationCardVariants.compact(
+                name: 'YSL Mini Store',
+                address: 'Explore YSL Beauty essentials and bestsellers in our convenient mini store location.',
+                distance: '3.5 km',
+                isOpen: true,
+                pinVariation: PinVariation.pinB,
+                onTap: () => _showSnackBar('Compact location tapped: YSL Mini Store - Pin B'),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLocationSliderComponent() {
+    return _buildComponentCard(
+      title: 'YSL LOCATION SLIDER',
+      status: 'READY',
+      description: 'Horizontal location slider with manual navigation controls. Features multiple location cards with different pin variations (pin_a.svg, pin_b.svg, pin_c.svg), smooth scrolling animations, and YSL brand styling. Includes borderless variants for minimal, clean layouts. Perfect for browsing multiple locations.',
+      component: _buildLocationSliderDemo(),
+      figmaLinks: [
+        'Location Slider: node-id=40000153-12569',
+        'Manual navigation with arrow controls',
+        'Uses existing location card components',
+      ],
+    );
+  }
+
+  Widget _buildLocationSliderDemo() {
+    return Column(
+      children: [
+        // Figma Exact Variant
+        Container(
+          margin: const EdgeInsets.only(bottom: 32),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.grey.shade300,
+              width: 1,
+            ),
+            borderRadius: BorderRadius.zero,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  'FIGMA EXACT - 5 LOCATIONS WITH PIN VARIATIONS',
+                  style: TextStyle(
+                    fontFamily: 'ITC Avant Garde Gothic Pro',
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey.shade700,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+              YslLocationSliderVariants.figmaExact(
+                onLocationTap: () => _showSnackBar('Location slider item tapped - Figma Exact'),
+              ),
+            ],
+          ),
+        ),
+
+        // Standard Variant
+        Container(
+          margin: const EdgeInsets.only(bottom: 32),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.grey.shade300,
+              width: 1,
+            ),
+            borderRadius: BorderRadius.zero,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  'STANDARD - 3 DISTINCT LOCATIONS (PIN A, B, C)',
+                  style: TextStyle(
+                    fontFamily: 'ITC Avant Garde Gothic Pro',
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey.shade700,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+              YslLocationSliderVariants.standard(
+                onLocationTap: () => _showSnackBar('Location slider item tapped - Standard'),
+              ),
+            ],
+          ),
+        ),
+
+        // Compact Variant
+        Container(
+          margin: const EdgeInsets.only(bottom: 32),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.grey.shade300,
+              width: 1,
+            ),
+            borderRadius: BorderRadius.zero,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  'COMPACT VARIANT - SMALLER CARDS',
+                  style: TextStyle(
+                    fontFamily: 'ITC Avant Garde Gothic Pro',
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey.shade700,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+              YslLocationSliderVariants.compact(
+                onLocationTap: () => _showSnackBar('Location slider item tapped - Compact'),
+              ),
+            ],
+          ),
+        ),
+
+        // Premium Variant
+        Container(
+          margin: const EdgeInsets.only(bottom: 32),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.grey.shade300,
+              width: 1,
+            ),
+            borderRadius: BorderRadius.zero,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  'PREMIUM VARIANT - LUXURY LOCATIONS',
+                  style: TextStyle(
+                    fontFamily: 'ITC Avant Garde Gothic Pro',
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey.shade700,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+              YslLocationSliderVariants.premium(
+                onLocationTap: () => _showSnackBar('Location slider item tapped - Premium'),
+              ),
+            ],
+          ),
+        ),
+
+        // Borderless Variant
+        Container(
+          margin: const EdgeInsets.only(bottom: 32),
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.grey.shade300,
+              width: 1,
+            ),
+            borderRadius: BorderRadius.zero,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  'BORDERLESS VARIANT - NO CARD BORDERS',
+                  style: TextStyle(
+                    fontFamily: 'ITC Avant Garde Gothic Pro',
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey.shade700,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+              YslLocationSliderVariants.borderless(
+                onLocationTap: () => _showSnackBar('Location slider item tapped - Borderless'),
+              ),
+            ],
+          ),
+        ),
+
+        // Borderless Compact Variant
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.grey.shade300,
+              width: 1,
+            ),
+            borderRadius: BorderRadius.zero,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  'BORDERLESS COMPACT - CLEAN & MINIMAL',
+                  style: TextStyle(
+                    fontFamily: 'ITC Avant Garde Gothic Pro',
+                    fontSize: 10,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.grey.shade700,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+              ),
+              YslLocationSliderVariants.borderlessCompact(
+                onLocationTap: () => _showSnackBar('Location slider item tapped - Borderless Compact'),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildUpcomingSection() {
     final upcomingComponents = [
-      'Location Slider Component',
       'Map View Component',
-      'List View Component',
+      'List View Component', 
       'Navigation Components',
       'Product Display Cards',
       'Image Gallery Component',
+      'Location Search & Filter',
     ];
 
     return Container(

@@ -69,10 +69,12 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/images/frame_845083630.png
+    - assets/splash_screen_ourika.mp4
     - assets/svgs/
     - assets/svgs/icons/
+    - assets/svgs/icons/pin_a.svg
     - assets/svgs/logos/
-    - assets/splash_screen_ourika.mp4
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
@@ -85,23 +87,29 @@ flutter:
   # YSL Beauty Experience - Custom Fonts
   # Extracted from Figma designs for pixel-perfect typography
   fonts:
+    # Arial font family with weights
     - family: Arial
       fonts:
         - asset: assets/fonts/Arial/Arial-Regular.ttf
+          weight: 400
         - asset: assets/fonts/Arial/Arial-Bold.ttf
           weight: 700
+    
+    # ITC Avant Garde Gothic Pro font family with all weights
     - family: ITC Avant Garde Gothic Pro
       fonts:
         - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-XLt.ttf
-          weight: 300
+          weight: 200  # Extra Light
         - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Bk.ttf
-          weight: 400
+          weight: 300  # Light (Book)
+        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Bk.ttf
+          weight: 400  # Regular (using Book as regular)
         - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Md.ttf
-          weight: 500
+          weight: 500  # Medium
         - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Demi.ttf
-          weight: 600
+          weight: 600  # SemiBold (Demi)
         - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Bold.ttf
-          weight: 700
+          weight: 700  # Bold
   
   # Note: Font files need to be manually added to the assets/fonts/ directory
   # See FONTS_SETUP.md for detailed instructions on acquiring these fonts

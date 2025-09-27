@@ -155,16 +155,20 @@ class _YslToggleSwitchState extends State<YslToggleSwitch>
                                 ? AppColors.yslWhite
                                 : AppColors.yslBlack,
                           ),
-                          const SizedBox(width: 6),
+                          const SizedBox(width: 4),
                           // Map text
-                          Text(
-                            'MAP',
-                            style: AppText.bodyLarge.copyWith(
-                              color: widget.selectedOption == YslToggleOption.map
-                                  ? AppColors.yslWhite
-                                  : AppColors.yslBlack,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 0.8,
+                          Flexible(
+                            child: Text(
+                              'MAP',
+                              style: AppText.bodyLarge.copyWith(
+                                color: widget.selectedOption == YslToggleOption.map
+                                    ? AppColors.yslWhite
+                                    : AppColors.yslBlack,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 0.5,
+                                fontSize: 13,
+                              ),
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],
@@ -195,16 +199,20 @@ class _YslToggleSwitchState extends State<YslToggleSwitch>
                                 ? AppColors.yslWhite
                                 : AppColors.yslBlack,
                           ),
-                          const SizedBox(width: 6),
+                          const SizedBox(width: 4),
                           // List text
-                          Text(
-                            'LIST',
-                            style: AppText.bodyLarge.copyWith(
-                              color: widget.selectedOption == YslToggleOption.list
-                                  ? AppColors.yslWhite
-                                  : AppColors.yslBlack,
-                              fontWeight: FontWeight.w600,
-                              letterSpacing: 0.8,
+                          Flexible(
+                            child: Text(
+                              'LIST',
+                              style: AppText.bodyLarge.copyWith(
+                                color: widget.selectedOption == YslToggleOption.list
+                                    ? AppColors.yslWhite
+                                    : AppColors.yslBlack,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 0.5,
+                                fontSize: 13,
+                              ),
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],

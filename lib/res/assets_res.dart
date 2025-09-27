@@ -8,5 +8,7 @@ class AssetsRes {
 
   static const String PROJECT_NAME = 'ysl_beauty_experience';
   static const String PROJECT_VERSION = '1.0.0+1';
+  static const String FRAME_845083630 = 'assets/images/frame_845083630.png';
   static const String SPLASH_SCREEN_OURIKA = 'assets/splash_screen_ourika.mp4';
+  static const String PIN_A = 'assets/svgs/icons/pin_a.svg';
 }

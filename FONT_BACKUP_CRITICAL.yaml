@@ -1,0 +1,61 @@
+# =============================
+# CRITICAL FONT CONFIGURATION
+# =============================
+# 
+# ⚠️  WARNING: NEVER DELETE OR MODIFY THIS FILE! ⚠️
+# 
+# This is the CORRECT font configuration for YSL Beauty Experience
+# If fonts ever break again, copy this configuration back to pubspec.yaml
+# 
+# The correct configuration is:
+
+fonts:
+  # Arial font family with weights
+  - family: Arial
+    fonts:
+      - asset: assets/fonts/Arial/Arial-Regular.ttf
+        weight: 400
+      - asset: assets/fonts/Arial/Arial-Bold.ttf
+        weight: 700
+  
+  # ITC Avant Garde Gothic Pro font family with all weights
+  - family: ITC Avant Garde Gothic Pro
+    fonts:
+      - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-XLt.ttf
+        weight: 200  # Extra Light
+      - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Bk.ttf
+        weight: 300  # Light (Book)
+      - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Bk.ttf
+        weight: 400  # Regular (using Book as regular)
+      - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Md.ttf
+        weight: 500  # Medium
+      - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Demi.ttf
+        weight: 600  # SemiBold (Demi)
+      - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Bold.ttf
+        weight: 700  # Bold
+
+# =============================
+# IMPORTANT NOTES:
+# =============================
+# 
+# 1. The font family MUST be named exactly: "ITC Avant Garde Gothic Pro"
+# 2. All weights must be mapped to the correct .ttf files
+# 3. The main.dart file FORCES this font family on the entire app:
+#    theme: AppTheme.lightTheme.copyWith(
+#      textTheme: AppTheme.lightTheme.textTheme.apply(
+#        fontFamily: 'ITC Avant Garde Gothic Pro',
+#      ),
+# 4. Components reference this font by name in fontFamily properties
+# 5. If fonts appear generic/system, check that this configuration is in pubspec.yaml
+# 
+# =============================
+# RECOVERY INSTRUCTIONS:
+# =============================
+# 
+# If fonts break:
+# 1. Copy the "fonts:" section above
+# 2. Paste it into pubspec.yaml replacing the existing fonts section
+# 3. Run: flutter clean && flutter pub get
+# 4. Restart the app
+# 
+# =============================

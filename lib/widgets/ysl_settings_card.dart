@@ -124,11 +124,13 @@ class YslSettingsCard extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            YslToggleSwitch(
-              selectedOption: selectedToggleOption,
-              onToggle: onToggleChanged,
-              width: 175,
-              height: 45,
+            Flexible(
+              child: YslToggleSwitch(
+                selectedOption: selectedToggleOption,
+                onToggle: onToggleChanged,
+                width: 175,
+                height: 45,
+              ),
             ),
           ],
         ),
