@@ -3,7 +3,6 @@
 // Following YSL brand principles: elegant, minimal, hard-edged rectangles
 
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../theme/app_text.dart';
@@ -181,8 +180,8 @@ class _SplashScreenState extends State<SplashScreen>
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Colors.black.withOpacity(0.3),
-                  Colors.black.withOpacity(0.6),
+                  Colors.black.withValues(alpha: 0.3),
+                  Colors.black.withValues(alpha: 0.6),
                 ],
               ),
             ),
@@ -225,11 +224,11 @@ class _SplashScreenState extends State<SplashScreen>
                                 Text(
                                   'BRAND WORLD EXPERIENCE',
                                   style: AppText.displaySubtitle.copyWith(
-                                    color: AppColors.yslWhite.withOpacity(0.9),
+                                    color: AppColors.yslWhite.withValues(alpha: 0.9),
                                     letterSpacing: 2.0,
                                     shadows: [
                                       Shadow(
-                                        color: Colors.black.withOpacity(0.6),
+                                        color: Colors.black.withValues(alpha: 0.6),
                                         offset: const Offset(0, 1),
                                         blurRadius: 2,
                                       ),
@@ -244,11 +243,11 @@ class _SplashScreenState extends State<SplashScreen>
                                 Text(
                                   'DISCOVER THE ESSENCE OF LUXURY',
                                   style: AppText.bodyLarge.copyWith(
-                                    color: AppColors.yslWhite.withOpacity(0.8),
+                                    color: AppColors.yslWhite.withValues(alpha: 0.8),
                                     letterSpacing: 1.5,
                                     shadows: [
                                       Shadow(
-                                        color: Colors.black.withOpacity(0.6),
+                                        color: Colors.black.withValues(alpha: 0.6),
                                         offset: const Offset(0, 1),
                                         blurRadius: 2,
                                       ),
@@ -265,11 +264,11 @@ class _SplashScreenState extends State<SplashScreen>
                             Text(
                               'AN IMMERSIVE JOURNEY AWAITS',
                               style: AppText.bodySmall.copyWith(
-                                color: AppColors.yslWhite.withOpacity(0.7),
+                                color: AppColors.yslWhite.withValues(alpha: 0.7),
                                 letterSpacing: 1.2,
                                 shadows: [
                                   Shadow(
-                                    color: Colors.black.withOpacity(0.6),
+                                    color: Colors.black.withValues(alpha: 0.6),
                                     offset: const Offset(0, 1),
                                     blurRadius: 2,
                                   ),

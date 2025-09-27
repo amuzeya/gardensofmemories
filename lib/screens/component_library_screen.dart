@@ -478,7 +478,7 @@ class _ComponentLibraryScreenState extends State<ComponentLibraryScreen> {
   }
 
   Widget _buildTypographyDemo() {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -14,13 +14,13 @@ class YslAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Color backgroundColor;
 
   const YslAppBar({
-    Key? key,
+    super.key,
     this.leadingActions,
     this.trailingActions,
     this.onLogoTap,
     this.height = 56.0,
     this.backgroundColor = AppColors.yslWhite,
-  }) : super(key: key);
+  });
 
   @override
   Size get preferredSize => Size.fromHeight(height);
@@ -30,17 +30,17 @@ class YslAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: backgroundColor,
       elevation: 0.5,
-      shadowColor: AppColors.yslBlack.withOpacity(0.1),
+      shadowColor: AppColors.yslBlack.withValues(alpha: 0.1),
       automaticallyImplyLeading: false,
       toolbarHeight: height,
       titleSpacing: 0,
-      title: Container(
+      title: SizedBox(
         height: height,
         child: Row(
           children: [
             // Leading actions
             if (leadingActions != null) ...[
-              Container(
+              SizedBox(
                 width: 48,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -97,18 +97,18 @@ class YslAppBarIcon extends StatelessWidget {
   final Color? color;
 
   const YslAppBarIcon({
-    Key? key,
+    super.key,
     required this.iconPath,
     this.onTap,
     this.size = 20,
     this.color,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
+      child: SizedBox(
         width: 32,
         height: 32,
         child: Center(
@@ -305,7 +305,7 @@ class YslAppBarVariants {
   static Widget _buildMenuIcon(VoidCallback? onTap) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
+      child: SizedBox(
         width: 32,
         height: 32,
         child: Center(

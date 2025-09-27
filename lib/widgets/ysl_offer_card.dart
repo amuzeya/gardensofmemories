@@ -128,7 +128,7 @@ class _YslOfferCardState extends State<YslOfferCard>
                 borderRadius: BorderRadius.zero,
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.yslBlack.withOpacity(0.1),
+                    color: AppColors.yslBlack.withValues(alpha: 0.1),
                     offset: const Offset(0, 4),
                     blurRadius: 8,
                     spreadRadius: 0,

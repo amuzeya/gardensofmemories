@@ -177,7 +177,7 @@ class _LoadingScreenState extends State<LoadingScreen>
                           height: 2,
                           width: double.infinity,
                           decoration: BoxDecoration(
-                            color: AppColors.yslWhite.withOpacity(0.2),
+                            color: AppColors.yslWhite.withValues(alpha: 0.2),
                             borderRadius: BorderRadius.zero, // Hard edges
                           ),
                           child: AnimatedContainer(
@@ -196,9 +196,9 @@ class _LoadingScreenState extends State<LoadingScreen>
 
                         // Progress percentage
                         Text(
-                          '${_loadingProgress}%',
+'$_loadingProgress%',
                           style: AppText.bodyLarge.copyWith(
-                            color: AppColors.yslWhite.withOpacity(0.7),
+                            color: AppColors.yslWhite.withValues(alpha: 0.7),
                             letterSpacing: 1.0,
                           ),
                         ),
@@ -214,7 +214,7 @@ class _LoadingScreenState extends State<LoadingScreen>
                     child: Text(
                       'GARDENS OF MEMORIES AWAIT',
                       style: AppText.bodySmall.copyWith(
-                        color: AppColors.yslWhite.withOpacity(0.6),
+                        color: AppColors.yslWhite.withValues(alpha: 0.6),
                         letterSpacing: 1.5,
                       ),
                       textAlign: TextAlign.center,

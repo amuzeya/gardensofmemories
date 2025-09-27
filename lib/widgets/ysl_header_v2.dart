@@ -17,7 +17,7 @@ class YslHeaderV2 extends StatelessWidget {
   final double spacing;
 
   const YslHeaderV2({
-    Key? key,
+    super.key,
     required this.title,
     this.backgroundColor = AppColors.yslWhite,
     this.logoHeight = 28,
@@ -25,7 +25,7 @@ class YslHeaderV2 extends StatelessWidget {
     this.padding,
     this.alignment = MainAxisAlignment.center,
     this.spacing = 12,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

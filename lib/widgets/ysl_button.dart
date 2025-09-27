@@ -109,7 +109,7 @@ class _YslButtonState extends State<YslButton>
         return _isPressed ? AppColors.grey100 : AppColors.yslWhite;
       case YslButtonVariant.outline:
         return _isPressed 
-            ? Colors.white.withOpacity(0.1) 
+            ? Colors.white.withValues(alpha: 0.1) 
             : Colors.transparent;
       case YslButtonVariant.light:
         return _isPressed ? AppColors.grey800 : AppColors.yslBlack;
@@ -188,7 +188,7 @@ class _YslButtonState extends State<YslButton>
                 borderRadius: BorderRadius.zero,
                 boxShadow: _isPressed ? null : [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withValues(alpha: 0.1),
                     offset: const Offset(0, 2),
                     blurRadius: 4,
                   ),

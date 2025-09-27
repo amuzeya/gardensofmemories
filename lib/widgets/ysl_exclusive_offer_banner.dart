@@ -15,14 +15,14 @@ class YslExclusiveOfferBanner extends StatelessWidget {
   final VoidCallback? onClose;
 
   const YslExclusiveOfferBanner({
-    Key? key,
+    super.key,
     required this.text,
     this.subText,
     this.onTap,
     this.icon,
     this.isCloseable = false,
     this.onClose,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +60,7 @@ class YslExclusiveOfferBanner extends StatelessWidget {
                     Text(
                       subText!.toUpperCase(),
                       style: AppText.bodySmall.copyWith(
-                        color: AppColors.yslWhite.withOpacity(0.8),
+                        color: AppColors.yslWhite.withValues(alpha: 0.8),
                         fontWeight: FontWeight.w400,
                         letterSpacing: 0.5,
                         fontFamily: 'ITC Avant Garde Gothic Pro',

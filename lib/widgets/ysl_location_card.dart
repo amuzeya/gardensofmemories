@@ -118,7 +118,7 @@ class YslLocationCard extends StatelessWidget {
   }
 
   Widget _buildLocationImage() {
-    return Container(
+    return SizedBox(
       width: 140,
       height: height, // Full height of the card
       child: ClipRect(

@@ -70,7 +70,7 @@ class YslContentCard extends StatelessWidget {
   }
 
   Widget _buildTextContent() {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       child: Column(
         mainAxisSize: MainAxisSize.min,
