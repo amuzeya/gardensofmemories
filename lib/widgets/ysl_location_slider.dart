@@ -1,10 +1,12 @@
 // YSL Beauty Experience - Location Slider Component
 // Based on Figma designs: Horizontal location slider with manual navigation
 // Following YSL brand principles: clean layouts, manual control, structured navigation
+// Now with full responsive support and overflow protection
 
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import '../constants/assets.dart';
+import '../utils/responsive_utils.dart';
 import 'ysl_location_card.dart';
 import 'ysl_home_location_card.dart';
 
@@ -14,8 +16,9 @@ import 'ysl_home_location_card.dart';
 /// - Manual navigation with left/right arrows
 /// - Multiple location support with pin variations
 /// - YSL brand styling throughout
-/// - Responsive design with flexible card sizing
+/// - Fully responsive design with automatic overflow protection
 /// - Smooth scrolling animations
+/// - Selected location highlighting and tracking
 class YslLocationSlider extends StatefulWidget {
   final List<YslLocationData> locations;
   final double? height;
@@ -30,6 +33,9 @@ class YslLocationSlider extends StatefulWidget {
   final bool useHomeStyle;
   final bool usePageView;
   final double viewportFraction;
+  final bool enableResponsive;
+  final int? selectedLocationIndex;
+  final Function(int index)? onLocationSelected;
 
   const YslLocationSlider({
     super.key,
@@ -46,6 +52,9 @@ class YslLocationSlider extends StatefulWidget {
     this.useHomeStyle = false,
     this.usePageView = false,
     this.viewportFraction = 0.9,
+    this.enableResponsive = true,
+    this.selectedLocationIndex,
+    this.onLocationSelected,
   });
 
   @override
@@ -57,14 +66,47 @@ class _YslLocationSliderState extends State<YslLocationSlider> {
   PageController? _pageController; // when using PageView
   bool _canScrollLeft = false;
   bool _canScrollRight = true;
+  
+  // Responsive state
+  YslLocationSliderResponsive? _responsiveParams;
+  YslDeviceType? _deviceType;
+  int _currentSelectedIndex = 0;
 
   @override
   void initState() {
     super.initState();
+    _currentSelectedIndex = widget.selectedLocationIndex ?? 0;
     _scrollController = ScrollController();
     _scrollController.addListener(_updateScrollState);
+  }
+  
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _updateResponsiveParams();
+    _initializePageController();
+  }
+  
+  void _updateResponsiveParams() {
+    if (widget.enableResponsive) {
+      final screenWidth = MediaQuery.of(context).size.width;
+      _deviceType = YslResponsiveUtils.getDeviceType(screenWidth);
+      _responsiveParams = YslResponsiveUtils.getLocationSliderParams(
+        context,
+        _deviceType!,
+        widget.useHomeStyle, // Assuming useHomeStyle indicates map view
+      );
+    }
+  }
+  
+  void _initializePageController() {
     if (widget.usePageView) {
-      _pageController = PageController(viewportFraction: widget.viewportFraction);
+      final viewportFraction = _responsiveParams?.viewportFraction ?? widget.viewportFraction;
+      _pageController?.dispose();
+      _pageController = PageController(
+        viewportFraction: viewportFraction,
+        initialPage: _currentSelectedIndex,
+      );
     }
   }
 
@@ -109,35 +151,69 @@ class _YslLocationSliderState extends State<YslLocationSlider> {
 
   @override
   Widget build(BuildContext context) {
+    // Use responsive parameters if available
+    final height = _responsiveParams?.height ?? widget.height;
+    final padding = _responsiveParams?.padding ?? widget.padding ?? const EdgeInsets.symmetric(horizontal: 20);
+    final showArrows = _responsiveParams?.showArrows ?? widget.showNavigationArrows;
+    
     return Container(
-      height: widget.height,
+      height: height,
       margin: widget.margin ?? const EdgeInsets.symmetric(vertical: 16),
-      padding: widget.padding ?? const EdgeInsets.symmetric(horizontal: 20),
-      child: Row(
-        children: [
-          // Left Navigation Arrow
-          if (widget.showNavigationArrows && !widget.usePageView)
-            _buildNavigationButton(
-              icon: Icons.arrow_back_ios,
-              onPressed: _canScrollLeft ? _scrollLeft : null,
-              isLeft: true,
-            ),
+      padding: padding,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          // Overflow protection
+          if (widget.enableResponsive) {
+            _validateAndAdjustLayout(constraints);
+          }
+          
+          return Row(
+            children: [
+              // Left Navigation Arrow
+              if (showArrows && !widget.usePageView)
+                _buildNavigationButton(
+                  icon: Icons.arrow_back_ios,
+                  onPressed: _canScrollLeft ? _scrollLeft : null,
+                  isLeft: true,
+                ),
 
-          // Location Cards Slider
-          Expanded(
-            child: widget.usePageView ? _buildPageViewSlider() : _buildLocationSlider(),
-          ),
+              // Location Cards Slider
+              Expanded(
+                child: widget.usePageView ? _buildPageViewSlider() : _buildLocationSlider(),
+              ),
 
-          // Right Navigation Arrow
-          if (widget.showNavigationArrows && !widget.usePageView)
-            _buildNavigationButton(
-              icon: Icons.arrow_forward_ios,
-              onPressed: _canScrollRight ? _scrollRight : null,
-              isLeft: false,
-            ),
-        ],
+              // Right Navigation Arrow
+              if (showArrows && !widget.usePageView)
+                _buildNavigationButton(
+                  icon: Icons.arrow_forward_ios,
+                  onPressed: _canScrollRight ? _scrollRight : null,
+                  isLeft: false,
+                ),
+            ],
+          );
+        },
       ),
     );
+  }
+  
+  void _validateAndAdjustLayout(BoxConstraints constraints) {
+    final cardWidth = _responsiveParams?.cardWidth ?? widget.cardWidth;
+    final cardSpacing = _responsiveParams?.cardSpacing ?? widget.cardSpacing;
+    
+    // Check for potential overflow and log warnings (development only)
+    if (YslResponsiveUtils.willOverflow(
+      containerWidth: constraints.maxWidth,
+      cardWidth: cardWidth,
+      cardSpacing: cardSpacing,
+      cardCount: widget.locations.length,
+    )) {
+      // In development, we could show a warning
+      // In production, the responsive params should prevent this
+      assert(() {
+        debugPrint('YslLocationSlider: Potential overflow detected for screen width ${constraints.maxWidth}');
+        return true;
+      }());
+    }
   }
 
   Widget _buildNavigationButton({
@@ -184,7 +260,7 @@ class _YslLocationSliderState extends State<YslLocationSlider> {
         itemCount: widget.locations.length,
         separatorBuilder: (context, index) => SizedBox(width: widget.cardSpacing),
         itemBuilder: (context, index) {
-          return _buildLocationCard(widget.locations[index]);
+          return _buildLocationCard(widget.locations[index], index);
         },
       ),
     );
@@ -206,7 +282,7 @@ class _YslLocationSliderState extends State<YslLocationSlider> {
                 child: SizedBox(
                   width: cardW,
                   height: widget.height,
-                  child: _buildLocationCard(widget.locations[index]),
+                  child: _buildLocationCard(widget.locations[index], index),
                 ),
               ),
             );
@@ -215,29 +291,55 @@ class _YslLocationSliderState extends State<YslLocationSlider> {
       },
     );
   }
-
-  Widget _buildLocationCard(YslLocationData location) {
-    return SizedBox(
-      width: widget.cardWidth,
-      height: widget.height,
-      child: widget.useHomeStyle
-          ? YslHomeLocationCard(
-              location: location,
-              width: widget.cardWidth,
-              height: widget.height ?? 180,
-              viewType: YslCardViewType.mapView, // Compact for slider
-              onTap: widget.onLocationTap,
-              margin: EdgeInsets.zero,
-            )
-          : YslLocationCard(
-              location: location,
-              width: widget.cardWidth,
-              height: widget.height,
-              onTap: widget.onLocationTap,
-              margin: EdgeInsets.zero, // Remove individual card margins
-              showBorder: widget.showCardBorders,
-            ),
+  
+  Widget _buildLocationCard(YslLocationData location, int index) {
+    // Use responsive parameters if available
+    final cardWidth = _responsiveParams?.cardWidth ?? widget.cardWidth;
+    final height = _responsiveParams?.height ?? widget.height;
+    
+    return GestureDetector(
+      onTap: () {
+        _onCardTapped(index);
+        widget.onLocationTap?.call();
+      },
+      child: SizedBox(
+        width: cardWidth,
+        height: height,
+        child: widget.useHomeStyle
+            ? YslHomeLocationCard(
+                location: location,
+                width: cardWidth,
+                height: height ?? 180,
+                viewType: YslCardViewType.mapView, // Compact for slider
+                onTap: () => _onCardTapped(index),
+                margin: EdgeInsets.zero,
+              )
+            : YslLocationCard(
+                location: location,
+                width: cardWidth,
+                height: height,
+                onTap: () => _onCardTapped(index),
+                margin: EdgeInsets.zero,
+                showBorder: widget.showCardBorders,
+              ),
+      ),
     );
+  }
+  
+  void _onCardTapped(int index) {
+    setState(() {
+      _currentSelectedIndex = index;
+    });
+    widget.onLocationSelected?.call(index);
+    
+    // Auto-scroll to center the selected card if using PageView
+    if (widget.usePageView && _pageController != null) {
+      _pageController!.animateToPage(
+        index,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
   }
 }
 

@@ -15,6 +15,7 @@ import '../models/home_quote.dart';
 
 import '../theme/app_colors.dart';
 import '../theme/app_text.dart';
+import '../utils/responsive_utils.dart';
 
 import '../widgets/ysl_exclusive_offer_banner.dart';
 import '../widgets/ysl_location_slider.dart';
@@ -55,6 +56,8 @@ class _HomePageScreenState extends State<HomePageScreen> {
   final _repo = HomeRepository();
   late Future<_HomeData> _future;
   YslToggleOption _viewToggle = YslToggleOption.map;
+  int _selectedLocationIndex = 0;
+  YslDeviceType? _deviceType;
 
   @override
   void initState() {
@@ -108,6 +111,10 @@ class _HomePageScreenState extends State<HomePageScreen> {
   }
 
   Widget _buildBody(BuildContext context, _HomeData data) {
+    // Determine device type and responsive parameters
+    final screenWidth = MediaQuery.of(context).size.width;
+    _deviceType = YslResponsiveUtils.getDeviceType(screenWidth);
+    
     // Map locations to widget data
     final yslLocations = data.locations
         .map(toYslLocationData)
@@ -115,13 +122,19 @@ class _HomePageScreenState extends State<HomePageScreen> {
 
     // Conditional rendering based on toggle state
     if (_viewToggle == YslToggleOption.map) {
-      return _buildMapView(data, yslLocations);
+      return _buildMapView(context, data, yslLocations);
     } else {
-      return _buildListView(data, yslLocations);
+      return _buildListView(context, data, yslLocations);
     }
   }
 
-  Widget _buildMapView(_HomeData data, List<YslLocationData> yslLocations) {
+  Widget _buildMapView(BuildContext context, _HomeData data, List<YslLocationData> yslLocations) {
+    final sliderParams = YslResponsiveUtils.getLocationSliderParams(
+      context,
+      _deviceType!,
+      true, // isMapView
+    );
+    
     return Stack(
       children: [
         // Full-screen interactive map background
@@ -161,7 +174,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
               // Hero header with semi-transparent background
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-                padding: const EdgeInsets.all(20),
+                padding: sliderParams.padding,
                 decoration: BoxDecoration(
                   color: AppColors.yslWhite.withValues(alpha: 0.95),
                   border: Border.all(color: Colors.black12, width: 1),
@@ -174,7 +187,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                     ),
                   ],
                 ),
-                child: _buildHeroHeaderContent(),
+                child: _buildHeroHeaderContent(context),
               ),
 
               // Spacer to push location slider to bottom
@@ -192,15 +205,23 @@ class _HomePageScreenState extends State<HomePageScreen> {
             top: false,
             child: YslLocationSlider(
               locations: yslLocations,
-              height: 100,
-              cardWidth: 200,
-              cardSpacing: 12,
-              showNavigationArrows: false,
+              height: sliderParams.height,
+              cardWidth: sliderParams.cardWidth,
+              cardSpacing: sliderParams.cardSpacing,
+              padding: sliderParams.padding,
+              showNavigationArrows: sliderParams.showArrows,
               backgroundColor: Colors.transparent,
               showCardBorders: false,
               useHomeStyle: true,
               usePageView: true,
-              viewportFraction: 0.86,
+              viewportFraction: sliderParams.viewportFraction,
+              enableResponsive: true,
+              selectedLocationIndex: _selectedLocationIndex,
+              onLocationSelected: (index) {
+                setState(() {
+                  _selectedLocationIndex = index;
+                });
+              },
             ),
           ),
         ),
@@ -208,7 +229,10 @@ class _HomePageScreenState extends State<HomePageScreen> {
     );
   }
 
-  Widget _buildListView(_HomeData data, List<YslLocationData> yslLocations) {
+  Widget _buildListView(BuildContext context, _HomeData data, List<YslLocationData> yslLocations) {
+    final listParams = YslResponsiveUtils.getListViewParams(context, _deviceType!);
+    final heroParams = YslResponsiveUtils.getHeroHeaderParams(context, _deviceType!);
+    
     return SafeArea(
       child: Column(
         children: [
@@ -227,98 +251,83 @@ class _HomePageScreenState extends State<HomePageScreen> {
           
           // Hero header (no background since no map)
           Container(
-            padding: const EdgeInsets.all(20),
-            child: _buildHeroHeaderContent(),
+            padding: heroParams.padding,
+            child: _buildHeroHeaderContent(context),
           ),
 
-          // Scrollable list of locations using horizontal location cards
+          // Scrollable list/grid of locations using responsive layout
           Expanded(
-            child: ListView.separated(
-              padding: const EdgeInsets.all(16),
-              itemCount: yslLocations.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 16),
-              itemBuilder: (context, index) {
-                final location = yslLocations[index];
-                return YslHomeLocationCard(
-                  location: location,
-                  isVertical: false,
-                  viewType: YslCardViewType.listView, // Spacious list view
-                  height: 160, // Taller for spacious layout
-                  width: double.infinity,
-                  margin: EdgeInsets.zero,
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Explore ${location.name}!'),
-                        backgroundColor: AppColors.yslBlack,
-                        duration: const Duration(seconds: 2),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
+            child: listParams.crossAxisCount > 1
+                ? _buildResponsiveGrid(yslLocations, listParams)
+                : _buildResponsiveList(yslLocations, listParams),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildHeroHeaderContent() {
+  Widget _buildHeroHeaderContent(BuildContext context) {
+    final heroParams = YslResponsiveUtils.getHeroHeaderParams(context, _deviceType!);
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         // YSL logo
         SvgPicture.asset(
           'assets/svgs/logos/state_logo_beaut_on.svg',
-          height: 40,
+          height: heroParams.logoHeight,
           colorFilter: const ColorFilter.mode(
             AppColors.yslBlack,
             BlendMode.srcIn,
           ),
         ),
-        const SizedBox(height: 16),
+        SizedBox(height: heroParams.spacing),
 
         // Small subtitle
         Text(
           'YVES THROUGH MARRAKECH',
           style: AppText.bodySmallLight.copyWith(
             color: AppColors.yslBlack,
+            fontSize: heroParams.subtitleFontSize,
             letterSpacing: 1.5,
           ),
           textAlign: TextAlign.center,
         ),
 
-        const SizedBox(height: 12),
+        SizedBox(height: heroParams.spacing * 0.8),
 
         // Main hero title
         Text(
           'GARDENS OF MEMORIES',
           style: AppText.heroDisplay.copyWith(
             color: AppColors.yslBlack,
+            fontSize: heroParams.titleFontSize,
             letterSpacing: 1.2,
           ),
           textAlign: TextAlign.center,
         ),
 
-        const SizedBox(height: 16),
+        SizedBox(height: heroParams.spacing),
 
         // Description paragraph
         Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 400),
+            constraints: BoxConstraints(maxWidth: heroParams.maxDescriptionWidth),
             child: Text(
               'In Marrakech, Yves Saint Laurent found refuge and inspiration—where freedom burns and memory lingers like perfume.',
               style: AppText.bodyLarge.copyWith(
                 color: AppColors.yslBlack,
+                fontSize: heroParams.descriptionFontSize,
                 height: 1.4,
               ),
               textAlign: TextAlign.center,
+              maxLines: _deviceType == YslDeviceType.mobile ? 4 : 3, // Prevent overflow on small screens
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ),
 
-        const SizedBox(height: 14),
+        SizedBox(height: heroParams.spacing),
 
         // Toggle switch
         Center(
@@ -327,11 +336,73 @@ class _HomePageScreenState extends State<HomePageScreen> {
             onToggle: (opt) {
               setState(() {
                 _viewToggle = opt;
+                _selectedLocationIndex = 0; // Reset selection when switching views
               });
             },
           ),
         ),
       ],
+    );
+  }
+  
+  Widget _buildResponsiveList(List<YslLocationData> yslLocations, YslListViewResponsive listParams) {
+    return ListView.separated(
+      padding: listParams.padding,
+      itemCount: yslLocations.length,
+      separatorBuilder: (context, index) => SizedBox(height: listParams.itemSpacing),
+      itemBuilder: (context, index) {
+        final location = yslLocations[index];
+        
+        return YslHomeLocationCard(
+          location: location,
+          isVertical: false,
+          viewType: YslCardViewType.listView, // Spacious list view
+          height: listParams.itemHeight,
+          width: listParams.maxWidth,
+          margin: EdgeInsets.zero,
+          onTap: () => _onLocationCardTapped(index, location),
+        );
+      },
+    );
+  }
+  
+  Widget _buildResponsiveGrid(List<YslLocationData> yslLocations, YslListViewResponsive listParams) {
+    return GridView.builder(
+      padding: listParams.padding,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: listParams.crossAxisCount,
+        crossAxisSpacing: listParams.itemSpacing,
+        mainAxisSpacing: listParams.itemSpacing,
+        childAspectRatio: listParams.maxWidth / listParams.itemHeight,
+      ),
+      itemCount: yslLocations.length,
+      itemBuilder: (context, index) {
+        final location = yslLocations[index];
+        
+        return YslHomeLocationCard(
+          location: location,
+          isVertical: false,
+          viewType: YslCardViewType.listView,
+          height: listParams.itemHeight,
+          width: listParams.maxWidth,
+          margin: EdgeInsets.zero,
+          onTap: () => _onLocationCardTapped(index, location),
+        );
+      },
+    );
+  }
+  
+  void _onLocationCardTapped(int index, YslLocationData location) {
+    setState(() {
+      _selectedLocationIndex = index;
+    });
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Explore ${location.name}!'),
+        backgroundColor: AppColors.yslBlack,
+        duration: const Duration(seconds: 2),
+      ),
     );
   }
 }

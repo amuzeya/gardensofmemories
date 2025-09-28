@@ -18,6 +18,8 @@ class YslHomeLocationCard extends StatelessWidget {
   final EdgeInsetsGeometry? margin;
   final bool isVertical;
   final YslCardViewType viewType;
+  final int? maxTitleLines; // Configurable title line limit
+  final int? maxDescriptionLines; // Configurable description line limit
 
   const YslHomeLocationCard({
     super.key,
@@ -28,6 +30,8 @@ class YslHomeLocationCard extends StatelessWidget {
     this.margin,
     this.isVertical = false,
     this.viewType = YslCardViewType.mapView,
+    this.maxTitleLines,
+    this.maxDescriptionLines,
   });
 
   @override
@@ -50,34 +54,47 @@ class YslHomeLocationCard extends StatelessWidget {
             ),
           ],
         ),
-        child: isVertical 
-            ? _buildVerticalLayout() 
-            : (viewType == YslCardViewType.mapView 
-                ? _buildMapViewLayout() 
-                : _buildListViewLayout()),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return isVertical 
+                ? _buildVerticalLayout(constraints) 
+                : (viewType == YslCardViewType.mapView 
+                    ? _buildMapViewLayout(constraints) 
+                    : _buildListViewLayout(constraints));
+          },
+        ),
       ),
     );
   }
 
   // Compact layout for map view slider (fits in 100px height)
-  Widget _buildMapViewLayout() {
+  Widget _buildMapViewLayout(BoxConstraints constraints) {
+    final imageSize = constraints.maxHeight;
+    final availableWidth = constraints.maxWidth - imageSize;
+    
+    // Prevent overflow by adjusting padding based on available width
+    final padding = availableWidth < 150 
+        ? const EdgeInsets.all(8.0) 
+        : const EdgeInsets.all(12.0);
+    
     return Row(
       children: [
-        _buildImage(),
+        _buildImage(constraints),
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.all(12.0),
+            padding: padding,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               mainAxisSize: MainAxisSize.min,
               children: [
-                _buildTitleRow(),
-                SizedBox(height: 8.0,),
+                _buildTitleRow(constraints),
+                if (constraints.maxHeight > 80) // Only show spacing if height allows
+                  SizedBox(height: constraints.maxHeight > 90 ? 8.0 : 4.0),
                 // Compact explore button - no description in map view
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: _buildExploreButton(),
+                  child: _buildExploreButton(constraints),
                 ),
               ],
             ),
@@ -88,36 +105,54 @@ class YslHomeLocationCard extends StatelessWidget {
   }
 
   // Spacious layout for list view (fits in 160px+ height)
-  Widget _buildListViewLayout() {
+  Widget _buildListViewLayout(BoxConstraints constraints) {
+    final imageSize = constraints.maxHeight;
+    final availableWidth = constraints.maxWidth - imageSize;
+    
+    // Adjust padding and spacing based on available space
+    final padding = availableWidth < 200 
+        ? const EdgeInsets.all(12.0) 
+        : const EdgeInsets.all(16.0);
+    
+    final spacing = constraints.maxHeight < 140 ? 6.0 : 8.0;
+    final buttonSpacing = constraints.maxHeight < 140 ? 8.0 : 12.0;
+    
+    // Calculate max lines for description based on height
+    final descriptionMaxLines = maxDescriptionLines ?? 
+        (constraints.maxHeight < 140 ? 2 : (constraints.maxHeight < 180 ? 3 : 4));
+    
     return Row(
       children: [
-        _buildImage(),
+        _buildImage(constraints),
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.all(16.0), // More padding for list view
+            padding: padding,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _buildTitleRow(),
-                const SizedBox(height: 8), // Proper spacing
-                // Location description with better styling
-                Text(
-                  location.address,
-                  style: AppText.bodySmall.copyWith(
-                    color: AppColors.yslBlack.withValues(alpha: 0.8),
-                    height: 1.3, // Comfortable line height
-                    fontSize: 12, // Readable font size
-                    fontFamily: 'ITC Avant Garde Gothic Pro',
+                _buildTitleRow(constraints),
+                SizedBox(height: spacing),
+                // Location description with responsive styling
+                if (constraints.maxHeight > 120) // Only show description if height allows
+                  Flexible(
+                    child: Text(
+                      location.address,
+                      style: AppText.bodySmall.copyWith(
+                        color: AppColors.yslBlack.withValues(alpha: 0.8),
+                        height: 1.3,
+                        fontSize: _getDescriptionFontSize(constraints),
+                        fontFamily: 'ITC Avant Garde Gothic Pro',
+                      ),
+                      maxLines: descriptionMaxLines,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                  maxLines: 3, // More lines for list view
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 12), // Proper spacing
+                SizedBox(height: buttonSpacing),
                 // Explore button with proper spacing
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: _buildListViewButton(),
+                  child: _buildListViewButton(constraints),
                 ),
               ],
             ),
@@ -126,8 +161,27 @@ class YslHomeLocationCard extends StatelessWidget {
       ],
     );
   }
+  
+  double _getDescriptionFontSize(BoxConstraints constraints) {
+    if (constraints.maxHeight < 140) return 10;
+    if (constraints.maxHeight < 160) return 11;
+    return 12;
+  }
+  
+  double _getTitleFontSize(BoxConstraints constraints) {
+    if (viewType == YslCardViewType.listView) {
+      if (constraints.maxHeight < 120) return 13;
+      if (constraints.maxHeight < 140) return 14;
+      return 15;
+    } else {
+      // Map view - smaller font sizes
+      if (constraints.maxHeight < 80) return 11;
+      if (constraints.maxHeight < 100) return 12;
+      return 13;
+    }
+  }
 
-  Widget _buildVerticalLayout() {
+  Widget _buildVerticalLayout(BoxConstraints constraints) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -161,7 +215,7 @@ class YslHomeLocationCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildTitleRow(),
+                _buildTitleRow(constraints),
                 const SizedBox(height: 12),
                 // Description text
                 Expanded(
@@ -172,12 +226,12 @@ class YslHomeLocationCard extends StatelessWidget {
                       height: 1.3,
                       fontFamily: 'ITC Avant Garde Gothic Pro',
                     ),
-                    maxLines: 3,
+                    maxLines: maxDescriptionLines ?? 3,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 const SizedBox(height: 12),
-                _buildExploreButton(),
+                _buildExploreButton(constraints),
               ],
             ),
           ),
@@ -186,17 +240,18 @@ class YslHomeLocationCard extends StatelessWidget {
     );
   }
 
-  Widget _buildImage() {
+  Widget _buildImage(BoxConstraints constraints) {
+    final imageSize = constraints.maxHeight;
     return SizedBox(
-      width: height, // square-ish image block
-      height: height,
+      width: imageSize, // square-ish image block
+      height: imageSize,
       child: ClipRect(
         child: location.imagePath != null
             ? Image.asset(
                 location.imagePath!,
                 fit: BoxFit.cover,
-                width: height,
-                height: height,
+                width: imageSize,
+                height: imageSize,
                 errorBuilder: (context, error, stackTrace) {
                   return Container(
                     color: Colors.grey.shade200,
@@ -212,21 +267,25 @@ class YslHomeLocationCard extends StatelessWidget {
     );
   }
 
-  Widget _buildTitleRow() {
-    // Different styling based on view type
+  Widget _buildTitleRow(BoxConstraints constraints) {
+    // Responsive title sizing based on constraints and view type
+    final titleFontSize = _getTitleFontSize(constraints);
     final titleStyle = viewType == YslCardViewType.listView
         ? AppText.titleLarge.copyWith(
             color: AppColors.yslBlack,
             fontWeight: FontWeight.w700,
-            fontSize: 15, // Bigger for list view
+            fontSize: titleFontSize,
             fontFamily: 'ITC Avant Garde Gothic Pro',
           )
         : AppText.titleLarge.copyWith(
             color: AppColors.yslBlack,
             fontWeight: FontWeight.w600,
-            fontSize: 13, // Smaller for map view
+            fontSize: titleFontSize,
             fontFamily: 'ITC Avant Garde Gothic Pro',
           );
+    
+    final titleMaxLines = maxTitleLines ?? 
+        (constraints.maxHeight < 100 ? 1 : (constraints.maxWidth < 300 ? 1 : 2));
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -239,7 +298,7 @@ class YslHomeLocationCard extends StatelessWidget {
           child: Text(
             location.name.toUpperCase(),
             style: titleStyle,
-            maxLines: 1,
+            maxLines: titleMaxLines,
             overflow: TextOverflow.ellipsis,
           ),
         ),
@@ -270,10 +329,14 @@ class YslHomeLocationCard extends StatelessWidget {
     );
   }
 
-  Widget _buildExploreButton() {
+  Widget _buildExploreButton(BoxConstraints constraints) {
+    final buttonHeight = constraints.maxHeight < 90 ? 24.0 : 28.0;
+    final fontSize = constraints.maxHeight < 90 ? 9.0 : 10.0;
+    final horizontalPadding = constraints.maxWidth < 300 ? 8.0 : 12.0;
+    
     return Container(
-      height: 28, // Reduced from 32
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6), // Reduced padding
+      height: buttonHeight,
+      padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 4),
       decoration: const BoxDecoration(
         color: AppColors.yslBlack,
         borderRadius: BorderRadius.zero,
@@ -285,16 +348,20 @@ class YslHomeLocationCard extends StatelessWidget {
           letterSpacing: 0.8,
           fontWeight: FontWeight.w600,
           fontFamily: 'ITC Avant Garde Gothic Pro',
-          fontSize: 10, // Reduced font size
+          fontSize: fontSize,
         ),
       ),
     );
   }
 
-  Widget _buildListViewButton() {
+  Widget _buildListViewButton(BoxConstraints constraints) {
+    final buttonHeight = constraints.maxHeight < 140 ? 28.0 : 32.0;
+    final fontSize = constraints.maxHeight < 140 ? 10.0 : 11.0;
+    final horizontalPadding = constraints.maxWidth < 400 ? 12.0 : 16.0;
+    
     return Container(
-      height: 32, // Bigger for list view
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      height: buttonHeight,
+      padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 6),
       decoration: const BoxDecoration(
         color: AppColors.yslBlack,
         borderRadius: BorderRadius.zero,
@@ -306,7 +373,7 @@ class YslHomeLocationCard extends StatelessWidget {
           letterSpacing: 0.8,
           fontWeight: FontWeight.w600,
           fontFamily: 'ITC Avant Garde Gothic Pro',
-          fontSize: 11,
+          fontSize: fontSize,
         ),
       ),
     );
