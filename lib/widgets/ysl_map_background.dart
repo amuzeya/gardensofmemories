@@ -13,11 +13,13 @@ import '../constants/assets.dart';
 class YslMapBackground extends StatelessWidget {
   final HomeMapConfig config;
   final List<HomeLocation> locations;
+  final void Function(HomeLocation)? onMarkerTap;
 
   const YslMapBackground({
     super.key,
     required this.config,
     required this.locations,
+    this.onMarkerTap,
   });
 
   @override
@@ -46,13 +48,26 @@ class YslMapBackground extends StatelessWidget {
     final iconPath = _pinAsset(l.pin);
     return Marker(
       point: ll.LatLng(l.lat, l.lng),
-      width: 36,
-      height: 48,
-      child: Center(
-        child: SvgPicture.asset(
-          iconPath,
-          width: 28,
-          height: 28,
+      width: 48,
+      height: 60,
+      child: GestureDetector(
+        onTap: () => onMarkerTap?.call(l),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.2),
+                blurRadius: 8,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: SvgPicture.asset(
+            iconPath,
+            width: 36,
+            height: 36,
+          ),
         ),
       ),
     );
