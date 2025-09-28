@@ -21,7 +21,7 @@ import '../widgets/ysl_exclusive_offer_banner.dart';
 import '../widgets/ysl_location_slider.dart';
 import '../widgets/ysl_location_card.dart';
 import '../widgets/ysl_home_location_card.dart';
-import '../widgets/ysl_map_background.dart';
+import '../widgets/ysl_mapbox_background.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../widgets/ysl_toggle_switch.dart';
 
@@ -138,9 +138,9 @@ class _HomePageScreenState extends State<HomePageScreen> {
     
     return Stack(
       children: [
-        // Full-screen interactive map background
+        // Full-screen YSL-branded Mapbox background
         Positioned.fill(
-          child: YslMapBackground(
+          child: YslMapboxBackground(
             config: data.map, 
             locations: data.locations,
             onMarkerTap: (location) {
