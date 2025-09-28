@@ -87,6 +87,33 @@ class _YslLocationSliderState extends State<YslLocationSlider> {
     _initializePageController();
   }
   
+  @override
+  void didUpdateWidget(YslLocationSlider oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    
+    // Handle external updates to selectedLocationIndex (e.g., from map marker tap)
+    if (widget.selectedLocationIndex != oldWidget.selectedLocationIndex &&
+        widget.selectedLocationIndex != null &&
+        widget.selectedLocationIndex != _currentSelectedIndex) {
+      _currentSelectedIndex = widget.selectedLocationIndex!;
+      
+      // Animate to the new selection if using PageView
+      if (widget.usePageView && _pageController != null) {
+        _pageController!.animateToPage(
+          _currentSelectedIndex,
+          duration: const Duration(milliseconds: 400),
+          curve: Curves.easeInOut,
+        );
+      }
+    }
+    
+    // Reinitialize PageController if parameters changed
+    if (widget.usePageView != oldWidget.usePageView ||
+        widget.viewportFraction != oldWidget.viewportFraction) {
+      _initializePageController();
+    }
+  }
+  
   void _updateResponsiveParams() {
     if (widget.enableResponsive) {
       final screenWidth = MediaQuery.of(context).size.width;

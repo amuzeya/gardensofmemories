@@ -144,13 +144,24 @@ class _HomePageScreenState extends State<HomePageScreen> {
             config: data.map, 
             locations: data.locations,
             onMarkerTap: (location) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Tapped ${location.name} - ${location.type.name.toUpperCase()}'),
-                  backgroundColor: AppColors.yslBlack,
-                  duration: const Duration(seconds: 2),
-                ),
-              );
+              // Find the index of the tapped location in our data
+              final locationIndex = data.locations.indexWhere((loc) => loc.id == location.id);
+              
+              if (locationIndex != -1) {
+                // Update the selected location index to sync the slider
+                setState(() {
+                  _selectedLocationIndex = locationIndex;
+                });
+                
+                // Show feedback with location info
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Selected ${location.name} - ${location.type.name.toUpperCase()}'),
+                    backgroundColor: AppColors.yslBlack,
+                    duration: const Duration(seconds: 1),
+                  ),
+                );
+              }
             },
           ),
         ),
