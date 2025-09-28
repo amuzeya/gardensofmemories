@@ -18,6 +18,7 @@ class YslGoogleMapBackground extends StatefulWidget {
   final HomeMapConfig config;
   final List<HomeLocation> locations;
   final void Function(HomeLocation)? onMarkerTap;
+  final void Function(GoogleMapController)? onMapReady;
   final EdgeInsetsGeometry? padding;
 
   const YslGoogleMapBackground({
@@ -25,6 +26,7 @@ class YslGoogleMapBackground extends StatefulWidget {
     required this.config,
     required this.locations,
     this.onMarkerTap,
+    this.onMapReady,
     this.padding,
   });
 
@@ -278,6 +280,8 @@ class _YslGoogleMapBackgroundState extends State<YslGoogleMapBackground> {
         onMapCreated: (GoogleMapController controller) {
           _controller = controller;
           _isMapReady = true;
+          // Notify parent widget that map is ready
+          widget.onMapReady?.call(controller);
         },
         style: _yslMapStyle, // Apply YSL black and white style directly
         initialCameraPosition: CameraPosition(

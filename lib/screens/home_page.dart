@@ -3,6 +3,7 @@
 
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../data/home_repository.dart';
 import '../mappers/location_mapper.dart';
@@ -17,6 +18,7 @@ import '../models/home_quote.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text.dart';
 import '../utils/responsive_utils.dart';
+import '../utils/map_animation_utils.dart';
 
 import '../widgets/ysl_exclusive_offer_banner.dart';
 import '../widgets/ysl_location_slider.dart';
@@ -84,6 +86,9 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
   
   // Timer for automatic immersive transition
   Timer? _immersiveTimer;
+  
+  // Google Maps controller for cinematic animations
+  GoogleMapController? _mapController;
 
   @override
   void initState() {
@@ -325,6 +330,26 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
     }
   }
   
+  void _animateMapToLocation(List<HomeLocation> locations, int index) {
+    // Only animate if we have a map controller and valid index
+    if (_mapController == null || 
+        index < 0 || 
+        index >= locations.length) {
+      return;
+    }
+    
+    final selectedLocation = locations[index];
+    
+    print('🎯 Initiating cinematic flight to: ${selectedLocation.name}');
+    
+    // Use cinematic multi-stage animation for brand experience
+    MapAnimationUtils.cinematicFlyToLocation(
+      _mapController!,
+      selectedLocation,
+      finalZoom: 17.0, // Close zoom to focus on single location
+    );
+  }
+  
   @override
   void dispose() {
     _immersiveTimer?.cancel();
@@ -433,6 +458,17 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
             child: YslGoogleMapBackground(
               config: data.map, 
               locations: data.locations,
+              onMapReady: (controller) {
+                _mapController = controller;
+                print('Map controller ready for animations');
+                // Automatically fly to first location after map loads
+                Future.delayed(const Duration(milliseconds: 1500), () {
+                  if (data.locations.isNotEmpty) {
+                    print('🚀 Auto-flying to first location: ${data.locations.first.name}');
+                    _animateMapToLocation(data.locations, 0);
+                  }
+                });
+              },
               onMarkerTap: (location) {
                 _onMapInteraction(); // Track interaction
                 
@@ -533,9 +569,20 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
               enableResponsive: true,
               selectedLocationIndex: _selectedLocationIndex,
               onLocationSelected: (index) {
-                setState(() {
-                  _selectedLocationIndex = index;
-                });
+                print('🎯 Slider changed to index: $index');
+                if (index >= 0 && index < data.locations.length) {
+                  final location = data.locations[index];
+                  print('🗺 Selected location: ${location.name} at (${ location.lat}, ${location.lng})');
+                  
+                  setState(() {
+                    _selectedLocationIndex = index;
+                  });
+                  
+                  // Animate map to selected location
+                  _animateMapToLocation(data.locations, index);
+                } else {
+                  print('⚠️ Invalid location index: $index (max: ${data.locations.length - 1})');
+                }
               },
             ),
           ),

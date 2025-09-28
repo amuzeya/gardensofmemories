@@ -301,6 +301,13 @@ class _YslLocationSliderState extends State<YslLocationSlider> {
           controller: _pageController,
           padEnds: false,
           itemCount: widget.locations.length,
+          onPageChanged: (index) {
+            // This is the missing piece! Trigger the callback when sliding
+            setState(() {
+              _currentSelectedIndex = index;
+            });
+            widget.onLocationSelected?.call(index);
+          },
           itemBuilder: (context, index) {
             return Padding(
               padding: EdgeInsets.only(right: widget.cardSpacing),
