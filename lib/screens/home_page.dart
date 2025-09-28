@@ -860,6 +860,18 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
                 },
               ),
             ),
+            
+          // Location bottom sheet overlay (same as map view)
+          if (data.locations.isNotEmpty && _selectedLocationIndex < data.locations.length)
+            YslLocationBottomSheet(
+              location: data.locations[_selectedLocationIndex],
+              isVisible: _showBottomSheet,
+              onClose: () {
+                setState(() {
+                  _showBottomSheet = false;
+                });
+              },
+            ),
         ],
       ),
     );
@@ -1053,12 +1065,42 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
       _selectedLocationIndex = index;
     });
     
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Explore ${location.name}!'),
-        backgroundColor: AppColors.yslBlack,
-        duration: const Duration(seconds: 2),
-      ),
-    );
+    // Get the _HomeData from the FutureBuilder context
+    _future.then((data) {
+      if (_viewToggle == YslToggleOption.list) {
+        // In list view: show bottom sheet immediately for quick access
+        setState(() {
+          _showBottomSheet = true;
+        });
+        
+        // Optional: Also transition to map view after showing bottom sheet
+        // User can tap "Explore" again or close the sheet to see map
+        // Uncomment below lines if you want auto-transition to map:
+        // Future.delayed(const Duration(milliseconds: 2000), () {
+        //   if (mounted) {
+        //     _transitionToView(YslToggleOption.map);
+        //     Future.delayed(const Duration(milliseconds: 600), () {
+        //       if (mounted && index < data.locations.length) {
+        //         _animateMapToLocation(data.locations, index);
+        //       }
+        //     });
+        //   }
+        // });
+      } else {
+        // Already in map view, animate directly
+        if (index < data.locations.length) {
+          _animateMapToLocation(data.locations, index);
+        }
+      }
+    }).catchError((error) {
+      // Fallback: just show a snackbar if data loading fails
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Explore ${location.name}!'),
+          backgroundColor: AppColors.yslBlack,
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    });
   }
 }
