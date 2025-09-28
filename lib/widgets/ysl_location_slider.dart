@@ -36,6 +36,10 @@ class YslLocationSlider extends StatefulWidget {
   final bool enableResponsive;
   final int? selectedLocationIndex;
   final Function(int index)? onLocationSelected;
+  final int unlockedCount;
+  final int? rewardIndex;
+  final Function(int index)? onExplore;
+  final int? pulseIndex;
 
   const YslLocationSlider({
     super.key,
@@ -55,6 +59,10 @@ class YslLocationSlider extends StatefulWidget {
     this.enableResponsive = true,
     this.selectedLocationIndex,
     this.onLocationSelected,
+    this.unlockedCount = 0,
+    this.rewardIndex,
+    this.onExplore,
+    this.pulseIndex,
   });
 
   @override
@@ -302,7 +310,20 @@ class _YslLocationSliderState extends State<YslLocationSlider> {
           padEnds: false,
           itemCount: widget.locations.length,
           onPageChanged: (index) {
-            // This is the missing piece! Trigger the callback when sliding
+            // Locking: prevent navigating to locked items
+            final isReward = widget.rewardIndex != null && index == widget.rewardIndex;
+            final rewardLocked = isReward && widget.unlockedCount < (widget.rewardIndex ?? 0);
+            final isLocked = (!isReward && index > widget.unlockedCount) || rewardLocked;
+            if (isLocked) {
+              // Snap back to previous allowed page
+              Future.microtask(() => _pageController?.animateToPage(
+                    _currentSelectedIndex,
+                    duration: const Duration(milliseconds: 250),
+                    curve: Curves.easeInOut,
+                  ));
+              return;
+            }
+
             setState(() {
               _currentSelectedIndex = index;
             });
@@ -331,8 +352,13 @@ class _YslLocationSliderState extends State<YslLocationSlider> {
     final cardWidth = _responsiveParams?.cardWidth ?? widget.cardWidth;
     final height = _responsiveParams?.height ?? widget.height;
     
+    final isReward = widget.rewardIndex != null && index == widget.rewardIndex;
+    final rewardLocked = isReward && widget.unlockedCount < (widget.rewardIndex ?? 0);
+    final isLocked = (!isReward && index > widget.unlockedCount) || rewardLocked;
+
     return GestureDetector(
       onTap: () {
+        if (isLocked) return; // Ignore taps on locked cards
         _onCardTapped(index);
         widget.onLocationTap?.call();
       },
@@ -344,9 +370,13 @@ class _YslLocationSliderState extends State<YslLocationSlider> {
                 location: location,
                 width: cardWidth,
                 height: height ?? 180,
-                viewType: YslCardViewType.mapView, // Compact for slider
+                viewType: YslCardViewType.mapView,
                 onTap: () => _onCardTapped(index),
                 margin: EdgeInsets.zero,
+                isLocked: isLocked,
+                isReward: isReward,
+                onExplore: () => widget.onExplore?.call(index),
+                shouldPulseExplore: (widget.pulseIndex != null && widget.pulseIndex == index && !isLocked),
               )
             : YslLocationCard(
                 location: location,

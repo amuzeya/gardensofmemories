@@ -293,10 +293,8 @@ class _YslGoogleMapBackgroundState extends State<YslGoogleMapBackground> {
           pinType == 'pinB' ? BitmapDescriptor.hueBlue :
           BitmapDescriptor.hueViolet
         ),
-        infoWindow: InfoWindow(
-          title: location.name.toUpperCase(),
-          snippet: location.address,
-        ),
+        // Disable default Google Maps info window / tooltips
+        infoWindow: const InfoWindow(title: '', snippet: ''),
       );
     }).toSet();
     

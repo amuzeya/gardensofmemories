@@ -94,6 +94,7 @@ flutter:
     - assets/data/home/products.json
     - assets/data/home/quotes.json
     - assets/images/
+    - assets/images/exclusive_offer/main_banner.png
     - assets/images/frame_845083630.png
     - assets/images/pins/pin_a.png
     - assets/images/pins/pin_b.png
@@ -131,18 +132,21 @@ flutter:
     - family: Arial-Regular
       fonts:
         - asset: assets/fonts/Arial/Arial-Regular.ttf
-    - family: ITC Avant Garde Gothic Pro
+    - family: ITCAvantGardeStd-Bk
+      fonts:
+        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Bk.ttf
+    - family: ITCAvantGardeStd-Bold
+      fonts:
+        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Bold.ttf
+    - family: ITCAvantGardeStd-Demi
+      fonts:
+        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Demi.ttf
+    - family: ITCAvantGardeStd-Md
+      fonts:
+        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Md.ttf
+    - family: ITCAvantGardeStd-XLt
       fonts:
         - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-XLt.ttf
-          weight: 200
-        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Bk.ttf
-          weight: 300
-        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Md.ttf
-          weight: 500
-        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Demi.ttf
-          weight: 600
-        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Bold.ttf
-          weight: 700
   
   # Note: Font files need to be manually added to the assets/fonts/ directory
   # See FONTS_SETUP.md for detailed instructions on acquiring these fonts

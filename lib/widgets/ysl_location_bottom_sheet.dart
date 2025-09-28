@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:animations/animations.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text.dart';
 import '../models/home_location.dart';
@@ -39,9 +40,10 @@ class _YslLocationBottomSheetState extends State<YslLocationBottomSheet>
   void initState() {
     super.initState();
     
-    // Slide up animation - more elegant and slower
+    // Slide up animation - smooth and elegant
     _slideController = AnimationController(
-      duration: const Duration(milliseconds: 1500), // Slower for spring elegance
+      duration: const Duration(milliseconds: 1000), // slower entrance
+      reverseDuration: const Duration(milliseconds: 700), // gentle exit
       vsync: this,
     );
     
@@ -56,7 +58,8 @@ class _YslLocationBottomSheetState extends State<YslLocationBottomSheet>
       end: 0.5, // Show at 50% height
     ).animate(CurvedAnimation(
       parent: _slideController,
-      curve: Curves.elasticOut, // Spring-like curve for elegant entrance
+      curve: Curves.easeOutCubic, // Smooth slide up
+      reverseCurve: Curves.easeInCubic,
     ));
     
     _pulseAnimation = Tween<double>(
@@ -205,34 +208,46 @@ class _YslLocationBottomSheetState extends State<YslLocationBottomSheet>
         // Use either animation position or drag position
         final position = widget.isVisible ? _dragPosition : _slideAnimation.value;
         
-        return Positioned(
-          left: 0,
-          right: 0,
-          bottom: -screenHeight * position,
-          height: screenHeight * 0.95, // 95% of screen height
-          child: GestureDetector(
-            onPanUpdate: _onDragUpdate,
-            onPanEnd: _onDragEnd,
-            child: Transform.scale(
-              scale: _dragScale,
-              child: Container(
-                decoration: const BoxDecoration(
-                  color: AppColors.yslWhite,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black26,
-                      blurRadius: 20,
-                      offset: Offset(0, -5),
-                    ),
-                  ],
-                ),
-              child: Column(
-                children: [
-                  // Header with drag handle and close button
+        return Stack(
+          children: [
+            // Full-screen transparent backdrop to allow closing when tapping outside
+            Positioned.fill(
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: widget.onClose,
+                child: Container(color: Colors.transparent),
+              ),
+            ),
+            Positioned(
+              left: 0,
+              right: 0,
+              bottom: -screenHeight * position,
+              height: screenHeight * 0.95, // 95% of screen height
+              child: GestureDetector(
+                onPanUpdate: _onDragUpdate,
+                onPanEnd: _onDragEnd,
+                child: FadeScaleTransition(
+                  animation: CurvedAnimation(parent: _slideController, curve: Curves.easeOutCubic),
+                  child: Transform.scale(
+                    scale: _dragScale,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        color: AppColors.yslWhite,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20),
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 20,
+                            offset: Offset(0, -5),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          // Header with drag handle and close button
                   _buildHeader(),
                   
                   // Location content
@@ -244,7 +259,9 @@ class _YslLocationBottomSheetState extends State<YslLocationBottomSheet>
             ),
           ),
         ),
-        );
+      ),
+            )],
+  );
       },
     );
   }

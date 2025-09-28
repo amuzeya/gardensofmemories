@@ -62,6 +62,9 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
   late Future<_HomeData> _future;
   YslToggleOption _viewToggle = YslToggleOption.map;
   int _selectedLocationIndex = 0;
+  int _unlockedCount = 0; // number of unlocked regular locations (progression)
+  late int _rewardIndex; // index of reward card in slider list
+  bool _pulseFirstExplore = true;
   YslDeviceType? _deviceType;
   
   // Animation controllers for immersive map experience
@@ -82,6 +85,13 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
   late Animation<double> _viewModeFadeIn;
   late Animation<Offset> _viewModeSlideOut;
   late Animation<Offset> _viewModeSlideIn;
+  
+  // Unlock toast animation
+  late AnimationController _unlockToastController;
+  late Animation<double> _unlockToastOpacity;
+  late Animation<Offset> _unlockToastSlide;
+  bool _showUnlockToast = false;
+  String _unlockToastText = 'NEW LOCATION UNLOCKED!';
   
   bool _isImmersiveMode = false;
   bool _hasInteracted = false;
@@ -124,6 +134,19 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
     _viewModeTransitionController = AnimationController(
       duration: const Duration(milliseconds: 600),
       vsync: this,
+    );
+
+    // Unlock toast animations
+    _unlockToastController = AnimationController(
+      duration: const Duration(milliseconds: 800), // slower, more immersive
+      vsync: this,
+    );
+    _unlockToastOpacity = CurvedAnimation(
+      parent: _unlockToastController,
+      curve: Curves.easeOut,
+    );
+    _unlockToastSlide = Tween<Offset>(begin: const Offset(0, -0.1), end: Offset.zero).animate(
+      CurvedAnimation(parent: _unlockToastController, curve: Curves.easeOutCubic),
     );
     
     // Enhanced hero subtitle fade and slide animations
@@ -375,12 +398,14 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
       onCompleted: () {
         // Let user appreciate the location for a moment before showing details
         Future.delayed(const Duration(milliseconds: 1200), () {
-          if (mounted) {
-            print('📝 Elegantly showing bottom sheet for: ${selectedLocation.name}');
-            setState(() {
-              _showBottomSheet = true;
-            });
+          if (!mounted) return;
+          // Do not auto-open for first location; pulse Explore instead
+          if (index == 0 && _unlockedCount == 0) {
+            setState(() { _pulseFirstExplore = true; });
+            return;
           }
+          print('📝 Elegantly showing bottom sheet for: ${selectedLocation.name}');
+          setState(() { _showBottomSheet = true; });
         });
       },
     );
@@ -392,6 +417,7 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
     _heroFadeController.dispose();
     _toggleTransitionController.dispose();
     _viewModeTransitionController.dispose();
+    _unlockToastController.dispose();
     super.dispose();
   }
 
@@ -446,9 +472,25 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
     _deviceType = YslResponsiveUtils.getDeviceType(screenWidth);
     
     // Map locations to widget data
-    final yslLocations = data.locations
+    final baseLocations = data.locations
         .map(toYslLocationData)
         .toList(growable: false);
+
+    // Append reward as a pseudo-location at the end
+    final reward = YslLocationData(
+      name: 'YSL LIBRE FRAGRANCE',
+      address: 'Complete the journey to unlock your reward.',
+      city: null,
+      distance: null,
+      hours: null,
+      phone: null,
+      imagePath: 'assets/images/exclusive_offer/main_banner.png',
+      isOpen: true,
+      type: LocationType.experience,
+      pinVariation: PinVariation.pinA,
+    );
+    final yslLocations = [...baseLocations, reward];
+    _rewardIndex = yslLocations.length - 1;
 
     return Stack(
       children: [
@@ -526,6 +568,8 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
                 final locationIndex = data.locations.indexWhere((loc) => loc.id == location.id);
                 
                 if (locationIndex != -1) {
+                  // Locking rule: ignore taps on locked markers
+                  if (locationIndex > _unlockedCount) return;
                   // Update the selected location index to sync the slider
                   setState(() {
                     _selectedLocationIndex = locationIndex;
@@ -589,6 +633,49 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
           ),
         ),
 
+        // Unlock toast overlay (above header and slider)
+        if (_showUnlockToast)
+          Positioned(
+            bottom: (sliderParams.height ?? 165) + 16,
+            left: 0,
+            right: 0,
+            child: SlideTransition(
+              position: _unlockToastSlide,
+              child: FadeTransition(
+                opacity: _unlockToastOpacity,
+                child: Center(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: AppColors.yslWhite,
+                      border: Border.all(color: AppColors.yslBlack, width: 1),
+                      borderRadius: BorderRadius.zero,
+                      boxShadow: [
+                        BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 8, offset: const Offset(0, 2)),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.lock_open, color: AppColors.yslBlack, size: 16),
+                        const SizedBox(width: 8),
+                        Text(
+                          _unlockToastText,
+                          style: AppText.bodyMedium.copyWith(
+                            color: AppColors.yslBlack,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 1.0,
+                            fontFamily: 'ITC Avant Garde Gothic Pro',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        SizedBox(height: 15,),
         // Sticky floating location slider at bottom
         Positioned(
           left: 0,
@@ -610,20 +697,27 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
               viewportFraction: sliderParams.viewportFraction,
               enableResponsive: true,
               selectedLocationIndex: _selectedLocationIndex,
+              unlockedCount: _unlockedCount,
+              rewardIndex: _rewardIndex,
+              onExplore: (index) => _onExploreFromCard(index),
+              pulseIndex: (_unlockedCount == 0 && _selectedLocationIndex == 0 && _pulseFirstExplore) ? 0 : null,
               onLocationSelected: (index) {
                 print('🎯 Slider changed to index: $index');
-                if (index >= 0 && index < data.locations.length) {
+                final isReward = index == _rewardIndex;
+final rewardLocked = _unlockedCount < data.locations.length;
+                final isLocked = (!isReward && index > _unlockedCount) || (isReward && rewardLocked);
+                if (isLocked) return;
+
+if (!isReward && index >= 0 && index < data.locations.length) {
                   final location = data.locations[index];
                   print('🗺 Selected location: ${location.name} at (${ location.lat}, ${location.lng})');
-                  
-                  setState(() {
-                    _selectedLocationIndex = index;
-                  });
-                  
-                  // Animate map to selected location
+                  setState(() { _selectedLocationIndex = index; });
                   _animateMapToLocation(data.locations, index);
-                } else {
-                  print('⚠️ Invalid location index: $index (max: ${data.locations.length - 1})');
+                } else if (isReward) {
+                  setState(() {
+                    _selectedLocationIndex = _rewardIndex;
+                    _showBottomSheet = true;
+                  });
                 }
               },
             ),
@@ -649,17 +743,23 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
             ),
           ),
           
-        // Location bottom sheet overlay
-        if (data.locations.isNotEmpty && _selectedLocationIndex < data.locations.length)
+        // Location bottom sheet overlay for regular locations
+        if (_selectedLocationIndex < _rewardIndex)
           YslLocationBottomSheet(
             location: data.locations[_selectedLocationIndex],
             isVisible: _showBottomSheet,
             onClose: () {
-              setState(() {
-                _showBottomSheet = false;
-              });
+              // Smooth sequence: close -> unlock -> toast -> focus next
+              setState(() { _showBottomSheet = false; });
+              if (_unlockedCount == _selectedLocationIndex) {
+                _unlockedCount++;
+                _runUnlockSequence(data, _unlockedCount);
+              }
             },
           ),
+        // Reward bottom sheet (black)
+        if (_showBottomSheet && _selectedLocationIndex == _rewardIndex)
+          _buildRewardBottomSheet(),
       ],
     );
   }
@@ -816,7 +916,7 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
             children: [
               // Figma-exact Offer Banner at very top
               YslExclusiveOfferBannerVariants.figmaOffer(
-                offerText: 'EXCLUSIVE OFFER AVAILABLE',
+                offerText: 'UNLOCK THE LOVE STORY FOR AN EXCLUSIVE OFFER',
                 onTap: () {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
@@ -888,9 +988,13 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
               location: data.locations[_selectedLocationIndex],
               isVisible: _showBottomSheet,
               onClose: () {
-                setState(() {
-                  _showBottomSheet = false;
-                });
+                // Close and unlock next location (same logic as map view)
+                setState(() { _showBottomSheet = false; });
+                if (_selectedLocationIndex < _rewardIndex &&
+                    _unlockedCount == _selectedLocationIndex) {
+                  _unlockedCount++;
+                  _runUnlockSequence(data, _unlockedCount);
+                }
               },
             ),
         ],
@@ -1041,6 +1145,9 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
       separatorBuilder: (context, index) => SizedBox(height: listParams.itemSpacing),
       itemBuilder: (context, index) {
         final location = yslLocations[index];
+        final isReward = index == _rewardIndex;
+        final rewardLocked = _unlockedCount < _rewardIndex;
+        final isLocked = (!isReward && index > _unlockedCount) || (isReward && rewardLocked);
         
         return YslHomeLocationCard(
           location: location,
@@ -1049,7 +1156,16 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
           height: listParams.itemHeight,
           width: listParams.maxWidth,
           margin: EdgeInsets.zero,
-          onTap: () => _onLocationCardTapped(index, location),
+          isLocked: isLocked,
+          isReward: isReward,
+          onTap: () {
+            if (isLocked) return;
+            _onLocationCardTapped(index, location);
+          },
+          onExplore: () {
+            if (isLocked) return;
+            _onLocationCardTapped(index, location);
+          },
         );
       },
     );
@@ -1067,6 +1183,9 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
       itemCount: yslLocations.length,
       itemBuilder: (context, index) {
         final location = yslLocations[index];
+        final isReward = index == _rewardIndex;
+        final rewardLocked = _unlockedCount < _rewardIndex;
+        final isLocked = (!isReward && index > _unlockedCount) || (isReward && rewardLocked);
         
         return YslHomeLocationCard(
           location: location,
@@ -1075,7 +1194,16 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
           height: listParams.itemHeight,
           width: listParams.maxWidth,
           margin: EdgeInsets.zero,
-          onTap: () => _onLocationCardTapped(index, location),
+          isLocked: isLocked,
+          isReward: isReward,
+          onTap: () {
+            if (isLocked) return;
+            _onLocationCardTapped(index, location);
+          },
+          onExplore: () {
+            if (isLocked) return;
+            _onLocationCardTapped(index, location);
+          },
         );
       },
     );
@@ -1122,6 +1250,122 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
           duration: const Duration(seconds: 2),
         ),
       );
+    });
+  }
+
+  void _runUnlockSequence(_HomeData data, int nextIndex) async {
+    if (nextIndex >= _rewardIndex) {
+      // Reward unlocked
+      _unlockToastText = 'REWARD UNLOCKED!';
+    } else {
+      _unlockToastText = 'NEW LOCATION UNLOCKED!';
+    }
+    setState(() { _showUnlockToast = true; });
+    _unlockToastController.forward(from: 0);
+
+    // Give the toast more time before focusing the next location
+    await Future.delayed(const Duration(milliseconds: 1200));
+
+    if (mounted) {
+      // Update selected index to next and animate map
+      setState(() { _selectedLocationIndex = nextIndex; });
+      if (nextIndex < data.locations.length) {
+        _animateMapToLocation(data.locations, nextIndex);
+      }
+    }
+
+    // Let the toast stay visible longer, then fade out slowly
+    await Future.delayed(const Duration(milliseconds: 2400));
+    if (mounted) {
+      _unlockToastController.reverse();
+      await Future.delayed(const Duration(milliseconds: 700));
+      if (mounted) setState(() { _showUnlockToast = false; });
+    }
+  }
+
+  // Simple black reward bottom sheet
+  Widget _buildRewardBottomSheet() {
+    return Positioned(
+      left: 0,
+      right: 0,
+      bottom: 0,
+      child: Container(
+        height: MediaQuery.of(context).size.height * 0.6,
+        decoration: const BoxDecoration(
+          color: AppColors.yslBlack,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(16),
+            topRight: Radius.circular(16),
+          ),
+        ),
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Spacer(),
+                GestureDetector(
+                  onTap: () { setState(() { _showBottomSheet = false; }); },
+                  child: const Icon(Icons.close, color: AppColors.yslWhite, size: 20),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'YSL LIBRE FRAGRANCE',
+              style: AppText.titleLarge.copyWith(
+                color: AppColors.yslWhite,
+                fontWeight: FontWeight.w700,
+                fontSize: 22,
+                fontFamily: 'ITC Avant Garde Gothic Pro',
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'Complete the journey to unlock your reward.',
+              style: AppText.bodyMedium.copyWith(
+                color: AppColors.yslWhite.withOpacity(0.7),
+                fontSize: 14,
+                fontFamily: 'ITC Avant Garde Gothic Pro',
+              ),
+            ),
+            const Spacer(),
+            SizedBox(
+              width: double.infinity,
+              child: Container(
+                height: 44,
+                color: AppColors.yslWhite,
+                child: Center(
+                  child: Text(
+                    'UNLOCK MY REWARD',
+                    style: AppText.bodyMedium.copyWith(
+                      color: AppColors.yslBlack,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 1.0,
+                      fontFamily: 'ITC Avant Garde Gothic Pro',
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _onExploreFromCard(int index) {
+    // Ignore if locked
+    final isReward = index == _rewardIndex;
+    final rewardLocked = _unlockedCount < _rewardIndex;
+    final isLocked = (!isReward && index > _unlockedCount) || (isReward && rewardLocked);
+    if (isLocked) return;
+
+    setState(() {
+      _selectedLocationIndex = index;
+      _showBottomSheet = true;
+      if (index == 0) _pulseFirstExplore = false;
     });
   }
 }

@@ -3,6 +3,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'dart:ui' as ui;
 
 import '../theme/app_colors.dart';
 import '../theme/app_text.dart';
@@ -10,7 +11,7 @@ import 'ysl_location_card.dart';
 
 enum YslCardViewType { mapView, listView }
 
-class YslHomeLocationCard extends StatelessWidget {
+class YslHomeLocationCard extends StatefulWidget {
   final YslLocationData location;
   final VoidCallback? onTap;
   final double width;
@@ -20,6 +21,10 @@ class YslHomeLocationCard extends StatelessWidget {
   final YslCardViewType viewType;
   final int? maxTitleLines; // Configurable title line limit
   final int? maxDescriptionLines; // Configurable description line limit
+  final bool isLocked;
+  final bool isReward;
+  final VoidCallback? onExplore;
+  final bool shouldPulseExplore;
 
   const YslHomeLocationCard({
     super.key,
@@ -32,19 +37,62 @@ class YslHomeLocationCard extends StatelessWidget {
     this.viewType = YslCardViewType.mapView,
     this.maxTitleLines,
     this.maxDescriptionLines,
+    this.isLocked = false,
+    this.isReward = false,
+    this.onExplore,
+    this.shouldPulseExplore = false,
   });
+
+  @override
+  State<YslHomeLocationCard> createState() => _YslHomeLocationCardState();
+}
+
+class _YslHomeLocationCardState extends State<YslHomeLocationCard>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _pulseController;
+
+  @override
+  void initState() {
+    super.initState();
+    _pulseController = AnimationController(
+      duration: const Duration(milliseconds: 900),
+      vsync: this,
+      lowerBound: 0.95,
+      upperBound: 1.05,
+    );
+    if (widget.shouldPulseExplore && !widget.isLocked) {
+      _pulseController.repeat(reverse: true);
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant YslHomeLocationCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.shouldPulseExplore && !widget.isLocked) {
+      if (!_pulseController.isAnimating) _pulseController.repeat(reverse: true);
+    } else {
+      _pulseController.stop();
+      _pulseController.value = 1.0;
+    }
+  }
+
+  @override
+  void dispose() {
+    _pulseController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+onTap: widget.onTap,
       child: Container(
-        width: width,
-        height: height,
-        margin: margin ?? const EdgeInsets.symmetric(vertical: 8),
+width: widget.width,
+height: widget.height,
+margin: widget.margin ?? const EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
-          color: AppColors.yslWhite,
-          border: Border.all(color: Colors.grey.shade300, width: 1),
+color: widget.isReward ? AppColors.yslBlack : AppColors.yslWhite,
+border: Border.all(color: widget.isReward ? AppColors.yslBlack : Colors.grey.shade300, width: 1),
           borderRadius: BorderRadius.zero,
           boxShadow: [
             BoxShadow(
@@ -56,9 +104,9 @@ class YslHomeLocationCard extends StatelessWidget {
         ),
         child: LayoutBuilder(
           builder: (context, constraints) {
-            return isVertical 
+return widget.isVertical
                 ? _buildVerticalLayout(constraints) 
-                : (viewType == YslCardViewType.mapView 
+                : (widget.viewType == YslCardViewType.mapView
                     ? _buildMapViewLayout(constraints)
                     : _buildListViewLayout(constraints));
           },
@@ -92,7 +140,7 @@ class YslHomeLocationCard extends StatelessWidget {
                 if (constraints.maxHeight > 80) // Only show spacing if height allows
                   SizedBox(height: constraints.maxHeight > 90 ? 8.0 : 4.0),
                 // Compact explore button - no description in map view
-                _buildExploreButton(constraints),
+                widget.isReward ? _buildRewardButton(constraints) : _buildExploreButton(constraints),
               ],
             ),
           ),
@@ -115,7 +163,7 @@ class YslHomeLocationCard extends StatelessWidget {
     final buttonSpacing = constraints.maxHeight < 140 ? 8.0 : 12.0;
     
     // Calculate max lines for description based on height
-    final descriptionMaxLines = maxDescriptionLines ?? 
+    final descriptionMaxLines = widget.maxDescriptionLines ?? 
         (constraints.maxHeight < 140 ? 2 : (constraints.maxHeight < 180 ? 3 : 4));
     
     return Row(
@@ -133,14 +181,14 @@ class YslHomeLocationCard extends StatelessWidget {
                 // Location description with responsive styling
                 if (constraints.maxHeight > 120) // Only show description if height allows
                   Flexible(
-                    child: Text(
-                      location.address,
+                  child: Text(
+widget.location.address,
                       style: AppText.bodySmall.copyWith(
-                        color: AppColors.yslBlack.withValues(alpha: 0.65), // Lighter text
+color: widget.isReward ? AppColors.yslWhite.withValues(alpha: 0.7) : AppColors.yslBlack.withValues(alpha: 0.65),
                         height: 1.3,
                         fontSize: _getDescriptionFontSize(constraints),
                         fontFamily: 'ITC Avant Garde Gothic Pro',
-                        fontWeight: FontWeight.w300, // Even lighter font weight
+                        fontWeight: FontWeight.w300,
                       ),
                       maxLines: descriptionMaxLines,
                       overflow: TextOverflow.ellipsis,
@@ -150,7 +198,7 @@ class YslHomeLocationCard extends StatelessWidget {
                 // Explore button with proper spacing
                 Align(
                   alignment: Alignment.centerLeft,
-                  child: _buildListViewButton(constraints),
+child: widget.isReward ? _buildRewardListButton(constraints) : _buildListViewButton(constraints),
                 ),
               ],
             ),
@@ -167,7 +215,7 @@ class YslHomeLocationCard extends StatelessWidget {
   }
   
   double _getTitleFontSize(BoxConstraints constraints) {
-    if (viewType == YslCardViewType.listView) {
+if (widget.viewType == YslCardViewType.listView) {
       if (constraints.maxHeight < 120) return 13;
       if (constraints.maxHeight < 140) return 14;
       return 15;
@@ -187,9 +235,9 @@ class YslHomeLocationCard extends StatelessWidget {
         SizedBox(
           height: 120,
           child: ClipRect(
-            child: location.imagePath != null
+child: widget.location.imagePath != null
                 ? Image.asset(
-                    location.imagePath!,
+widget.location.imagePath!,
                     fit: BoxFit.cover,
                     width: double.infinity,
                     height: 120,
@@ -218,14 +266,14 @@ class YslHomeLocationCard extends StatelessWidget {
                 // Description text
                 Expanded(
                   child: Text(
-                    location.address,
+                    widget.location.address,
                     style: AppText.bodySmall.copyWith(
                       color: AppColors.yslBlack.withValues(alpha: 0.65), // Lighter text
                       height: 1.3,
                       fontFamily: 'ITC Avant Garde Gothic Pro',
                       fontWeight: FontWeight.w300, // Lighter font weight
                     ),
-                    maxLines: maxDescriptionLines ?? 3,
+                    maxLines: widget.maxDescriptionLines ?? 3,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
@@ -242,26 +290,53 @@ class YslHomeLocationCard extends StatelessWidget {
   Widget _buildImage(BoxConstraints constraints) {
     final imageSize = constraints.maxHeight;
     return SizedBox(
-      width: imageSize, // square-ish image block
+      width: imageSize,
       height: imageSize,
-      child: ClipRect(
-        child: location.imagePath != null
-            ? Image.asset(
-                location.imagePath!,
-                fit: BoxFit.cover,
-                width: imageSize,
-                height: imageSize,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    color: Colors.grey.shade200,
-                    child: const Icon(Icons.image, color: AppColors.yslBlack),
-                  );
-                },
-              )
-            : Container(
-                color: Colors.grey.shade200,
-                child: const Icon(Icons.image, color: AppColors.yslBlack),
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          ClipRect(
+            child: TweenAnimationBuilder<double>(
+              tween: Tween<double>(begin: 0.0, end: widget.isLocked ? 6.0 : 0.0),
+              duration: const Duration(milliseconds: 400),
+              builder: (context, sigma, child) {
+                return ImageFiltered(
+imageFilter: ui.ImageFilter.blur(sigmaX: sigma, sigmaY: sigma),
+                  child: child,
+                );
+              },
+child: widget.location.imagePath != null
+                  ? Image.asset(
+widget.location.imagePath!,
+                      fit: BoxFit.cover,
+                      width: imageSize,
+                      height: imageSize,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Container(
+                          color: Colors.grey.shade200,
+                          child: const Icon(Icons.image, color: AppColors.yslBlack),
+                        );
+                      },
+                    )
+                  : Container(
+                      color: Colors.grey.shade200,
+                      child: const Icon(Icons.image, color: AppColors.yslBlack),
+                    ),
+            ),
+          ),
+if (widget.isLocked)
+            Center(
+              child: Container(
+                width: 28,
+                height: 28,
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.85),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(Icons.lock, color: Colors.black, size: 16),
               ),
+            ),
+        ],
       ),
     );
   }
@@ -269,33 +344,33 @@ class YslHomeLocationCard extends StatelessWidget {
   Widget _buildTitleRow(BoxConstraints constraints) {
     // Responsive title sizing based on constraints and view type
     final titleFontSize = _getTitleFontSize(constraints);
-    final titleStyle = viewType == YslCardViewType.listView
+final titleStyle = widget.viewType == YslCardViewType.listView
         ? AppText.titleLarge.copyWith(
-            color: AppColors.yslBlack,
+color: widget.isReward ? AppColors.yslWhite : AppColors.yslBlack,
             fontWeight: FontWeight.w700,
             fontSize: titleFontSize,
             fontFamily: 'ITC Avant Garde Gothic Pro',
           )
         : AppText.titleLarge.copyWith(
-            color: AppColors.yslBlack,
+            color: widget.isReward ? AppColors.yslWhite : AppColors.yslBlack,
             fontWeight: FontWeight.w600,
             fontSize: titleFontSize,
             fontFamily: 'ITC Avant Garde Gothic Pro',
           );
     
-    final titleMaxLines = maxTitleLines ?? 
+final titleMaxLines = widget.maxTitleLines ??
         (constraints.maxHeight < 100 ? 1 : (constraints.maxWidth < 300 ? 1 : 2));
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // SVG pin icon (primary) with circular badge fallback
-        _buildPinIcon(),
-        const SizedBox(width: 12),
+        // SVG pin icon (hidden for reward card)
+if (!widget.isReward) _buildPinIcon(),
+if (!widget.isReward) const SizedBox(width: 12),
         // Title
         Expanded(
           child: Text(
-            location.name.toUpperCase(),
+widget.location.name.toUpperCase(),
             style: titleStyle,
             maxLines: titleMaxLines,
             overflow: TextOverflow.ellipsis,
@@ -336,22 +411,28 @@ class YslHomeLocationCard extends StatelessWidget {
     return Align(
       alignment: Alignment.centerLeft,
       child: IntrinsicWidth(
-        child: Container(
-          height: buttonHeight,
-          padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 4),
-          decoration: const BoxDecoration(
-            color: AppColors.yslBlack,
-            borderRadius: BorderRadius.zero,
-          ),
-          child: Center(
-            child: Text(
-              'EXPLORE',
-              style: AppText.bodySmall.copyWith(
-                color: AppColors.yslWhite,
-                letterSpacing: 0.8,
-                fontWeight: FontWeight.w600,
-                fontFamily: 'ITC Avant Garde Gothic Pro',
-                fontSize: fontSize,
+        child: GestureDetector(
+          onTap: widget.isLocked ? null : widget.onExplore,
+          child: ScaleTransition(
+            scale: widget.shouldPulseExplore && !widget.isLocked ? _pulseController : AlwaysStoppedAnimation(1.0),
+            child: Container(
+              height: buttonHeight,
+              padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 4),
+              decoration: const BoxDecoration(
+                color: AppColors.yslBlack,
+                borderRadius: BorderRadius.zero,
+              ),
+              child: Center(
+                child: Text(
+                  'EXPLORE',
+                  style: AppText.bodySmall.copyWith(
+                    color: AppColors.yslWhite,
+                    letterSpacing: 0.8,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'ITC Avant Garde Gothic Pro',
+                    fontSize: fontSize,
+                  ),
+                ),
               ),
             ),
           ),
@@ -368,22 +449,99 @@ class YslHomeLocationCard extends StatelessWidget {
     return Align(
       alignment: Alignment.centerLeft,
       child: IntrinsicWidth(
-        child: Container(
-          height: buttonHeight,
-          padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 0), // Remove bottom padding
-          decoration: const BoxDecoration(
-            color: AppColors.yslBlack,
-            borderRadius: BorderRadius.zero,
+        child: GestureDetector(
+          onTap: widget.isLocked ? null : widget.onExplore,
+          child: ScaleTransition(
+            scale: widget.shouldPulseExplore && !widget.isLocked ? _pulseController : AlwaysStoppedAnimation(1.0),
+            child: Container(
+              height: buttonHeight,
+              padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 0), // Remove bottom padding
+              decoration: const BoxDecoration(
+                color: AppColors.yslBlack,
+                borderRadius: BorderRadius.zero,
+              ),
+              child: Center( // Center the text in the container
+                child: Text(
+                  'EXPLORE',
+                  style: AppText.bodySmall.copyWith(
+                    color: AppColors.yslWhite,
+                    letterSpacing: 0.8,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'ITC Avant Garde Gothic Pro',
+                    fontSize: fontSize,
+                  ),
+                ),
+              ),
+            ),
           ),
-          child: Center( // Center the text in the container
-            child: Text(
-              'EXPLORE',
-              style: AppText.bodySmall.copyWith(
-                color: AppColors.yslWhite,
-                letterSpacing: 0.8,
-                fontWeight: FontWeight.w600,
-                fontFamily: 'ITC Avant Garde Gothic Pro',
-                fontSize: fontSize,
+        ),
+      ),
+    );
+  }
+
+  // Reward buttons (white background, black text)
+  Widget _buildRewardButton(BoxConstraints constraints) {
+    final buttonHeight = constraints.maxHeight < 90 ? 24.0 : 28.0;
+    final fontSize = constraints.maxHeight < 90 ? 9.0 : 10.0;
+    final horizontalPadding = constraints.maxWidth < 300 ? 8.0 : 12.0;
+
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: IntrinsicWidth(
+        child: GestureDetector(
+          onTap: widget.isLocked ? null : widget.onExplore,
+          child: Container(
+            height: buttonHeight,
+            padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 4),
+            decoration: const BoxDecoration(
+              color: AppColors.yslWhite,
+              borderRadius: BorderRadius.zero,
+            ),
+            child: Center(
+              child: Text(
+                'UNLOCK MY REWARD',
+                style: AppText.bodySmall.copyWith(
+                  color: AppColors.yslBlack,
+                  letterSpacing: 0.8,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'ITC Avant Garde Gothic Pro',
+                  fontSize: fontSize,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRewardListButton(BoxConstraints constraints) {
+    final buttonHeight = constraints.maxHeight < 140 ? 28.0 : 32.0;
+    final fontSize = constraints.maxHeight < 140 ? 10.0 : 11.0;
+    final horizontalPadding = constraints.maxWidth < 400 ? 12.0 : 16.0;
+
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: IntrinsicWidth(
+        child: GestureDetector(
+          onTap: widget.isLocked ? null : widget.onExplore,
+          child: Container(
+            height: buttonHeight,
+            padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 0),
+            decoration: const BoxDecoration(
+              color: AppColors.yslWhite,
+              borderRadius: BorderRadius.zero,
+            ),
+            child: Center(
+              child: Text(
+                'UNLOCK MY REWARD',
+                style: AppText.bodySmall.copyWith(
+                  color: AppColors.yslBlack,
+                  letterSpacing: 0.8,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'ITC Avant Garde Gothic Pro',
+                  fontSize: fontSize,
+                ),
               ),
             ),
           ),
@@ -408,7 +566,7 @@ class YslHomeLocationCard extends StatelessWidget {
 
   // ignore: unused_element
   String _getPinLetter() {
-    switch (location.pinVariation) {
+    switch (widget.location.pinVariation) {
       case PinVariation.pinA:
         return 'A';
       case PinVariation.pinB:
@@ -419,7 +577,7 @@ class YslHomeLocationCard extends StatelessWidget {
   }
 
   String _getPinAssetPath() {
-    switch (location.pinVariation) {
+    switch (widget.location.pinVariation) {
       case PinVariation.pinA:
         return 'assets/svgs/icons/pin_a.svg';
       case PinVariation.pinB:

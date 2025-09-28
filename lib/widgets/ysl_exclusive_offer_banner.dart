@@ -326,7 +326,7 @@ class YslExclusiveOfferBannerVariants {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
               image: const DecorationImage(
-                image: AssetImage('assets/images/embrace.png'),
+                image: AssetImage('assets/images/exclusive_offer/main_banner.png'),
                 fit: BoxFit.cover,
               ),
             ),

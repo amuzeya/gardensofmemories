@@ -15,6 +15,7 @@ class AssetsRes {
   static const String OFFERS = 'assets/data/home/offers.json';
   static const String PRODUCTS = 'assets/data/home/products.json';
   static const String QUOTES = 'assets/data/home/quotes.json';
+  static const String MAIN_BANNER = 'assets/images/exclusive_offer/main_banner.png';
   static const String FRAME_845083630 = 'assets/images/frame_845083630.png';
   static const String PIN_A = 'assets/images/pins/pin_a.png';
   static const String PIN_B = 'assets/images/pins/pin_b.png';
@@ -29,6 +30,6 @@ class AssetsRes {
   static const String PINC = 'assets/svgs/icons/pinC.png';
   static const String PINC_WHITE = 'assets/svgs/icons/pinC_white.png';
   static const String PIND_WHITE = 'assets/svgs/icons/pinD_white.png';
-  static const String PIN_A = 'assets/svgs/icons/pin_a.svg';
+  static const String PIN_A_SVG = 'assets/svgs/icons/pin_a.svg';
   static const String PIN_ARRIVE = 'assets/svgs/icons/pin_arrive.svg';
 }
