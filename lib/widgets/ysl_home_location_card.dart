@@ -92,10 +92,7 @@ class YslHomeLocationCard extends StatelessWidget {
                 if (constraints.maxHeight > 80) // Only show spacing if height allows
                   SizedBox(height: constraints.maxHeight > 90 ? 8.0 : 4.0),
                 // Compact explore button - no description in map view
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: _buildExploreButton(constraints),
-                ),
+                _buildExploreButton(constraints),
               ],
             ),
           ),
@@ -336,22 +333,27 @@ class YslHomeLocationCard extends StatelessWidget {
     final fontSize = constraints.maxHeight < 90 ? 9.0 : 10.0;
     final horizontalPadding = constraints.maxWidth < 300 ? 8.0 : 12.0;
     
-    return Container(
-      height: buttonHeight,
-      padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 4),
-      decoration: const BoxDecoration(
-        color: AppColors.yslBlack,
-        borderRadius: BorderRadius.zero,
-      ),
-      child: Center(
-        child: Text(
-          'EXPLORE',
-          style: AppText.bodySmall.copyWith(
-            color: AppColors.yslWhite,
-            letterSpacing: 0.8,
-            fontWeight: FontWeight.w600,
-            fontFamily: 'ITC Avant Garde Gothic Pro',
-            fontSize: fontSize,
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: IntrinsicWidth(
+        child: Container(
+          height: buttonHeight,
+          padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 4),
+          decoration: const BoxDecoration(
+            color: AppColors.yslBlack,
+            borderRadius: BorderRadius.zero,
+          ),
+          child: Center(
+            child: Text(
+              'EXPLORE',
+              style: AppText.bodySmall.copyWith(
+                color: AppColors.yslWhite,
+                letterSpacing: 0.8,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'ITC Avant Garde Gothic Pro',
+                fontSize: fontSize,
+              ),
+            ),
           ),
         ),
       ),
@@ -363,21 +365,28 @@ class YslHomeLocationCard extends StatelessWidget {
     final fontSize = constraints.maxHeight < 140 ? 10.0 : 11.0;
     final horizontalPadding = constraints.maxWidth < 400 ? 12.0 : 16.0;
     
-    return Container(
-      height: buttonHeight,
-      padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 6),
-      decoration: const BoxDecoration(
-        color: AppColors.yslBlack,
-        borderRadius: BorderRadius.zero,
-      ),
-      child: Text(
-        'EXPLORE',
-        style: AppText.bodySmall.copyWith(
-          color: AppColors.yslWhite,
-          letterSpacing: 0.8,
-          fontWeight: FontWeight.w600,
-          fontFamily: 'ITC Avant Garde Gothic Pro',
-          fontSize: fontSize,
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: IntrinsicWidth(
+        child: Container(
+          height: buttonHeight,
+          padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 0), // Remove bottom padding
+          decoration: const BoxDecoration(
+            color: AppColors.yslBlack,
+            borderRadius: BorderRadius.zero,
+          ),
+          child: Center( // Center the text in the container
+            child: Text(
+              'EXPLORE',
+              style: AppText.bodySmall.copyWith(
+                color: AppColors.yslWhite,
+                letterSpacing: 0.8,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'ITC Avant Garde Gothic Pro',
+                fontSize: fontSize,
+              ),
+            ),
+          ),
         ),
       ),
     );

@@ -750,6 +750,9 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
                     : _buildHeroHeaderContent(context),
               ),
 
+              // Add spacing to prevent toggle overlap when in immersive mode
+              if (_isImmersiveMode) const SizedBox(height: 60),
+              
               // Scrollable list/grid of locations using responsive layout
               Expanded(
                 child: listParams.crossAxisCount > 1
