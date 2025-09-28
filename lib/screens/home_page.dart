@@ -18,6 +18,7 @@ import '../theme/app_text.dart';
 
 import '../widgets/ysl_exclusive_offer_banner.dart';
 import '../widgets/ysl_location_slider.dart';
+import '../widgets/ysl_location_card.dart';
 import '../widgets/ysl_map_background.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../widgets/ysl_toggle_switch.dart';
@@ -111,6 +112,15 @@ class _HomePageScreenState extends State<HomePageScreen> {
         .map(toYslLocationData)
         .toList(growable: false);
 
+    // Conditional rendering based on toggle state
+    if (_viewToggle == YslToggleOption.map) {
+      return _buildMapView(data, yslLocations);
+    } else {
+      return _buildListView(data, yslLocations);
+    }
+  }
+
+  Widget _buildMapView(_HomeData data, List<YslLocationData> yslLocations) {
     return Stack(
       children: [
         // Full-screen interactive map background
@@ -149,7 +159,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
               
               // Hero header with semi-transparent background
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: AppColors.yslWhite.withValues(alpha: 0.95),
@@ -179,37 +189,145 @@ class _HomePageScreenState extends State<HomePageScreen> {
           bottom: 0,
           child: SafeArea(
             top: false,
-            child: Container(
-              margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.95),
-                border: Border.all(color: Colors.black12, width: 1),
-                borderRadius: BorderRadius.zero,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.08),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: YslLocationSlider(
-                locations: yslLocations,
-                height: 100,
-                cardWidth: 200,
-                cardSpacing: 12,
-                showNavigationArrows: false,
-                backgroundColor: Colors.transparent,
-                showCardBorders: false,
-                useHomeStyle: true,
-                usePageView: true,
-                viewportFraction: 0.86,
-              ),
+            child: YslLocationSlider(
+              locations: yslLocations,
+              height: 100,
+              cardWidth: 200,
+              cardSpacing: 12,
+              showNavigationArrows: false,
+              backgroundColor: Colors.transparent,
+              showCardBorders: false,
+              useHomeStyle: true,
+              usePageView: true,
+              viewportFraction: 0.86,
             ),
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildListView(_HomeData data, List<YslLocationData> yslLocations) {
+    return SafeArea(
+      child: Column(
+        children: [
+          // Figma-exact Offer Banner at very top
+          YslExclusiveOfferBannerVariants.figmaOffer(
+            offerText: 'EXCLUSIVE OFFER AVAILABLE',
+            onTap: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Figma offer banner tapped!'),
+                  backgroundColor: AppColors.yslBlack,
+                ),
+              );
+            },
+          ),
+          
+          // Hero header (no background since no map)
+          Container(
+            padding: const EdgeInsets.all(20),
+            child: _buildHeroHeaderContent(),
+          ),
+
+          // Scrollable list of locations
+          Expanded(
+            child: ListView.separated(
+              padding: const EdgeInsets.all(16),
+              itemCount: yslLocations.length,
+              separatorBuilder: (context, index) => const SizedBox(height: 16),
+              itemBuilder: (context, index) {
+                final location = yslLocations[index];
+                return Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: AppColors.yslWhite,
+                    border: Border.all(color: Colors.black12, width: 1),
+                    borderRadius: BorderRadius.zero,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.05),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Location name
+                      Text(
+                        location.name,
+                        style: AppText.titleMedium.copyWith(
+                          color: AppColors.yslBlack,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      
+                      // Location details
+                      Row(
+                        children: [
+                          Icon(
+                            location.type == LocationType.store
+                                ? Icons.store
+                                : location.type == LocationType.boutique
+                                    ? Icons.shopping_bag
+                                    : location.type == LocationType.experience
+                                        ? Icons.palette
+                                        : Icons.storefront,
+                            size: 16,
+                            color: AppColors.yslBlack.withValues(alpha: 0.7),
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            '${location.type.name.toUpperCase()} • ${location.city}',
+                            style: AppText.bodySmall.copyWith(
+                              color: AppColors.yslBlack.withValues(alpha: 0.7),
+                              fontWeight: FontWeight.w500,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                          const Spacer(),
+                          if (location.isOpen)
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                              decoration: const BoxDecoration(
+                                color: Colors.green,
+                                borderRadius: BorderRadius.zero,
+                              ),
+                              child: Text(
+                                'OPEN',
+                                style: AppText.bodySmall.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 10,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      
+                      // Location description/address
+                      Text(
+                        location.address,
+                        style: AppText.bodyMedium.copyWith(
+                          color: AppColors.yslBlack,
+                          height: 1.4,
+                        ),
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 
