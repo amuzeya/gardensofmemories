@@ -26,6 +26,7 @@ import '../widgets/ysl_location_card.dart';
 import '../widgets/ysl_home_location_card.dart';
 import '../widgets/ysl_google_map_background.dart';
 import '../widgets/ysl_location_bottom_sheet.dart';
+import '../widgets/ysl_flight_path_animation.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../widgets/ysl_toggle_switch.dart';
 
@@ -93,6 +94,10 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
   
   // Bottom sheet state
   bool _showBottomSheet = false;
+  
+  // Gamified flight path animation state
+  bool _showFlightPath = true;
+  bool _flightCompleted = false;
 
   @override
   void initState() {
@@ -334,6 +339,17 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
     }
   }
   
+  void _onFlightCompleted() {
+    // Called when the gamified flight animation completes
+    setState(() {
+      _showFlightPath = false;
+      _flightCompleted = true;
+    });
+    
+    // Start the normal app experience
+    _startImmersiveTimer();
+  }
+  
   void _animateMapToLocation(List<HomeLocation> locations, int index) {
     // Only animate if we have a map controller and valid index
     if (_mapController == null || 
@@ -434,29 +450,42 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
         .map(toYslLocationData)
         .toList(growable: false);
 
-    // Conditional rendering based on toggle state
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 500),
-      switchInCurve: Curves.easeOutCubic,
-      switchOutCurve: Curves.easeInCubic,
-      transitionBuilder: (child, animation) {
-        // Fade + horizontal slide for elegance
-        final inFromRight = Tween<Offset>(begin: const Offset(0.2, 0), end: Offset.zero)
-            .animate(CurvedAnimation(parent: animation, curve: Curves.easeOutQuart));
-        return FadeTransition(
-          opacity: animation,
-          child: SlideTransition(position: inFromRight, child: child),
-        );
-      },
-      child: _viewToggle == YslToggleOption.map
-          ? KeyedSubtree(
-              key: const ValueKey('mapView'),
-              child: _buildMapView(context, data, yslLocations),
-            )
-          : KeyedSubtree(
-              key: const ValueKey('listView'),
-              child: _buildListView(context, data, yslLocations),
+    return Stack(
+      children: [
+        // Main app content
+        AnimatedSwitcher(
+          duration: const Duration(milliseconds: 500),
+          switchInCurve: Curves.easeOutCubic,
+          switchOutCurve: Curves.easeInCubic,
+          transitionBuilder: (child, animation) {
+            // Fade + horizontal slide for elegance
+            final inFromRight = Tween<Offset>(begin: const Offset(0.2, 0), end: Offset.zero)
+                .animate(CurvedAnimation(parent: animation, curve: Curves.easeOutQuart));
+            return FadeTransition(
+              opacity: animation,
+              child: SlideTransition(position: inFromRight, child: child),
+            );
+          },
+          child: _viewToggle == YslToggleOption.map
+              ? KeyedSubtree(
+                  key: const ValueKey('mapView'),
+                  child: _buildMapView(context, data, yslLocations),
+                )
+              : KeyedSubtree(
+                  key: const ValueKey('listView'),
+                  child: _buildListView(context, data, yslLocations),
+                ),
+        ),
+        
+        // Gamified flight path animation overlay
+        if (_showFlightPath && !_flightCompleted)
+          Positioned.fill(
+            child: YslFlightPathAnimation(
+              onFlightCompleted: _onFlightCompleted,
+              showAnimation: _showFlightPath,
             ),
+          ),
+      ],
     );
   }
 

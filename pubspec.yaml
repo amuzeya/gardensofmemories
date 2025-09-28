@@ -47,6 +47,12 @@ dependencies:
   # Google Maps for Flutter - reliable mapping solution
   google_maps_flutter: ^2.5.0
   google_maps_flutter_web: ^0.5.4
+  
+  # Geolocation for flight path gamification feature
+  geolocator: ^12.0.0
+  
+  # Animations package for elegant flight path animations
+  animations: ^2.0.11
 
 dev_dependencies:
   flutter_test:
@@ -103,6 +109,7 @@ flutter:
     - assets/svgs/icons/pinC_white.png
     - assets/svgs/icons/pinD_white.png
     - assets/svgs/icons/pin_a.svg
+    - assets/svgs/icons/pin_arrive.svg
     - assets/svgs/logos/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
