@@ -44,8 +44,9 @@ dependencies:
   # Video player for splash screen background video
   video_player: ^2.8.2
   
-  # Mapbox Maps SDK for Flutter - newer version
-  mapbox_maps_flutter: ^1.0.1
+  # Google Maps for Flutter - reliable mapping solution
+  google_maps_flutter: ^2.5.0
+  google_maps_flutter_web: ^0.5.4
 
 dev_dependencies:
   flutter_test:

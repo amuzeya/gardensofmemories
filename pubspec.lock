@@ -17,14 +17,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.13.0"
-  benchmark:
-    dependency: transitive
-    description:
-      name: benchmark
-      sha256: cb3eeea01e3f054df76ee9775ca680f3afa5f19f39b2bb426ba78ba27654493b
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.3.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -73,22 +65,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.8"
-  dart_sort_queue:
-    dependency: transitive
-    description:
-      name: dart_sort_queue
-      sha256: f3353ba8b4850e072d3368757f62edb79af34a9703c3e3df9c59342721f5f5b1
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.2+3"
-  enum_to_string:
-    dependency: transitive
-    description:
-      name: enum_to_string
-      sha256: "93b75963d3b0c9f6a90c095b3af153e1feccb79f6f08282d3274ff8d9eea52bc"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.2.1"
   fake_async:
     dependency: transitive
     description:
@@ -136,14 +112,54 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  geotypes:
+  google_maps:
     dependency: transitive
     description:
-      name: geotypes
-      sha256: "5bedf57de92283133dd221e363812ef50eaaba414f0823b1974ef7d84b86991f"
+      name: google_maps
+      sha256: "5d410c32112d7c6eb7858d359275b2aa04778eed3e36c745aeae905fb2fa6468"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.2"
+    version: "8.2.0"
+  google_maps_flutter:
+    dependency: "direct main"
+    description:
+      name: google_maps_flutter
+      sha256: c389e16fafc04b37a4105e0757ecb9d59806026cee72f408f1ba68811d01bfe6
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.13.1"
+  google_maps_flutter_android:
+    dependency: transitive
+    description:
+      name: google_maps_flutter_android
+      sha256: a6c9d43f6a944ff4bae5c3deb34817970ac3d591dcd7f5bd2ea450ab9e9c514a
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.18.2"
+  google_maps_flutter_ios:
+    dependency: transitive
+    description:
+      name: google_maps_flutter_ios
+      sha256: ca02463b19a9abc7d31fcaf22631d021d647107467f741b917a69fa26659fd75
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.15.5"
+  google_maps_flutter_platform_interface:
+    dependency: transitive
+    description:
+      name: google_maps_flutter_platform_interface
+      sha256: f4b9b44f7b12a1f6707ffc79d082738e0b7e194bf728ee61d2b3cdf5fdf16081
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.14.0"
+  google_maps_flutter_web:
+    dependency: "direct main"
+    description:
+      name: google_maps_flutter_web
+      sha256: "53e5dbf73ff04153acc55a038248706967c21d5b6ef6657a57fce2be73c2895a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.14+2"
   html:
     dependency: transitive
     description:
@@ -168,14 +184,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.2"
-  json_annotation:
-    dependency: transitive
-    description:
-      name: json_annotation
-      sha256: "1ce844379ca14835a50d2f019a3099f419082cfdd231cd86a142af94dd5c6bb1"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.9.0"
   leak_tracker:
     dependency: transitive
     description:
@@ -208,14 +216,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.1.1"
-  mapbox_maps_flutter:
-    dependency: "direct main"
-    description:
-      name: mapbox_maps_flutter
-      sha256: "09372c3ca04b54684f06fd80abb11e6f1a4ca8d87fbfcf477ff0dbaa8b6b091a"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.0"
   matcher:
     dependency: transitive
     description:
@@ -272,14 +272,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.8"
-  rbush:
+  sanitize_html:
     dependency: transitive
     description:
-      name: rbush
-      sha256: "48b683421b4afb43a642f82c6aa31911e54f3069143d31c7d33cbe329df13403"
+      name: sanitize_html
+      sha256: "12669c4a913688a26555323fb9cec373d8f9fbe091f2d01c40c723b33caa8989"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.1"
+    version: "2.1.0"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -309,6 +309,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
+  stream_transform:
+    dependency: transitive
+    description:
+      name: stream_transform
+      sha256: ad47125e588cfd37a9a7f86c7d6356dde8dfe89d071d293f80ca9e9273a33871
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.1"
   string_scanner:
     dependency: transitive
     description:
@@ -317,14 +325,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.1"
-  sweepline_intersections:
-    dependency: transitive
-    description:
-      name: sweepline_intersections
-      sha256: a665c707200a4f07140a4029b41a7c4883beb3f04322cd8e08ebf650f69e1176
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.4"
   term_glyph:
     dependency: transitive
     description:
@@ -341,30 +341,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.6"
-  turf:
-    dependency: transitive
-    description:
-      name: turf
-      sha256: "75347c45a5c1de805db7cb182286f05a3770e01546626c4dc292709d15cbe436"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.10"
-  turf_equality:
-    dependency: transitive
-    description:
-      name: turf_equality
-      sha256: f0f44ffe389547941358e0d3d4a747db2bd56115b32ff1cede5e5bdf3126a3e2
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.0"
-  turf_pip:
-    dependency: transitive
-    description:
-      name: turf_pip
-      sha256: ba4fd414baffd5d7b30880658ad6db82461c49ec023f8ffd0c23d398ad8b14be
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.2"
   typed_data:
     dependency: transitive
     description:
