@@ -551,15 +551,7 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
             children: [
               // Figma-exact Offer Banner at very top
               YslExclusiveOfferBannerVariants.figmaOffer(
-                offerText: 'EXCLUSIVE OFFER AVAILABLE',
-                onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Figma offer banner tapped!'),
-                      backgroundColor: AppColors.yslBlack,
-                    ),
-                  );
-                },
+                offerText: 'UNLOCK THE LOVE STORY FOR AN EXCLUSIVE OFFER',
               ),
               
               // Hero header - switches between full and minimalistic versions
