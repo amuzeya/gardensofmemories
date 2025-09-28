@@ -3,9 +3,11 @@
 // Following YSL principles: minimal, elegant, black and white only
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:ui' as ui;
+import 'dart:typed_data';
 
 import '../models/home_location.dart';
 import '../models/home_map_config.dart';
@@ -192,96 +194,71 @@ class _YslGoogleMapBackgroundState extends State<YslGoogleMapBackground> {
   @override
   void initState() {
     super.initState();
-    _loadCustomMarkerIcons();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _loadCustomMarkerIcons();
+    });
   }
 
   Future<void> _loadCustomMarkerIcons() async {
-    // Create custom YSL-branded markers with different colors for each pin type
-    _customMarkerIcons['pin_a'] = await _createYslCustomMarker(Colors.black, 'A');
-    _customMarkerIcons['pin_b'] = await _createYslCustomMarker(Colors.grey[800]!, 'B');
-    _customMarkerIcons['pin_c'] = await _createYslCustomMarker(Colors.grey[600]!, 'C');
-    
-    // Initialize markers after icons are loaded
-    _initializeMarkers();
+    try {
+      print('Loading PNG marker icons...');
+      
+      // Use the actual PNG files converted from your SVGs
+      final ImageConfiguration imageConfig = const ImageConfiguration();
+      
+      _customMarkerIcons['pinA'] = await BitmapDescriptor.fromAssetImage(
+        imageConfig,
+        Assets.pinA,
+      );
+      _customMarkerIcons['pinB'] = await BitmapDescriptor.fromAssetImage(
+        imageConfig,
+        Assets.pinB,
+      );
+      _customMarkerIcons['pinC'] = await BitmapDescriptor.fromAssetImage(
+        imageConfig,
+        Assets.pinC,
+      );
+      
+      print('PNG marker icons loaded: ${_customMarkerIcons.keys}');
+      
+      // Initialize markers after icons are loaded
+      _initializeMarkers();
+    } catch (e) {
+      print('Error loading PNG marker icons: $e');
+      // Initialize markers with default icons as fallback
+      _initializeMarkers();
+    }
   }
 
-  Future<BitmapDescriptor> _createYslCustomMarker(Color color, String letter) async {
-    const double size = 60.0;
-    
-    final recorder = ui.PictureRecorder();
-    final canvas = Canvas(recorder);
-    
-    // Draw YSL-style pin background
-    final paint = Paint()
-      ..color = color
-      ..style = PaintingStyle.fill;
-    
-    // Draw pin shape (teardrop)
-    final path = Path();
-    const double radius = size * 0.3;
-    const double centerX = size / 2;
-    const double centerY = radius;
-    
-    // Circle part of the pin
-    path.addOval(Rect.fromCircle(center: Offset(centerX, centerY), radius: radius));
-    
-    // Point part of the pin
-    path.moveTo(centerX - radius * 0.6, centerY + radius * 0.6);
-    path.lineTo(centerX, size - 5);
-    path.lineTo(centerX + radius * 0.6, centerY + radius * 0.6);
-    path.close();
-    
-    canvas.drawPath(path, paint);
-    
-    // Draw white letter in center
-    final textPainter = TextPainter(
-      text: TextSpan(
-        text: letter,
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: radius * 0.8,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'ITC Avant Garde Gothic Pro',
-        ),
-      ),
-      textDirection: TextDirection.ltr,
-    );
-    
-    textPainter.layout();
-    textPainter.paint(
-      canvas,
-      Offset(
-        centerX - textPainter.width / 2,
-        centerY - textPainter.height / 2,
-      ),
-    );
-    
-    // Convert to image
-    final picture = recorder.endRecording();
-    final img = await picture.toImage(size.toInt(), size.toInt());
-    final byteData = await img.toByteData(format: ui.ImageByteFormat.png);
-    final uint8List = byteData!.buffer.asUint8List();
-    
-    return BitmapDescriptor.bytes(uint8List);
-  }
+  
 
   void _initializeMarkers() {
+    print('Initializing markers for ${widget.locations.length} locations...');
+    
     _markers = widget.locations.map((location) {
       final pinType = location.pin.name; // pin_a, pin_b, pin_c
       final customIcon = _customMarkerIcons[pinType];
+      
+      print('Location: ${location.name}, Pin Type: $pinType, Has Custom Icon: ${customIcon != null}');
       
       return Marker(
         markerId: MarkerId(location.id),
         position: LatLng(location.lat, location.lng),
         onTap: () => widget.onMarkerTap?.call(location),
-        // Use custom YSL SVG marker or fallback to default
-        icon: customIcon ?? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueViolet),
+        // Use custom YSL marker or fallback to colored default marker
+        icon: customIcon ?? BitmapDescriptor.defaultMarkerWithHue(
+          pinType == 'pinA' ? BitmapDescriptor.hueRed :
+          pinType == 'pinB' ? BitmapDescriptor.hueBlue :
+          BitmapDescriptor.hueViolet
+        ),
         infoWindow: InfoWindow(
           title: location.name.toUpperCase(),
           snippet: location.address,
         ),
       );
     }).toSet();
+    
+    print('Created ${_markers.length} markers');
     
     // Update state to show markers on map
     if (mounted) {

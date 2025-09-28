@@ -16,6 +16,12 @@ class AssetsRes {
   static const String PRODUCTS = 'assets/data/home/products.json';
   static const String QUOTES = 'assets/data/home/quotes.json';
   static const String FRAME_845083630 = 'assets/images/frame_845083630.png';
+  static const String PIN_A = 'assets/images/pins/pin_a.png';
+  static const String PIN_B = 'assets/images/pins/pin_b.png';
+  static const String PIN_C = 'assets/images/pins/pin_c.png';
   static const String SPLASH_SCREEN_OURIKA = 'assets/splash_screen_ourika.mp4';
+  static const String PINA = 'assets/svgs/icons/pinA.png';
+  static const String PINB = 'assets/svgs/icons/pinB.png';
+  static const String PINC = 'assets/svgs/icons/pinC.png';
   static const String PIN_A = 'assets/svgs/icons/pin_a.svg';
 }

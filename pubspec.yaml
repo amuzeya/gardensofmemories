@@ -72,28 +72,34 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    - "assets/Cafe Le Studio (Activity)/"
+    - "assets/Fragrance (Product Feature) /"
+    - "assets/Jardin Majorelle (Activity)/"
+    - "assets/La Mamounia (Accomodation)/"
+    - "assets/Ourika Gardens (Activity)/"
+    - "assets/UI Assets/"
+    - "assets/YSL Museum (Activity)/"
+    - assets/data/
+    - assets/data/home/carousel.json
+    - assets/data/home/content.json
+    - assets/data/home/locations.json
+    - assets/data/home/map.json
+    - assets/data/home/offers.json
+    - assets/data/home/products.json
+    - assets/data/home/quotes.json
     - assets/images/
     - assets/images/frame_845083630.png
+    - assets/images/pins/pin_a.png
+    - assets/images/pins/pin_b.png
+    - assets/images/pins/pin_c.png
     - assets/splash_screen_ourika.mp4
     - assets/svgs/
     - assets/svgs/icons/
+    - assets/svgs/icons/pinA.png
+    - assets/svgs/icons/pinB.png
+    - assets/svgs/icons/pinC.png
     - assets/svgs/icons/pin_a.svg
     - assets/svgs/logos/
-    - assets/data/
-    - assets/data/home/offers.json
-    - assets/data/home/map.json
-    - assets/data/home/locations.json
-    - assets/data/home/carousel.json
-    - assets/data/home/content.json
-    - assets/data/home/products.json
-    - assets/data/home/quotes.json
-    - "assets/Ourika Gardens (Activity)/"
-    - "assets/Jardin Majorelle (Activity)/"
-    - "assets/Cafe Le Studio (Activity)/"
-    - "assets/La Mamounia (Accomodation)/"
-    - "assets/YSL Museum (Activity)/"
-    - "assets/Fragrance (Product Feature) /"
-    - "assets/UI Assets/"
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
@@ -106,29 +112,27 @@ flutter:
   # YSL Beauty Experience - Custom Fonts
   # Extracted from Figma designs for pixel-perfect typography
   fonts:
-    # Arial font family with weights
-    - family: Arial
+    - family: Arial-Bold
+      fonts:
+        - asset: assets/fonts/Arial/Arial-Bold.ttf
+    - family: Arial-Regular
       fonts:
         - asset: assets/fonts/Arial/Arial-Regular.ttf
-          weight: 400
-        - asset: assets/fonts/Arial/Arial-Bold.ttf
-          weight: 700
-    
-    # ITC Avant Garde Gothic Pro font family with all weights
-    - family: ITC Avant Garde Gothic Pro
+    - family: ITCAvantGardeStd-Bk
+      fonts:
+        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Bk.ttf
+    - family: ITCAvantGardeStd-Bold
+      fonts:
+        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Bold.ttf
+    - family: ITCAvantGardeStd-Demi
+      fonts:
+        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Demi.ttf
+    - family: ITCAvantGardeStd-Md
+      fonts:
+        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Md.ttf
+    - family: ITCAvantGardeStd-XLt
       fonts:
         - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-XLt.ttf
-          weight: 200  # Extra Light
-        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Bk.ttf
-          weight: 300  # Light (Book)
-        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Bk.ttf
-          weight: 400  # Regular (using Book as regular)
-        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Md.ttf
-          weight: 500  # Medium
-        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Demi.ttf
-          weight: 600  # SemiBold (Demi)
-        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Bold.ttf
-          weight: 700  # Bold
   
   # Note: Font files need to be manually added to the assets/fonts/ directory
   # See FONTS_SETUP.md for detailed instructions on acquiring these fonts

@@ -17,6 +17,9 @@ class Assets {
   static const String iconPinA = 'assets/svgs/icons/pin_a.svg';
   static const String iconPinB = 'assets/svgs/icons/pin_b.svg';
   static const String iconPinC = 'assets/svgs/icons/pin_c.svg';
+  static const String pinA = 'assets/svgs/icons/pinA.png';
+  static const String pinB = 'assets/svgs/icons/pinB.png';
+  static const String pinC = 'assets/svgs/icons/pinC.png';
   static const String iconPinOption1 = 'assets/svgs/icons/pin_option_1.svg';
   static const String iconPinOption2 = 'assets/svgs/icons/pin_option_2.svg';
   static const String iconPlus = 'assets/svgs/icons/property_1_plus.svg';
