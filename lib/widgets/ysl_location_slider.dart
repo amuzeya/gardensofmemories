@@ -41,7 +41,7 @@ class YslLocationSlider extends StatefulWidget {
     super.key,
     required this.locations,
     this.height = 165,
-    this.cardWidth = 300,
+    this.cardWidth = 150,
     this.cardSpacing = 15,
     this.padding,
     this.margin,

@@ -25,7 +25,7 @@ class YslHomeLocationCard extends StatelessWidget {
     super.key,
     required this.location,
     this.onTap,
-    this.width = 560,
+    this.width = 150,
     this.height = 180,
     this.margin,
     this.isVertical = false,
@@ -343,14 +343,16 @@ class YslHomeLocationCard extends StatelessWidget {
         color: AppColors.yslBlack,
         borderRadius: BorderRadius.zero,
       ),
-      child: Text(
-        'EXPLORE',
-        style: AppText.bodySmall.copyWith(
-          color: AppColors.yslWhite,
-          letterSpacing: 0.8,
-          fontWeight: FontWeight.w600,
-          fontFamily: 'ITC Avant Garde Gothic Pro',
-          fontSize: fontSize,
+      child: Center(
+        child: Text(
+          'EXPLORE',
+          style: AppText.bodySmall.copyWith(
+            color: AppColors.yslWhite,
+            letterSpacing: 0.8,
+            fontWeight: FontWeight.w600,
+            fontFamily: 'ITC Avant Garde Gothic Pro',
+            fontSize: fontSize,
+          ),
         ),
       ),
     );
