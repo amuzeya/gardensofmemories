@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import '../constants/assets.dart';
 import 'ysl_location_card.dart';
+import 'ysl_home_location_card.dart';
 
 /// YSL Location Slider Widget
 /// Features:
@@ -26,6 +27,9 @@ class YslLocationSlider extends StatefulWidget {
   final Color? backgroundColor;
   final VoidCallback? onLocationTap;
   final bool showCardBorders;
+  final bool useHomeStyle;
+  final bool usePageView;
+  final double viewportFraction;
 
   const YslLocationSlider({
     super.key,
@@ -39,6 +43,9 @@ class YslLocationSlider extends StatefulWidget {
     this.backgroundColor,
     this.onLocationTap,
     this.showCardBorders = true,
+    this.useHomeStyle = false,
+    this.usePageView = false,
+    this.viewportFraction = 0.9,
   });
 
   @override
@@ -47,6 +54,7 @@ class YslLocationSlider extends StatefulWidget {
 
 class _YslLocationSliderState extends State<YslLocationSlider> {
   late ScrollController _scrollController;
+  PageController? _pageController; // when using PageView
   bool _canScrollLeft = false;
   bool _canScrollRight = true;
 
@@ -55,12 +63,16 @@ class _YslLocationSliderState extends State<YslLocationSlider> {
     super.initState();
     _scrollController = ScrollController();
     _scrollController.addListener(_updateScrollState);
+    if (widget.usePageView) {
+      _pageController = PageController(viewportFraction: widget.viewportFraction);
+    }
   }
 
   @override
   void dispose() {
     _scrollController.removeListener(_updateScrollState);
     _scrollController.dispose();
+    _pageController?.dispose();
     super.dispose();
   }
 
@@ -104,7 +116,7 @@ class _YslLocationSliderState extends State<YslLocationSlider> {
       child: Row(
         children: [
           // Left Navigation Arrow
-          if (widget.showNavigationArrows)
+          if (widget.showNavigationArrows && !widget.usePageView)
             _buildNavigationButton(
               icon: Icons.arrow_back_ios,
               onPressed: _canScrollLeft ? _scrollLeft : null,
@@ -113,11 +125,11 @@ class _YslLocationSliderState extends State<YslLocationSlider> {
 
           // Location Cards Slider
           Expanded(
-            child: _buildLocationSlider(),
+            child: widget.usePageView ? _buildPageViewSlider() : _buildLocationSlider(),
           ),
 
           // Right Navigation Arrow
-          if (widget.showNavigationArrows)
+          if (widget.showNavigationArrows && !widget.usePageView)
             _buildNavigationButton(
               icon: Icons.arrow_forward_ios,
               onPressed: _canScrollRight ? _scrollRight : null,
@@ -178,18 +190,52 @@ class _YslLocationSliderState extends State<YslLocationSlider> {
     );
   }
 
+  Widget _buildPageViewSlider() {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final cardW = constraints.maxWidth * widget.viewportFraction;
+        return PageView.builder(
+          controller: _pageController,
+          padEnds: false,
+          itemCount: widget.locations.length,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: EdgeInsets.only(right: widget.cardSpacing),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: SizedBox(
+                  width: cardW,
+                  height: widget.height,
+                  child: _buildLocationCard(widget.locations[index]),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
   Widget _buildLocationCard(YslLocationData location) {
     return SizedBox(
       width: widget.cardWidth,
       height: widget.height,
-      child: YslLocationCard(
-        location: location,
-        width: widget.cardWidth,
-        height: widget.height,
-        onTap: widget.onLocationTap,
-        margin: EdgeInsets.zero, // Remove individual card margins
-        showBorder: widget.showCardBorders,
-      ),
+      child: widget.useHomeStyle
+          ? YslHomeLocationCard(
+              location: location,
+              width: widget.cardWidth,
+              height: widget.height ?? 180,
+              onTap: widget.onLocationTap,
+              margin: EdgeInsets.zero,
+            )
+          : YslLocationCard(
+              location: location,
+              width: widget.cardWidth,
+              height: widget.height,
+              onTap: widget.onLocationTap,
+              margin: EdgeInsets.zero, // Remove individual card margins
+              showBorder: widget.showCardBorders,
+            ),
     );
   }
 }

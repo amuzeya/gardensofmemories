@@ -16,13 +16,12 @@ import '../models/home_quote.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text.dart';
 
-import '../widgets/ysl_app_bar.dart';
 import '../widgets/ysl_exclusive_offer_banner.dart';
-import '../widgets/ysl_carousel.dart';
 import '../widgets/ysl_location_slider.dart';
-import '../widgets/ysl_content_card.dart';
 import '../widgets/ysl_offer_card.dart';
 import '../widgets/ysl_map_background.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import '../widgets/ysl_toggle_switch.dart';
 
 class HomePageScreen extends StatefulWidget {
   const HomePageScreen({super.key});
@@ -54,6 +53,7 @@ class _HomeData {
 class _HomePageScreenState extends State<HomePageScreen> {
   final _repo = HomeRepository();
   late Future<_HomeData> _future;
+  YslToggleOption _viewToggle = YslToggleOption.map;
 
   @override
   void initState() {
@@ -84,7 +84,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.yslWhite,
-      appBar: YslAppBarVariants.version5(),
+      appBar: null,
       body: FutureBuilder<_HomeData>(
         future: _future,
         builder: (context, snapshot) {
@@ -107,111 +107,144 @@ class _HomePageScreenState extends State<HomePageScreen> {
   }
 
   Widget _buildBody(BuildContext context, _HomeData data) {
-    final firstOffer = data.offers.isNotEmpty ? data.offers.first : null;
-
-    // Map home carousel items into the widget items
-    final carouselItems = data.carousel.map((c) {
-      return YslCarouselItem(
-        imagePath: c.type == HomeCarouselItemType.image ? c.imagePath : null,
-        videoPath: c.type == HomeCarouselItemType.video ? c.videoPath : null,
-        introText: c.introText,
-        title: c.title,
-        subtitle: c.subtitle,
-        paragraph: c.paragraph,
-      );
-    }).toList(growable: false);
-
     // Map locations to widget data
-    final yslLocations = data.locations.map(toYslLocationData).toList(growable: false);
+    final yslLocations = data.locations
+        .map(toYslLocationData)
+        .toList(growable: false);
 
-    return ListView(
-      padding: EdgeInsets.zero,
+    return Stack(
       children: [
-        if (firstOffer != null)
-          YslExclusiveOfferBanner(
-            text: firstOffer.text,
-            subText: null,
-            onTap: () {},
-          ),
-
-        // Hero Carousel (fixed height)
-        SizedBox(
-          height: 372,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            child: YslCarousel(
-              items: carouselItems,
-              height: 360,
-              layout: YslCarouselLayout.videoFocused,
-              backgroundColor: AppColors.yslWhite,
-            ),
-          ),
-        ),
-
-        // Map background area with Location Slider overlay
-        SizedBox(
-          height: MediaQuery.of(context).size.height * 0.9,
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              // Real OSM map background
-              YslMapBackground(config: data.map, locations: data.locations),
-
-              // Slider aligned to bottom
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  color: Colors.transparent,
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: YslLocationSlider(
-                    locations: yslLocations,
-                    height: 165,
-                    cardWidth: 300,
-                    cardSpacing: 12,
-                    showNavigationArrows: true,
-                    backgroundColor: Colors.transparent,
-                    showCardBorders: true,
+        ListView(
+          padding: const EdgeInsets.only(bottom: 190),
+          children: [
+            // Figma-exact Offer Banner at very top (before any header/app bar)
+            YslExclusiveOfferBannerVariants.figmaOffer(
+              offerText: 'EXCLUSIVE OFFER AVAILABLE',
+              onTap: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Figma offer banner tapped!'),
+                    backgroundColor: AppColors.yslBlack,
                   ),
-                ),
+                );
+              },
+            ),
+            // Hero header with logo, titles, description, and toggle
+            _buildHeroHeader(),
+            // Map background area with Location Slider overlay
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.82,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  // Real OSM map background
+                  YslMapBackground(config: data.map, locations: data.locations),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
 
-        const SizedBox(height: 16),
-
-        // Content section (first card if any)
-        if (data.cards.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: YslContentCard(
-              subtitle: data.cards.first.subtitle,
-              title: data.cards.first.title,
-              buttonText: data.cards.first.buttonText,
-              onButtonPressed: () {},
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 28),
+        // Sticky floating slider at the bottom of screen
+        Positioned(
+          left: 0,
+          right: 0,
+          bottom: 0,
+          child: SafeArea(
+            top: false,
+            child: Center(
+              child: YslLocationSlider(
+                locations: yslLocations,
+                height: 100,
+                cardWidth: 200,
+                cardSpacing: 12,
+                showNavigationArrows: false,
+                backgroundColor: Colors.transparent,
+                showCardBorders: false,
+                useHomeStyle: true,
+                usePageView: true,
+                viewportFraction: 0.86,
+              ),
             ),
           ),
-
-        const SizedBox(height: 16),
-
-        // Product highlight using YslOfferCard
-        if (data.products.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: YslOfferCard(
-              title: 'FEATURED PRODUCT',
-              subtitle: data.products.first.name.toUpperCase(),
-              description: data.products.first.description,
-              buttonText: 'SHOP NOW',
-              onButtonPressed: () {},
-              isExclusive: true,
-              padding: const EdgeInsets.all(16),
-            ),
-          ),
-
-        const SizedBox(height: 24),
+        ),
       ],
+    );
+  }
+
+  Widget _buildHeroHeader() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // YSL logo
+          SvgPicture.asset(
+            'assets/svgs/logos/state_logo_beaut_on.svg',
+            height: 40,
+            colorFilter: const ColorFilter.mode(
+              AppColors.yslBlack,
+              BlendMode.srcIn,
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // Small subtitle
+          Text(
+            'YVES THROUGH MARRAKECH',
+            style: AppText.bodySmallLight.copyWith(
+              color: AppColors.yslBlack,
+              letterSpacing: 1.5,
+            ),
+            textAlign: TextAlign.center,
+          ),
+
+          const SizedBox(height: 12),
+
+          // Main hero title
+          Text(
+            'GARDENS OF MEMORIES',
+            style: AppText.heroDisplay.copyWith(
+              color: AppColors.yslBlack,
+              letterSpacing: 1.2,
+            ),
+            textAlign: TextAlign.center,
+          ),
+
+          const SizedBox(height: 16),
+
+          // Description paragraph
+          Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 820),
+              child: Text(
+                'In Marrakech, Yves Saint Laurent found refuge and inspiration—where freedom burns and memory lingers like perfume.',
+                style: AppText.bodyLarge.copyWith(
+                  color: AppColors.yslBlack,
+                  height: 1.4,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 14),
+
+          // Toggle within a hard-edged container
+          Center(
+            child: YslToggleSwitch(
+              selectedOption: _viewToggle,
+              onToggle: (opt) {
+                setState(() {
+                  _viewToggle = opt;
+                });
+              },
+            ),
+          ),
+
+          const SizedBox(height: 12),
+        ],
+      ),
     );
   }
 }

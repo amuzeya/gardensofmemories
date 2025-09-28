@@ -199,9 +199,9 @@ class YslLocationCard extends StatelessWidget {
             style: AppText.titleMedium.copyWith(
               color: AppColors.yslBlack,
               fontFamily: 'ITC Avant Garde Gothic Pro',
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w400,
               letterSpacing: 1.0,
-              fontSize: 14,
+              fontSize: 10,
             ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,

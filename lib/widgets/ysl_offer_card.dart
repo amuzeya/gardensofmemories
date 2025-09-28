@@ -142,12 +142,10 @@ class _YslOfferCardState extends State<YslOfferCard>
                   // Exclusive badge (if applicable)
                   if (widget.isExclusive) _buildExclusiveBadge(),
                   
-                  // Main content area
-                  Expanded(
-                    child: Padding(
-                      padding: widget.padding ?? const EdgeInsets.all(16),
-                      child: widget.customContent ?? _buildDefaultContent(),
-                    ),
+                  // Main content area (avoid Expanded in unbounded height)
+                  Padding(
+                    padding: widget.padding ?? const EdgeInsets.all(16),
+                    child: widget.customContent ?? _buildDefaultContent(),
                   ),
                   
                   // Button area (if button provided)
@@ -241,19 +239,17 @@ class _YslOfferCardState extends State<YslOfferCard>
           const SizedBox(height: 8),
         ],
 
-        // Description (flexible to fill remaining space)
+        // Description (avoid flex in unbounded vertical context)
         if (widget.description != null)
-          Expanded(
-            child: Text(
-              widget.description!,
-              style: AppText.bodyMedium.copyWith(
-                color: AppColors.yslBlack,
-                height: 1.3,
-                fontFamily: 'ITC Avant Garde Gothic Pro',
-              ),
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
+          Text(
+            widget.description!,
+            style: AppText.bodyMedium.copyWith(
+              color: AppColors.yslBlack,
+              height: 1.3,
+              fontFamily: 'ITC Avant Garde Gothic Pro',
             ),
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
           ),
       ],
     );

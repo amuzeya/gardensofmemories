@@ -8,6 +8,13 @@ class AssetsRes {
 
   static const String PROJECT_NAME = 'ysl_beauty_experience';
   static const String PROJECT_VERSION = '1.0.0+1';
+  static const String CAROUSEL = 'assets/data/home/carousel.json';
+  static const String CONTENT = 'assets/data/home/content.json';
+  static const String LOCATIONS = 'assets/data/home/locations.json';
+  static const String MAP = 'assets/data/home/map.json';
+  static const String OFFERS = 'assets/data/home/offers.json';
+  static const String PRODUCTS = 'assets/data/home/products.json';
+  static const String QUOTES = 'assets/data/home/quotes.json';
   static const String FRAME_845083630 = 'assets/images/frame_845083630.png';
   static const String SPLASH_SCREEN_OURIKA = 'assets/splash_screen_ourika.mp4';
   static const String PIN_A = 'assets/svgs/icons/pin_a.svg';
