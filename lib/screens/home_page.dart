@@ -177,7 +177,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                 margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                 padding: heroParams.padding,
                 decoration: BoxDecoration(
-                  color: AppColors.yslWhite.withValues(alpha: 0.95),
+                  color: AppColors.yslWhite.withValues(alpha: 0.85), // More transparent
                   border: Border.all(color: Colors.black12, width: 1),
                   borderRadius: BorderRadius.zero,
                   boxShadow: [

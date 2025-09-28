@@ -33,20 +33,13 @@ class YslMapboxBackground extends StatelessWidget {
       width: double.infinity,
       height: double.infinity,
       decoration: BoxDecoration(
-        // YSL-branded grey gradient background
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [
-            const Color(0xFFF8F8F8), // Very light grey at top
-            const Color(0xFFECECEC), // Slightly darker grey at bottom
-          ],
-        ),
+        // Clean YSL-branded background - let the custom painter handle the details
+        color: const Color(0xFFF5F5F5), // Base light grey
         borderRadius: BorderRadius.zero, // YSL hard-edged design
       ),
       child: Stack(
         children: [
-          // Subtle grid pattern for map-like appearance
+          // Map background with roads, features, and geography
           _buildMapGrid(),
           // YSL location markers positioned elegantly
           ..._buildLocationMarkers(context),
@@ -192,24 +185,128 @@ class YslMapboxBackground extends StatelessWidget {
   }
 }
 
-/// Custom painter for subtle grid pattern background
+/// Custom painter for YSL-branded map with geographical features
 class YslMapGridPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = AppColors.yslBlack.withValues(alpha: 0.03)
-      ..strokeWidth = 0.5;
+    _drawMapBackground(canvas, size);
+    _drawRoadNetwork(canvas, size);
+    _drawGeographicalFeatures(canvas, size);
+    _drawSubtleGrid(canvas, size);
+  }
 
-    const gridSpacing = 40.0;
+  void _drawMapBackground(Canvas canvas, Size size) {
+    // Create a subtle terrain-like pattern
+    final terrainPaint = Paint()
+      ..shader = RadialGradient(
+        colors: [
+          const Color(0xFFF0F0F0), // Light grey center
+          const Color(0xFFE8E8E8), // Slightly darker edges
+        ],
+      ).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
     
-    // Draw vertical lines
-    for (double x = 0; x < size.width; x += gridSpacing) {
-      canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);
+    canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), terrainPaint);
+  }
+
+  void _drawRoadNetwork(Canvas canvas, Size size) {
+    final roadPaint = Paint()
+      ..color = AppColors.yslBlack.withValues(alpha: 0.15)
+      ..strokeWidth = 2.0
+      ..style = PaintingStyle.stroke;
+
+    final thinRoadPaint = Paint()
+      ..color = AppColors.yslBlack.withValues(alpha: 0.08)
+      ..strokeWidth = 1.0
+      ..style = PaintingStyle.stroke;
+
+    // Draw main roads (like major streets in Marrakech)
+    final mainRoads = [
+      // Horizontal main road
+      [Offset(0, size.height * 0.4), Offset(size.width, size.height * 0.4)],
+      [Offset(0, size.height * 0.7), Offset(size.width, size.height * 0.7)],
+      // Vertical main road
+      [Offset(size.width * 0.3, 0), Offset(size.width * 0.3, size.height)],
+      [Offset(size.width * 0.7, 0), Offset(size.width * 0.7, size.height)],
+    ];
+
+    for (final road in mainRoads) {
+      canvas.drawLine(road[0], road[1], roadPaint);
+    }
+
+    // Draw smaller connecting roads
+    final smallRoads = [
+      [Offset(size.width * 0.1, size.height * 0.2), Offset(size.width * 0.9, size.height * 0.3)],
+      [Offset(size.width * 0.2, size.height * 0.5), Offset(size.width * 0.8, size.height * 0.6)],
+      [Offset(size.width * 0.0, size.height * 0.8), Offset(size.width * 0.6, size.height * 0.9)],
+      [Offset(size.width * 0.5, size.height * 0.1), Offset(size.width * 0.9, size.height * 0.2)],
+    ];
+
+    for (final road in smallRoads) {
+      canvas.drawLine(road[0], road[1], thinRoadPaint);
+    }
+  }
+
+  void _drawGeographicalFeatures(Canvas canvas, Size size) {
+    // Draw water features (subtle)
+    final waterPaint = Paint()
+      ..color = AppColors.yslBlack.withValues(alpha: 0.05)
+      ..style = PaintingStyle.fill;
+
+    // Small water feature (like a fountain or small lake)
+    final waterPath = Path()
+      ..addOval(Rect.fromCenter(
+        center: Offset(size.width * 0.2, size.height * 0.6),
+        width: 60,
+        height: 40,
+      ))
+      ..addOval(Rect.fromCenter(
+        center: Offset(size.width * 0.8, size.height * 0.3),
+        width: 80,
+        height: 50,
+      ));
+    
+    canvas.drawPath(waterPath, waterPaint);
+
+    // Draw park/garden areas (subtle green-grey)
+    final parkPaint = Paint()
+      ..color = AppColors.yslBlack.withValues(alpha: 0.03)
+      ..style = PaintingStyle.fill;
+
+    final parkPath = Path()
+      ..addRRect(RRect.fromRectAndRadius(
+        Rect.fromCenter(
+          center: Offset(size.width * 0.5, size.height * 0.2),
+          width: 120,
+          height: 80,
+        ),
+        const Radius.circular(0), // YSL hard edges
+      ))
+      ..addRRect(RRect.fromRectAndRadius(
+        Rect.fromCenter(
+          center: Offset(size.width * 0.7, size.height * 0.8),
+          width: 100,
+          height: 60,
+        ),
+        const Radius.circular(0),
+      ));
+    
+    canvas.drawPath(parkPath, parkPaint);
+  }
+
+  void _drawSubtleGrid(Canvas canvas, Size size) {
+    final gridPaint = Paint()
+      ..color = AppColors.yslBlack.withValues(alpha: 0.02)
+      ..strokeWidth = 0.3;
+
+    const gridSpacing = 50.0;
+    
+    // Draw subtle background grid
+    for (double x = gridSpacing; x < size.width; x += gridSpacing) {
+      canvas.drawLine(Offset(x, 0), Offset(x, size.height), gridPaint);
     }
     
-    // Draw horizontal lines  
-    for (double y = 0; y < size.height; y += gridSpacing) {
-      canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
+    for (double y = gridSpacing; y < size.height; y += gridSpacing) {
+      canvas.drawLine(Offset(0, y), Offset(size.width, y), gridPaint);
     }
   }
 
