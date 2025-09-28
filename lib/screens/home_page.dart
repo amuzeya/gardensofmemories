@@ -25,6 +25,7 @@ import '../widgets/ysl_location_slider.dart';
 import '../widgets/ysl_location_card.dart';
 import '../widgets/ysl_home_location_card.dart';
 import '../widgets/ysl_google_map_background.dart';
+import '../widgets/ysl_location_bottom_sheet.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../widgets/ysl_toggle_switch.dart';
 
@@ -89,6 +90,9 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
   
   // Google Maps controller for cinematic animations
   GoogleMapController? _mapController;
+  
+  // Bottom sheet state
+  bool _showBottomSheet = false;
 
   @override
   void initState() {
@@ -342,11 +346,27 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
     
     print('🎯 Initiating cinematic flight to: ${selectedLocation.name}');
     
-    // Use cinematic multi-stage animation for brand experience
-    MapAnimationUtils.cinematicFlyToLocation(
+    // Hide bottom sheet during animation
+    setState(() {
+      _showBottomSheet = false;
+    });
+    
+    // Use cinematic multi-stage animation with callback for bottom sheet
+    MapAnimationUtils.cinematicFlyToLocationWithCallback(
       _mapController!,
       selectedLocation,
-      finalZoom: 17.0, // Close zoom to focus on single location
+      finalZoom: 17.0,
+      onCompleted: () {
+        // Let user appreciate the location for a moment before showing details
+        Future.delayed(const Duration(milliseconds: 1200), () {
+          if (mounted) {
+            print('📝 Elegantly showing bottom sheet for: ${selectedLocation.name}');
+            setState(() {
+              _showBottomSheet = true;
+            });
+          }
+        });
+      },
     );
   }
   
@@ -606,6 +626,18 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
                 );
               },
             ),
+          ),
+          
+        // Location bottom sheet overlay
+        if (data.locations.isNotEmpty && _selectedLocationIndex < data.locations.length)
+          YslLocationBottomSheet(
+            location: data.locations[_selectedLocationIndex],
+            isVisible: _showBottomSheet,
+            onClose: () {
+              setState(() {
+                _showBottomSheet = false;
+              });
+            },
           ),
       ],
     );

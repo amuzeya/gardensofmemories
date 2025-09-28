@@ -84,6 +84,18 @@ class MapAnimationUtils {
     }
   }
   
+  /// Cinematic fly-to animation with callback after completion
+  static Future<void> cinematicFlyToLocationWithCallback(
+    GoogleMapController controller,
+    HomeLocation location, {
+    double finalZoom = 17.0,
+    VoidCallback? onCompleted,
+  }) async {
+    await cinematicFlyToLocation(controller, location, finalZoom: finalZoom);
+    // Trigger callback after animation completes
+    onCompleted?.call();
+  }
+  
   /// Fallback simple animation if cinematic fails
   static Future<void> _fallbackAnimation(
     GoogleMapController controller,
