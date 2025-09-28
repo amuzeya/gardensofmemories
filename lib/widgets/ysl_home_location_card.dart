@@ -59,7 +59,7 @@ class YslHomeLocationCard extends StatelessWidget {
             return isVertical 
                 ? _buildVerticalLayout(constraints) 
                 : (viewType == YslCardViewType.mapView 
-                    ? _buildMapViewLayout(constraints) 
+                    ? _buildMapViewLayout(constraints)
                     : _buildListViewLayout(constraints));
           },
         ),

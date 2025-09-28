@@ -21,7 +21,11 @@ class AssetsRes {
   static const String PIN_C = 'assets/images/pins/pin_c.png';
   static const String SPLASH_SCREEN_OURIKA = 'assets/splash_screen_ourika.mp4';
   static const String PINA = 'assets/svgs/icons/pinA.png';
+  static const String PINA_WHITE = 'assets/svgs/icons/pinA_white.png';
   static const String PINB = 'assets/svgs/icons/pinB.png';
+  static const String PINB_WHITE = 'assets/svgs/icons/pinB_white.png';
   static const String PINC = 'assets/svgs/icons/pinC.png';
+  static const String PINC_WHITE = 'assets/svgs/icons/pinC_white.png';
+  static const String PIND_WHITE = 'assets/svgs/icons/pinD_white.png';
   static const String PIN_A = 'assets/svgs/icons/pin_a.svg';
 }

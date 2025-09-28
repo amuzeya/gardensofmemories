@@ -36,6 +36,7 @@ class _YslGoogleMapBackgroundState extends State<YslGoogleMapBackground> {
   GoogleMapController? _controller;
   Set<Marker> _markers = {};
   final Map<String, BitmapDescriptor> _customMarkerIcons = {};
+  bool _isMapReady = false;
 
   // YSL Black & White Map Style JSON
   static const String _yslMapStyle = '''
@@ -276,6 +277,7 @@ class _YslGoogleMapBackgroundState extends State<YslGoogleMapBackground> {
       child: GoogleMap(
         onMapCreated: (GoogleMapController controller) {
           _controller = controller;
+          _isMapReady = true;
         },
         style: _yslMapStyle, // Apply YSL black and white style directly
         initialCameraPosition: CameraPosition(
@@ -304,7 +306,8 @@ class _YslGoogleMapBackgroundState extends State<YslGoogleMapBackground> {
 
   @override
   void dispose() {
-    _controller?.dispose();
+    // Skip controller disposal to prevent web crashes - this is a known issue with google_maps_flutter_web
+    // The controller will be cleaned up automatically by the Flutter framework
     super.dispose();
   }
 }

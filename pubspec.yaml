@@ -96,8 +96,12 @@ flutter:
     - assets/svgs/
     - assets/svgs/icons/
     - assets/svgs/icons/pinA.png
+    - assets/svgs/icons/pinA_white.png
     - assets/svgs/icons/pinB.png
+    - assets/svgs/icons/pinB_white.png
     - assets/svgs/icons/pinC.png
+    - assets/svgs/icons/pinC_white.png
+    - assets/svgs/icons/pinD_white.png
     - assets/svgs/icons/pin_a.svg
     - assets/svgs/logos/
   #   - images/a_dot_burr.jpeg
