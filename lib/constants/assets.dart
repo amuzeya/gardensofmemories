@@ -20,6 +20,10 @@ class Assets {
   static const String pinA = 'assets/svgs/icons/pinA.png';
   static const String pinB = 'assets/svgs/icons/pinB.png';
   static const String pinC = 'assets/svgs/icons/pinC.png';
+  static const String pinAWhite = 'assets/svgs/icons/pinA_white.png';
+  static const String pinBWhite = 'assets/svgs/icons/pinB_white.png';
+  static const String pinCWhite = 'assets/svgs/icons/pinC_white.png';
+  static const String pinDWhite = 'assets/svgs/icons/pinD_white.png';
   static const String iconPinOption1 = 'assets/svgs/icons/pin_option_1.svg';
   static const String iconPinOption2 = 'assets/svgs/icons/pin_option_2.svg';
   static const String iconPlus = 'assets/svgs/icons/property_1_plus.svg';

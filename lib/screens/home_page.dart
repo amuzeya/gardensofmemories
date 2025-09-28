@@ -458,6 +458,7 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
             child: YslGoogleMapBackground(
               config: data.map, 
               locations: data.locations,
+              selectedLocationIndex: _selectedLocationIndex,
               onMapReady: (controller) {
                 _mapController = controller;
                 print('Map controller ready for animations');

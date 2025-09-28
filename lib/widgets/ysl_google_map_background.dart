@@ -20,6 +20,7 @@ class YslGoogleMapBackground extends StatefulWidget {
   final void Function(HomeLocation)? onMarkerTap;
   final void Function(GoogleMapController)? onMapReady;
   final EdgeInsetsGeometry? padding;
+  final int? selectedLocationIndex;
 
   const YslGoogleMapBackground({
     super.key,
@@ -28,6 +29,7 @@ class YslGoogleMapBackground extends StatefulWidget {
     this.onMarkerTap,
     this.onMapReady,
     this.padding,
+    this.selectedLocationIndex,
   });
 
   @override
@@ -38,6 +40,7 @@ class _YslGoogleMapBackgroundState extends State<YslGoogleMapBackground> {
   GoogleMapController? _controller;
   Set<Marker> _markers = {};
   final Map<String, BitmapDescriptor> _customMarkerIcons = {};
+  final Map<String, BitmapDescriptor> _customMarkerIconsWhite = {};
   bool _isMapReady = false;
 
   // YSL Black & White Map Style JSON
@@ -201,14 +204,25 @@ class _YslGoogleMapBackgroundState extends State<YslGoogleMapBackground> {
       _loadCustomMarkerIcons();
     });
   }
+  
+  @override
+  void didUpdateWidget(YslGoogleMapBackground oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    
+    // Refresh markers if selected location changed
+    if (widget.selectedLocationIndex != oldWidget.selectedLocationIndex) {
+      print('🔄 Selected location changed from ${oldWidget.selectedLocationIndex} to ${widget.selectedLocationIndex}');
+      _initializeMarkers();
+    }
+  }
 
   Future<void> _loadCustomMarkerIcons() async {
     try {
-      print('Loading PNG marker icons...');
+      print('Loading PNG marker icons (black and white versions)...');
       
-      // Use the actual PNG files converted from your SVGs
       final ImageConfiguration imageConfig = const ImageConfiguration();
       
+      // Load black markers (selected state)
       _customMarkerIcons['pinA'] = await BitmapDescriptor.fromAssetImage(
         imageConfig,
         Assets.pinA,
@@ -222,7 +236,21 @@ class _YslGoogleMapBackgroundState extends State<YslGoogleMapBackground> {
         Assets.pinC,
       );
       
-      print('PNG marker icons loaded: ${_customMarkerIcons.keys}');
+      // Load white markers (inactive state)
+      _customMarkerIconsWhite['pinA'] = await BitmapDescriptor.fromAssetImage(
+        imageConfig,
+        Assets.pinAWhite,
+      );
+      _customMarkerIconsWhite['pinB'] = await BitmapDescriptor.fromAssetImage(
+        imageConfig,
+        Assets.pinBWhite,
+      );
+      _customMarkerIconsWhite['pinC'] = await BitmapDescriptor.fromAssetImage(
+        imageConfig,
+        Assets.pinCWhite,
+      );
+      
+      print('PNG marker icons loaded - Black: ${_customMarkerIcons.keys}, White: ${_customMarkerIconsWhite.keys}');
       
       // Initialize markers after icons are loaded
       _initializeMarkers();
@@ -238,17 +266,28 @@ class _YslGoogleMapBackgroundState extends State<YslGoogleMapBackground> {
   void _initializeMarkers() {
     print('Initializing markers for ${widget.locations.length} locations...');
     
-    _markers = widget.locations.map((location) {
+    _markers = widget.locations.asMap().entries.map((entry) {
+      final index = entry.key;
+      final location = entry.value;
       final pinType = location.pin.name; // pin_a, pin_b, pin_c
-      final customIcon = _customMarkerIcons[pinType];
       
-      print('Location: ${location.name}, Pin Type: $pinType, Has Custom Icon: ${customIcon != null}');
+      // Determine if this marker should be selected (black) or inactive (white)
+      final isSelected = widget.selectedLocationIndex != null && 
+                        widget.selectedLocationIndex == index;
+      
+      // Choose appropriate marker color
+      final customIcon = isSelected 
+          ? _customMarkerIcons[pinType] 
+          : _customMarkerIconsWhite[pinType];
+      
+      final markerState = isSelected ? 'SELECTED (BLACK)' : 'INACTIVE (WHITE)';
+      print('Location: ${location.name}, Pin: $pinType, State: $markerState');
       
       return Marker(
         markerId: MarkerId(location.id),
         position: LatLng(location.lat, location.lng),
         onTap: () => widget.onMarkerTap?.call(location),
-        // Use custom YSL marker or fallback to colored default marker
+        // Use custom YSL marker (black or white) or fallback to colored default
         icon: customIcon ?? BitmapDescriptor.defaultMarkerWithHue(
           pinType == 'pinA' ? BitmapDescriptor.hueRed :
           pinType == 'pinB' ? BitmapDescriptor.hueBlue :
@@ -261,7 +300,7 @@ class _YslGoogleMapBackgroundState extends State<YslGoogleMapBackground> {
       );
     }).toSet();
     
-    print('Created ${_markers.length} markers');
+    print('Created ${_markers.length} markers with selection-based colors');
     
     // Update state to show markers on map
     if (mounted) {
