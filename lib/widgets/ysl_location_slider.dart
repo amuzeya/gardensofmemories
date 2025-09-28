@@ -225,6 +225,7 @@ class _YslLocationSliderState extends State<YslLocationSlider> {
               location: location,
               width: widget.cardWidth,
               height: widget.height ?? 180,
+              viewType: YslCardViewType.mapView, // Compact for slider
               onTap: widget.onLocationTap,
               margin: EdgeInsets.zero,
             )

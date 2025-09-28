@@ -19,6 +19,7 @@ import '../theme/app_text.dart';
 import '../widgets/ysl_exclusive_offer_banner.dart';
 import '../widgets/ysl_location_slider.dart';
 import '../widgets/ysl_location_card.dart';
+import '../widgets/ysl_home_location_card.dart';
 import '../widgets/ysl_map_background.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../widgets/ysl_toggle_switch.dart';
@@ -230,7 +231,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
             child: _buildHeroHeaderContent(),
           ),
 
-          // Scrollable list of locations
+          // Scrollable list of locations using horizontal location cards
           Expanded(
             child: ListView.separated(
               padding: const EdgeInsets.all(16),
@@ -238,90 +239,22 @@ class _HomePageScreenState extends State<HomePageScreen> {
               separatorBuilder: (context, index) => const SizedBox(height: 16),
               itemBuilder: (context, index) {
                 final location = yslLocations[index];
-                return Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: AppColors.yslWhite,
-                    border: Border.all(color: Colors.black12, width: 1),
-                    borderRadius: BorderRadius.zero,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.05),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
+                return YslHomeLocationCard(
+                  location: location,
+                  isVertical: false,
+                  viewType: YslCardViewType.listView, // Spacious list view
+                  height: 160, // Taller for spacious layout
+                  width: double.infinity,
+                  margin: EdgeInsets.zero,
+                  onTap: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Explore ${location.name}!'),
+                        backgroundColor: AppColors.yslBlack,
+                        duration: const Duration(seconds: 2),
                       ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Location name
-                      Text(
-                        location.name,
-                        style: AppText.titleMedium.copyWith(
-                          color: AppColors.yslBlack,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      
-                      // Location details
-                      Row(
-                        children: [
-                          Icon(
-                            location.type == LocationType.store
-                                ? Icons.store
-                                : location.type == LocationType.boutique
-                                    ? Icons.shopping_bag
-                                    : location.type == LocationType.experience
-                                        ? Icons.palette
-                                        : Icons.storefront,
-                            size: 16,
-                            color: AppColors.yslBlack.withValues(alpha: 0.7),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            '${location.type.name.toUpperCase()} • ${location.city}',
-                            style: AppText.bodySmall.copyWith(
-                              color: AppColors.yslBlack.withValues(alpha: 0.7),
-                              fontWeight: FontWeight.w500,
-                              letterSpacing: 0.5,
-                            ),
-                          ),
-                          const Spacer(),
-                          if (location.isOpen)
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                              decoration: const BoxDecoration(
-                                color: Colors.green,
-                                borderRadius: BorderRadius.zero,
-                              ),
-                              child: Text(
-                                'OPEN',
-                                style: AppText.bodySmall.copyWith(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 10,
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      
-                      // Location description/address
-                      Text(
-                        location.address,
-                        style: AppText.bodyMedium.copyWith(
-                          color: AppColors.yslBlack,
-                          height: 1.4,
-                        ),
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
+                    );
+                  },
                 );
               },
             ),
