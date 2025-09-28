@@ -139,10 +139,11 @@ class YslHomeLocationCard extends StatelessWidget {
                     child: Text(
                       location.address,
                       style: AppText.bodySmall.copyWith(
-                        color: AppColors.yslBlack.withValues(alpha: 0.8),
+                        color: AppColors.yslBlack.withValues(alpha: 0.65), // Lighter text
                         height: 1.3,
                         fontSize: _getDescriptionFontSize(constraints),
                         fontFamily: 'ITC Avant Garde Gothic Pro',
+                        fontWeight: FontWeight.w300, // Even lighter font weight
                       ),
                       maxLines: descriptionMaxLines,
                       overflow: TextOverflow.ellipsis,
@@ -222,9 +223,10 @@ class YslHomeLocationCard extends StatelessWidget {
                   child: Text(
                     location.address,
                     style: AppText.bodySmall.copyWith(
-                      color: AppColors.yslBlack,
+                      color: AppColors.yslBlack.withValues(alpha: 0.65), // Lighter text
                       height: 1.3,
                       fontFamily: 'ITC Avant Garde Gothic Pro',
+                      fontWeight: FontWeight.w300, // Lighter font weight
                     ),
                     maxLines: maxDescriptionLines ?? 3,
                     overflow: TextOverflow.ellipsis,

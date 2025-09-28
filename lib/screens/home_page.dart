@@ -134,6 +134,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
       _deviceType!,
       true, // isMapView
     );
+    final heroParams = YslResponsiveUtils.getHeroHeaderParams(context, _deviceType!);
     
     return Stack(
       children: [
@@ -174,7 +175,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
               // Hero header with semi-transparent background
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-                padding: sliderParams.padding,
+                padding: heroParams.padding,
                 decoration: BoxDecoration(
                   color: AppColors.yslWhite.withValues(alpha: 0.95),
                   border: Border.all(color: Colors.black12, width: 1),
@@ -316,9 +317,10 @@ class _HomePageScreenState extends State<HomePageScreen> {
             child: Text(
               'In Marrakech, Yves Saint Laurent found refuge and inspiration—where freedom burns and memory lingers like perfume.',
               style: AppText.bodyLarge.copyWith(
-                color: AppColors.yslBlack,
+                color: AppColors.yslBlack.withValues(alpha: 0.7), // Lighter text
                 fontSize: heroParams.descriptionFontSize,
                 height: 1.4,
+                fontWeight: FontWeight.w400, // Lighter font weight
               ),
               textAlign: TextAlign.center,
               maxLines: _deviceType == YslDeviceType.mobile ? 4 : 3, // Prevent overflow on small screens
