@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'theme/app_theme.dart';
+import 'screens/splash_screen.dart';
+import 'screens/loading_screen.dart';
+import 'screens/entering_experience_screen.dart';
 import 'screens/component_library_screen.dart';
 import 'screens/data_validation_screen.dart';
 import 'screens/home_page.dart' as home;
@@ -40,28 +43,32 @@ class YSLBeautyApp extends StatelessWidget {
       // Remove debug banner for production-ready appearance
       debugShowCheckedModeBanner: false,
 
-      // Routing configuration
-      initialRoute: '/home',
-      // Start with component library for development
+      // Routing configuration - Complete user flow
+      initialRoute: '/',
       onGenerateRoute: (RouteSettings settings) {
         switch (settings.name) {
-          // case '/components':
-          //   return MaterialPageRoute(
-          //     builder: (_) => const ComponentLibraryScreen(),
-          //   );
-          // case '/':
-          //   return MaterialPageRoute(builder: (_) => const SplashScreen());
+          case '/':
+            return MaterialPageRoute(builder: (_) => const SplashScreen());
+          case '/loading':
+            return MaterialPageRoute(builder: (_) => const LoadingScreen());
+          case '/entering':
+            return MaterialPageRoute(builder: (_) => const EnteringExperienceScreen());
           case '/home':
             return MaterialPageRoute(
               builder: (_) => home.HomePageScreen(),
+            );
+          case '/components':
+            return MaterialPageRoute(
+              builder: (_) => const ComponentLibraryScreen(),
             );
           case '/dev-data':
             return MaterialPageRoute(
               builder: (_) => const DataValidationScreen(),
             );
           default:
+            // Default to splash screen instead of component library
             return MaterialPageRoute(
-              builder: (_) => const ComponentLibraryScreen(),
+              builder: (_) => const SplashScreen(),
             );
         }
       },

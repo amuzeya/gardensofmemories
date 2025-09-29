@@ -65,15 +65,8 @@ class _EnteringExperienceScreenState extends State<EnteringExperienceScreen>
   }
 
   void _onEmbraceJourney() {
-    // TODO: Navigate to next screen
-    debugPrint('Embrace the Journey pressed');
-    // For now, just show a debug message
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Journey continues... (next screen to be implemented)'),
-        backgroundColor: AppColors.yslBlack,
-      ),
-    );
+    // Navigate to home page with elegant transition
+    Navigator.pushReplacementNamed(context, '/home');
   }
 
   @override
