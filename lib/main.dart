@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'theme/app_theme.dart';
+import 'theme/app_colors.dart';
 import 'screens/splash_screen.dart';
 import 'screens/loading_screen.dart';
 import 'screens/entering_experience_screen.dart';
@@ -27,13 +28,19 @@ class YSLBeautyApp extends StatelessWidget {
     return MaterialApp(
       title: 'YSL Beauty Brand Experience',
 
-      // YSL Beauty themes with forced font family
+      // YSL Beauty themes with enforced ITC Avant Garde font family
       theme: AppTheme.lightTheme.copyWith(
         textTheme: AppTheme.lightTheme.textTheme.apply(
           fontFamily: 'ITC Avant Garde Gothic Pro',
         ),
         primaryTextTheme: AppTheme.lightTheme.primaryTextTheme.apply(
           fontFamily: 'ITC Avant Garde Gothic Pro',
+        ),
+        // Ensure all Material Design text styles use ITC Avant Garde
+        textSelectionTheme: const TextSelectionThemeData(
+          cursorColor: AppColors.yslBlack,
+          selectionColor: AppColors.overlayLight,
+          selectionHandleColor: AppColors.yslBlack,
         ),
       ),
       darkTheme: AppTheme.darkTheme,

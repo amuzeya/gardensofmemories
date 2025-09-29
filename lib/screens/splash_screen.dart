@@ -8,7 +8,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../theme/app_text.dart';
 import '../theme/app_colors.dart';
 import '../constants/assets.dart';
-import 'loading_screen.dart';
 
 /// YSL Beauty Experience Splash Screen
 /// Features:
@@ -91,21 +90,21 @@ class _SplashScreenState extends State<SplashScreen>
   }
   
   void _showContentWithDelay() {
-    Future.delayed(const Duration(milliseconds: 1000), () {
+    Future.delayed(const Duration(milliseconds: 1500), () {
       if (mounted) {
         setState(() {
           _showContent = true;
         });
         _animationController.forward();
         
-        // Automatically navigate to loading screen after showing content for 3 seconds
+        // Automatically navigate to entering experience after showing content for 5 seconds
         _startAutoNavigation();
       }
     });
   }
   
   void _startAutoNavigation() {
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 5), () {
       if (mounted) {
         _enterExperience();
       }
@@ -113,20 +112,7 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   void _enterExperience() {
-    Navigator.pushReplacement(
-      context,
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) =>
-            const LoadingScreen(),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          return FadeTransition(
-            opacity: animation,
-            child: child,
-          );
-        },
-        transitionDuration: const Duration(milliseconds: 800),
-      ),
-    );
+    Navigator.pushReplacementNamed(context, '/entering');
   }
 
   @override
@@ -300,9 +286,9 @@ class _SplashScreenState extends State<SplashScreen>
                   SizedBox(height: 16),
                   Text(
                     'Loading...',
-                    style: TextStyle(
+                    style: AppText.bodyMedium.copyWith(
                       color: AppColors.yslWhite,
-                      fontSize: 16,
+                      letterSpacing: 1.2,
                     ),
                   ),
                 ],
