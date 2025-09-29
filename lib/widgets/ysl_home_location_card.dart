@@ -484,19 +484,16 @@ widget.location.name.toUpperCase(),
   }
   
   /// Unlock message for locked locations in list view
-  /// Uses the lightest weight of ITC Avant Garde Gothic Pro (FontWeight.w200)
+  /// Uses the lightest AppText style with extra light weight
   Widget _buildUnlockMessage(BoxConstraints constraints) {
-    final fontSize = constraints.maxHeight < 140 ? 9.0 : 10.0;
-    
     return Align(
       alignment: Alignment.centerLeft,
       child: Text(
         'Explore previous location to unlock.',
-        style: TextStyle(
-          fontFamily: 'ITC Avant Garde Gothic Pro',
-          fontWeight: FontWeight.w200, // Lightest weight available
-          fontSize: fontSize,
-          color: AppColors.yslBlack.withValues(alpha: 0.4), // Faint but visible
+        style: AppText.bodySmall.copyWith(
+          fontWeight: FontWeight.w300, // Lightest weight available
+          fontSize: 12,
+          color: const Color(0xFF737373), // Faint but visible
           height: 1.3,
           letterSpacing: 0.2,
         ),
