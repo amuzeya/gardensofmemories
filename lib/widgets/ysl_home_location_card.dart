@@ -442,6 +442,11 @@ widget.location.name.toUpperCase(),
   }
 
   Widget _buildListViewButton(BoxConstraints constraints) {
+    // Show unlock message for locked locations in list view
+    if (widget.isLocked) {
+      return _buildUnlockMessage(constraints);
+    }
+    
     final buttonHeight = constraints.maxHeight < 140 ? 28.0 : 32.0;
     final fontSize = constraints.maxHeight < 140 ? 10.0 : 11.0;
     final horizontalPadding = constraints.maxWidth < 400 ? 12.0 : 16.0;
@@ -450,30 +455,50 @@ widget.location.name.toUpperCase(),
       alignment: Alignment.centerLeft,
       child: IntrinsicWidth(
         child: GestureDetector(
-          onTap: widget.isLocked ? null : widget.onExplore,
+          onTap: widget.onExplore,
           child: ScaleTransition(
             scale: AlwaysStoppedAnimation(1.0),
             child: Container(
               height: buttonHeight,
-              padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 0), // Remove bottom padding
+              padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 0),
               decoration: const BoxDecoration(
                 color: AppColors.yslBlack,
                 borderRadius: BorderRadius.zero,
               ),
-              child: Center( // Center the text in the container
+              child: Center(
                 child: Text(
                   'EXPLORE',
                   style: AppText.bodySmall.copyWith(
                     color: AppColors.yslWhite,
                     letterSpacing: 0.8,
                     fontWeight: FontWeight.w600,
-                    fontFamily: 'ITC Avant Garde Gothic Pro',
                     fontSize: fontSize,
                   ),
                 ),
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+  
+  /// Unlock message for locked locations in list view
+  /// Uses the lightest weight of ITC Avant Garde Gothic Pro (FontWeight.w200)
+  Widget _buildUnlockMessage(BoxConstraints constraints) {
+    final fontSize = constraints.maxHeight < 140 ? 9.0 : 10.0;
+    
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Text(
+        'Explore previous location to unlock.',
+        style: TextStyle(
+          fontFamily: 'ITC Avant Garde Gothic Pro',
+          fontWeight: FontWeight.w200, // Lightest weight available
+          fontSize: fontSize,
+          color: AppColors.yslBlack.withValues(alpha: 0.4), // Faint but visible
+          height: 1.3,
+          letterSpacing: 0.2,
         ),
       ),
     );
@@ -516,6 +541,11 @@ widget.location.name.toUpperCase(),
   }
 
   Widget _buildRewardListButton(BoxConstraints constraints) {
+    // Show unlock message for locked reward in list view
+    if (widget.isLocked) {
+      return _buildUnlockMessage(constraints);
+    }
+    
     final buttonHeight = constraints.maxHeight < 140 ? 28.0 : 32.0;
     final fontSize = constraints.maxHeight < 140 ? 10.0 : 11.0;
     final horizontalPadding = constraints.maxWidth < 400 ? 12.0 : 16.0;
@@ -524,7 +554,7 @@ widget.location.name.toUpperCase(),
       alignment: Alignment.centerLeft,
       child: IntrinsicWidth(
         child: GestureDetector(
-          onTap: widget.isLocked ? null : widget.onExplore,
+          onTap: widget.onExplore,
           child: Container(
             height: buttonHeight,
             padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 0),
@@ -539,7 +569,6 @@ widget.location.name.toUpperCase(),
                   color: AppColors.yslBlack,
                   letterSpacing: 0.8,
                   fontWeight: FontWeight.w600,
-                  fontFamily: 'ITC Avant Garde Gothic Pro',
                   fontSize: fontSize,
                 ),
               ),
