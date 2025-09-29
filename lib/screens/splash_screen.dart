@@ -31,28 +31,13 @@ class _SplashScreenState extends State<SplashScreen>
   late Animation<double> _scaleAnimation;
   bool _isVideoInitialized = false;
   bool _showContent = false;
-  bool _isMobile = false;
   bool _videoFailed = false;
 
   @override
   void initState() {
     super.initState();
-    _detectPlatform();
     _initializeAnimations();
     _initializeVideo();
-  }
-
-  void _detectPlatform() {
-    // Detect if running on mobile web or mobile app
-    _isMobile = kIsWeb ? _isMobileWeb() : (Theme.of(context).platform == TargetPlatform.iOS || Theme.of(context).platform == TargetPlatform.android);
-    debugPrint('Platform detected - Mobile: $_isMobile, Web: $kIsWeb');
-  }
-
-  bool _isMobileWeb() {
-    // For web, we need to check user agent or screen size
-    // Using screen size as a heuristic for mobile detection
-    final data = MediaQueryData.fromView(WidgetsBinding.instance.platformDispatcher.views.first);
-    return data.size.width < 768; // Tablet breakpoint
   }
 
   void _initializeAnimations() {
@@ -79,74 +64,56 @@ class _SplashScreenState extends State<SplashScreen>
   }
 
   Future<void> _initializeVideo() async {
-    // Skip video initialization on mobile to avoid autoplay issues
-    if (_isMobile && kIsWeb) {
-      debugPrint('Mobile web detected - skipping video autoplay');
-      setState(() {
-        _videoFailed = true;
-      });
-      _showContentWithDelay();
-      return;
-    }
-    
     try {
-      debugPrint('Initializing video for platform: ${kIsWeb ? "Web" : "Native"}, Mobile: $_isMobile');
+      debugPrint('🎬 Initializing video for ${kIsWeb ? "Web" : "Native"} platform');
       
-      // Create video controller
+      // Create video controller with asset
       _videoController = VideoPlayerController.asset('assets/splash_screen_ourika.mp4');
       
-      // Set up listener for initialization
+      // Add listener for errors and state changes
       _videoController!.addListener(() {
         if (_videoController!.value.hasError) {
-          debugPrint('Video playback error: ${_videoController!.value.errorDescription}');
+          debugPrint('❌ Video error: ${_videoController!.value.errorDescription}');
           if (mounted) {
             setState(() {
               _videoFailed = true;
             });
+            _showContentWithDelay();
           }
         }
       });
       
-      // Initialize video with timeout
-      await _videoController!.initialize().timeout(
-        const Duration(seconds: 10),
-        onTimeout: () {
-          throw Exception('Video initialization timeout');
-        },
-      );
+      // Initialize video
+      debugPrint('📱 Initializing video player...');
+      await _videoController!.initialize();
       
       if (mounted) {
+        debugPrint('✅ Video initialized successfully');
         setState(() {
           _isVideoInitialized = true;
         });
         
-        // Configure video for optimal playback
-        _videoController!.setLooping(true);
-        _videoController!.setVolume(0.0); // Muted for autoplay compliance
+        // Configure video for mobile autoplay
+        await _videoController!.setLooping(true);
+        await _videoController!.setVolume(0.0); // Muted is REQUIRED for mobile autoplay
         
-        // Attempt to play video
-        try {
-          await _videoController!.play();
-          debugPrint('Video playback started successfully');
-        } catch (playError) {
-          debugPrint('Video play error: $playError');
-          if (mounted) {
-            setState(() {
-              _videoFailed = true;
-            });
-          }
-        }
+        debugPrint('🎵 Video configured - muted and looping');
         
-        // Show content after video starts
+        // Start playback immediately
+        debugPrint('▶️ Starting video playback...');
+        await _videoController!.play();
+        
+        debugPrint('🎉 Video playing successfully!');
+        
+        // Show content after a brief delay
         _showContentWithDelay();
       }
     } catch (e) {
-      debugPrint('Video initialization error: $e');
+      debugPrint('💥 Video initialization failed: $e');
       if (mounted) {
         setState(() {
           _videoFailed = true;
         });
-        // Show content even if video fails
         _showContentWithDelay();
       }
     }
@@ -192,7 +159,7 @@ class _SplashScreenState extends State<SplashScreen>
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // Background: Video or enhanced gradient fallback
+          // Background Video or elegant gradient fallback
           if (_isVideoInitialized && _videoController != null && !_videoFailed)
             SizedBox.expand(
               child: FittedBox(
@@ -205,52 +172,21 @@ class _SplashScreenState extends State<SplashScreen>
               ),
             )
           else
-            // Enhanced botanical gradient fallback for mobile and video failures
+            // Elegant botanical gradient fallback while video loads
             Container(
-              decoration: BoxDecoration(
-                gradient: _isMobile ? 
-                  // Mobile-optimized gradient with more visual interest
-                  const RadialGradient(
-                    center: Alignment.topLeft,
-                    radius: 1.5,
-                    stops: [0.0, 0.3, 0.6, 1.0],
-                    colors: [
-                      Color(0xFF3E5E3E), // Brighter botanical green
-                      Color(0xFF2D4A2D), // Rich botanical green
-                      Color(0xFF1F3A1F), // Deep forest green
-                      Color(0xFF0D0D0D), // Deep black
-                    ],
-                  ) :
-                  // Desktop gradient
-                  const LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    stops: [0.0, 0.3, 0.6, 1.0],
-                    colors: [
-                      Color(0xFF2D4A2D), // Rich botanical green
-                      Color(0xFF1F3A1F), // Deep forest green
-                      Color(0xFF1A2A1A), // Dark botanical
-                      Color(0xFF0D0D0D), // Deep black
-                    ],
-                  ),
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  stops: [0.0, 0.3, 0.6, 1.0],
+                  colors: [
+                    Color(0xFF2D4A2D), // Rich botanical green
+                    Color(0xFF1F3A1F), // Deep forest green
+                    Color(0xFF1A2A1A), // Dark botanical
+                    Color(0xFF0D0D0D), // Deep black
+                  ],
+                ),
               ),
-              child: _isMobile ? 
-                // Add subtle pattern for mobile to compensate for missing video
-                Container(
-                  decoration: BoxDecoration(
-                    backgroundBlendMode: BlendMode.overlay,
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      stops: const [0.0, 0.5, 1.0],
-                      colors: [
-                        Colors.transparent,
-                        Colors.black.withValues(alpha: 0.1),
-                        Colors.black.withValues(alpha: 0.3),
-                      ],
-                    ),
-                  ),
-                ) : null,
             ),
 
           // Dark overlay for content readability
@@ -379,24 +315,12 @@ class _SplashScreenState extends State<SplashScreen>
                   ),
                   SizedBox(height: 16),
                   Text(
-                    _isMobile ? 'Entering Experience...' : 'Loading...',
+                    'Loading Experience...',
                     style: AppText.bodyMedium.copyWith(
                       color: AppColors.yslWhite,
                       letterSpacing: 1.2,
                     ),
                   ),
-                  if (_isMobile && kIsWeb)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Text(
-                        'For full video experience, visit on desktop',
-                        style: AppText.bodySmall.copyWith(
-                          color: AppColors.yslWhite.withValues(alpha: 0.7),
-                          letterSpacing: 0.8,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
                 ],
               ),
             ),
