@@ -106,7 +106,8 @@ class _YslLocationBottomSheetState extends State<YslLocationBottomSheet>
   }
 
   void _onDragUpdate(DragUpdateDetails details) {
-    double newPosition = _dragPosition - (details.delta.dy / MediaQuery.of(context).size.height);
+    // Fix: Add delta instead of subtract - swipe UP should open (reduce position), swipe DOWN should close (increase position)
+    double newPosition = _dragPosition + (details.delta.dy / MediaQuery.of(context).size.height);
     
     // Add smooth resistance when dragging beyond boundaries
     if (newPosition < 0) {
@@ -137,8 +138,9 @@ class _YslLocationBottomSheetState extends State<YslLocationBottomSheet>
     late bool shouldExpand;
     
     // Determine target based on velocity and position
+    // Fix: Swap velocity directions - upward velocity (negative) should expand, downward (positive) should close
     if (details.velocity.pixelsPerSecond.dy < -800 || _dragPosition < 0.25) {
-      // Snap to full screen
+      // Fast upward swipe or already near top - snap to full screen
       targetPosition = 0.05; // Almost full screen
       shouldExpand = true;
       _pulseController.stop(); // Stop pulsing when fully expanded
