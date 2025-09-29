@@ -111,6 +111,14 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
   // Gamified flight path animation state
   bool _showFlightPath = true;
   bool _flightCompleted = false;
+  
+  // Hero content entrance animation controllers
+  late AnimationController _heroEntranceController;
+  late Animation<double> _heroContentFadeIn;
+  late Animation<Offset> _heroContentSlideIn;
+  late Animation<double> _subtitleEntranceFade;
+  late Animation<double> _descriptionEntranceFade;
+  bool _heroContentVisible = false;
 
   @override
   void initState() {
@@ -144,6 +152,47 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
       duration: const Duration(milliseconds: 800), // slower, more immersive
       vsync: this,
     );
+    
+    // Hero content entrance animations (for post-flight transition)
+    _heroEntranceController = AnimationController(
+      duration: const Duration(milliseconds: 2500), // Elegant, slow entrance
+      vsync: this,
+    );
+    
+    // Main hero content fade and slide
+    _heroContentFadeIn = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _heroEntranceController,
+      curve: const Interval(0.0, 0.8, curve: Curves.easeOutCubic),
+    ));
+    
+    _heroContentSlideIn = Tween<Offset>(
+      begin: const Offset(0.0, 0.3), // Start slightly below
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _heroEntranceController,
+      curve: const Interval(0.0, 0.8, curve: Curves.easeOutQuart),
+    ));
+    
+    // Staggered subtitle entrance
+    _subtitleEntranceFade = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _heroEntranceController,
+      curve: const Interval(0.3, 0.9, curve: Curves.easeOut),
+    ));
+    
+    // Staggered description entrance
+    _descriptionEntranceFade = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _heroEntranceController,
+      curve: const Interval(0.5, 1.0, curve: Curves.easeOut),
+    ));
     _unlockToastOpacity = CurvedAnimation(
       parent: _unlockToastController,
       curve: Curves.easeOut,
@@ -273,8 +322,8 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
   }
   
   void _startImmersiveTimer() {
-    // Start the immersive transition after 6 seconds if no interaction
-    _immersiveTimer = Timer(const Duration(seconds: 6), () {
+    // Start the immersive transition after 8 seconds if no interaction (longer for better UX)
+    _immersiveTimer = Timer(const Duration(seconds: 8), () {
       if (!_hasInteracted && mounted && _viewToggle == YslToggleOption.map) {
         _triggerImmersiveMode();
       }
@@ -366,14 +415,31 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
   }
   
   void _onFlightCompleted() {
-    // Called when the gamified flight animation completes
+    // Called when the gamified flight animation completes with elegant transition
     setState(() {
       _showFlightPath = false;
       _flightCompleted = true;
     });
     
-    // Start the normal app experience
-    _startImmersiveTimer();
+    // Start hero content with elegant entrance animations
+    Future.delayed(const Duration(milliseconds: 300), () {
+      if (mounted) {
+        // First show the hero content with staggered animations
+        _showHeroContentWithStagger();
+        // Then start the immersive timer
+        _startImmersiveTimer();
+      }
+    });
+  }
+  
+  void _showHeroContentWithStagger() {
+    // Elegant staggered entrance for hero content after flight animation
+    if (!_heroContentVisible) {
+      setState(() {
+        _heroContentVisible = true;
+      });
+      _heroEntranceController.forward();
+    }
   }
   
   void _animateMapToLocation(List<HomeLocation> locations, int index) {
@@ -418,6 +484,7 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
   void dispose() {
     _immersiveTimer?.cancel();
     _heroFadeController.dispose();
+    _heroEntranceController.dispose();
     _toggleTransitionController.dispose();
     _viewModeTransitionController.dispose();
     _unlockToastController.dispose();
@@ -1026,20 +1093,36 @@ if (!isReward && index >= 0 && index < data.locations.length) {
         ),
         SizedBox(height: heroParams.spacing),
 
-        // Small subtitle with fade and slide animation
+        // Small subtitle with entrance and immersive fade animations
         AnimatedBuilder(
-          animation: Listenable.merge([_heroSubtitleFade, _heroSubtitleSlide]),
+          animation: Listenable.merge([
+            _heroSubtitleFade, 
+            _heroSubtitleSlide, 
+            _subtitleEntranceFade,
+            _heroContentFadeIn,
+            _heroContentSlideIn
+          ]),
           builder: (context, child) {
-            return SlideTransition(
-              position: _heroSubtitleSlide,
-              child: FadeTransition(
-                opacity: _heroSubtitleFade,
+            // Use entrance animation if coming from flight, otherwise use immersive fade
+            final opacity = _heroContentVisible 
+                ? _subtitleEntranceFade.value * _heroSubtitleFade.value
+                : _heroSubtitleFade.value;
+            final slideOffset = _heroContentVisible
+                ? Offset(_heroContentSlideIn.value.dx, _heroSubtitleSlide.value.dy + _heroContentSlideIn.value.dy)
+                : _heroSubtitleSlide.value;
+                
+            return Transform.translate(
+              offset: Offset(slideOffset.dx * MediaQuery.of(context).size.width, 
+                           slideOffset.dy * MediaQuery.of(context).size.height),
+              child: Opacity(
+                opacity: opacity.clamp(0.0, 1.0),
                 child: Text(
                   'YVES THROUGH MARRAKECH',
-                  style: AppText.bodySmallLight.copyWith(
+                  style: AppText.bodyLarge.copyWith(
                     color: AppColors.yslBlack,
                     fontSize: heroParams.subtitleFontSize,
                     letterSpacing: 1.5,
+                    fontWeight: FontWeight.w300,
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -1084,27 +1167,43 @@ if (!isReward && index >= 0 && index < data.locations.length) {
           },
         ),
 
-        // Description paragraph with fade and slide animation
+        // Description paragraph with entrance and immersive fade animations
         AnimatedBuilder(
-          animation: Listenable.merge([_heroDescriptionFade, _heroDescriptionSlide]),
+          animation: Listenable.merge([
+            _heroDescriptionFade, 
+            _heroDescriptionSlide, 
+            _descriptionEntranceFade,
+            _heroContentFadeIn,
+            _heroContentSlideIn
+          ]),
           builder: (context, child) {
-            return SlideTransition(
-              position: _heroDescriptionSlide,
-              child: FadeTransition(
-                opacity: _heroDescriptionFade,
+            // Use entrance animation if coming from flight, otherwise use immersive fade
+            final opacity = _heroContentVisible 
+                ? _descriptionEntranceFade.value * _heroDescriptionFade.value
+                : _heroDescriptionFade.value;
+            final slideOffset = _heroContentVisible
+                ? Offset(_heroContentSlideIn.value.dx, _heroDescriptionSlide.value.dy + _heroContentSlideIn.value.dy)
+                : _heroDescriptionSlide.value;
+                
+            return Transform.translate(
+              offset: Offset(slideOffset.dx * MediaQuery.of(context).size.width, 
+                           slideOffset.dy * MediaQuery.of(context).size.height),
+              child: Opacity(
+                opacity: opacity.clamp(0.0, 1.0),
                 child: Center(
                   child: ConstrainedBox(
                     constraints: BoxConstraints(maxWidth: heroParams.maxDescriptionWidth),
                     child: Text(
                       'In Marrakech, Yves Saint Laurent found refuge and inspiration—where freedom burns and memory lingers like perfume.',
-                      style: AppText.bodyLarge.copyWith(
-                        color: AppColors.yslBlack.withValues(alpha: 0.7), // Lighter text
+                      style: AppText.bodyMedium.copyWith(
+                        color: AppColors.yslBlack.withValues(alpha: 0.75), // Slightly more visible
                         fontSize: heroParams.descriptionFontSize,
-                        height: 1.4,
-                        fontWeight: FontWeight.w400, // Lighter font weight
+                        height: 1.5,
+                        fontWeight: FontWeight.w300, // Light weight for elegance
+                        fontFamily: 'ITC Avant Garde Gothic Pro',
                       ),
                       textAlign: TextAlign.center,
-                      maxLines: _deviceType == YslDeviceType.mobile ? 4 : 3, // Prevent overflow on small screens
+                      maxLines: _deviceType == YslDeviceType.mobile ? 4 : 3,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),

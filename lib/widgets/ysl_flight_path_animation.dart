@@ -53,6 +53,12 @@ class _YslFlightPathAnimationState extends State<YslFlightPathAnimation>
   // Animation states
   bool _showFlightPath = false;
   bool _animationCompleted = false;
+  bool _showArrival = false;
+  
+  // Arrival celebration animation
+  late AnimationController _arrivalController;
+  late Animation<double> _arrivalPulse;
+  late Animation<double> _arrivalFade;
 
   // Google Map state
   final Set<Marker> _markers = <Marker>{};
@@ -100,6 +106,28 @@ class _YslFlightPathAnimationState extends State<YslFlightPathAnimation>
     )..repeat();
     _pulseController.addListener(_onPulseTick);
     
+    // Arrival celebration animation
+    _arrivalController = AnimationController(
+      duration: const Duration(milliseconds: 2000),
+      vsync: this,
+    );
+    
+    _arrivalPulse = Tween<double>(
+      begin: 1.0,
+      end: 1.3,
+    ).animate(CurvedAnimation(
+      parent: _arrivalController,
+      curve: const Interval(0.0, 0.6, curve: Curves.elasticOut),
+    ));
+    
+    _arrivalFade = Tween<double>(
+      begin: 1.0,
+      end: 0.0,
+    ).animate(CurvedAnimation(
+      parent: _arrivalController,
+      curve: const Interval(0.4, 1.0, curve: Curves.easeInCubic),
+    ));
+    
     // Create animations with elegant curves
     _planeProgress = Tween<double>(
       begin: 0.0,
@@ -117,14 +145,18 @@ class _YslFlightPathAnimationState extends State<YslFlightPathAnimation>
       curve: Curves.easeOut,
     ));
     
-    // Listen for animation completion
+    // Listen for animation completion with elegant transition
     _planeController.addStatusListener((status) {
       if (status == AnimationStatus.completed && !_animationCompleted) {
         _animationCompleted = true;
-        // Delay before completing to let user appreciate the arrival
-        Future.delayed(const Duration(milliseconds: 1000), () {
+        
+        // Show arrival celebration briefly
+        _showArrivalCelebration();
+        
+        // Elegant fade to home with proper timing
+        Future.delayed(const Duration(milliseconds: 1500), () {
           if (mounted) {
-            widget.onFlightCompleted();
+            _startElegantTransitionToHome();
           }
         });
       }
@@ -310,7 +342,21 @@ class _YslFlightPathAnimationState extends State<YslFlightPathAnimation>
     _planeController.dispose();
     _fadeInController.dispose();
     _pulseController.dispose();
+    _arrivalController.dispose();
     super.dispose();
+  }
+  
+  void _showArrivalCelebration() {
+    // Show elegant arrival celebration
+    setState(() {
+      _showArrival = true;
+    });
+    _arrivalController.forward();
+  }
+  
+  void _startElegantTransitionToHome() {
+    // Elegant fade transition to home page
+    widget.onFlightCompleted();
   }
 
   @override

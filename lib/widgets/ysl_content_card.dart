@@ -16,6 +16,7 @@ import '../widgets/ysl_button.dart';
 class YslContentCard extends StatelessWidget {
   final String? subtitle;
   final String? title;
+  final String? description;
   final String? buttonText;
   final VoidCallback? onButtonPressed;
   final EdgeInsetsGeometry? padding;
@@ -26,6 +27,7 @@ class YslContentCard extends StatelessWidget {
     super.key,
     this.subtitle,
     this.title,
+    this.description,
     this.buttonText,
     this.onButtonPressed,
     this.padding,
@@ -38,7 +40,8 @@ class YslContentCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       margin: margin ?? const EdgeInsets.all(0),
-      padding: padding ?? const EdgeInsets.symmetric(horizontal: 30, vertical: 50),
+      padding:
+          padding ?? const EdgeInsets.symmetric(horizontal: 30, vertical: 50),
       clipBehavior: Clip.antiAlias,
       decoration: const BoxDecoration(
         color: AppColors.yslWhite,
@@ -50,8 +53,7 @@ class YslContentCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           // Text content section
-          if (subtitle != null || title != null)
-            _buildTextContent(),
+          if (subtitle != null || title != null) _buildTextContent(),
 
           // Custom content
           if (customContent != null) ...[
@@ -88,6 +90,7 @@ class YslContentCard extends StatelessWidget {
                   color: AppColors.yslBlack,
                   letterSpacing: 0.60,
                   height: 1.50,
+                  fontSize: 12,
                 ),
               ),
             ),
@@ -101,8 +104,23 @@ class YslContentCard extends StatelessWidget {
               child: Text(
                 title!,
                 textAlign: TextAlign.center,
-                style: AppText.titleLarge.copyWith(
+                style: AppText.titleLarge.copyWith(color: AppColors.yslBlack),
+              ),
+            ),
+
+          SizedBox(height: 20,),
+
+          if (description != null)
+            SizedBox(
+              width: double.infinity,
+              child: Text(
+                description!,
+                textAlign: TextAlign.center,
+                style: AppText.bodySmallLight.copyWith(
                   color: AppColors.yslBlack,
+                  letterSpacing: 0.60,
+                  height: 1.50,
+                  fontSize: 12,
                 ),
               ),
             ),
@@ -115,7 +133,8 @@ class YslContentCard extends StatelessWidget {
     return YslButton(
       text: buttonText!,
       onPressed: onButtonPressed!,
-      variant: YslButtonVariant.light, // Using lighter font weight variant
+      variant: YslButtonVariant.light,
+      // Using lighter font weight variant
       height: 50,
       padding: const EdgeInsets.symmetric(horizontal: 20),
     );
