@@ -183,11 +183,11 @@ return widget.isVertical
                   Flexible(
                   child: Text(
                     widget.location.listingDescription ?? widget.location.address,
-                      style: AppText.bodySmall.copyWith(
+                      style: AppText.bodySmallMedium.copyWith(
 color: widget.isReward ? AppColors.yslWhite.withValues(alpha: 0.7) : AppColors.yslBlack.withValues(alpha: 0.65),
                         height: 1.3,
                         fontSize: _getDescriptionFontSize(constraints),
-                        fontFamily: 'ITC Avant Garde Gothic Pro',
+                        fontFamily: AppText.bodySmallMedium.fontFamily,
                         fontWeight: FontWeight.w300,
                       ),
                       maxLines: descriptionMaxLines,

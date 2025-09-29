@@ -29,15 +29,9 @@ class YSLBeautyApp extends StatelessWidget {
     return MaterialApp(
       title: 'YSL Beauty Brand Experience',
 
-      // YSL Beauty themes with enforced ITC Avant Garde font family
+      // YSL Beauty themes with proper font configuration
       theme: AppTheme.lightTheme.copyWith(
-        textTheme: AppTheme.lightTheme.textTheme.apply(
-          fontFamily: 'ITC Avant Garde Gothic Pro',
-        ),
-        primaryTextTheme: AppTheme.lightTheme.primaryTextTheme.apply(
-          fontFamily: 'ITC Avant Garde Gothic Pro',
-        ),
-        // Ensure all Material Design text styles use ITC Avant Garde
+        // Text selection theme
         textSelectionTheme: const TextSelectionThemeData(
           cursorColor: AppColors.yslBlack,
           selectionColor: AppColors.overlayLight,

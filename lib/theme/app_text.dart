@@ -32,12 +32,12 @@ class AppText {
   }) {
     return TextStyle(
       fontFamily: primaryFontFamily,
+      fontFamilyFallback: const ['Arial', 'Helvetica', 'sans-serif'],
       fontSize: fontSize,
       fontWeight: fontWeight,
       color: color ?? AppColors.yslBlack,
       letterSpacing: letterSpacing,
       height: height,
-      // No fallback needed - using bundled font files
     );
   }
   
@@ -51,12 +51,12 @@ class AppText {
   }) {
     return TextStyle(
       fontFamily: displayFontFamily,
+      fontFamilyFallback: const ['Helvetica', 'sans-serif'],
       fontSize: fontSize,
       fontWeight: fontWeight,
       color: color ?? AppColors.yslBlack,
       letterSpacing: letterSpacing,
       height: height,
-      // No fallback needed - using bundled font files
     );
   }
 
