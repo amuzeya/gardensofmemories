@@ -9,6 +9,7 @@ import '../theme/app_colors.dart';
 import '../theme/app_text.dart';
 import '../models/home_location.dart';
 import '../models/location_details.dart';
+import 'ysl_carousel.dart';
 
 class YslLocationBottomSheet extends StatefulWidget {
   final HomeLocation location;
@@ -275,46 +276,49 @@ class _YslLocationBottomSheetState extends State<YslLocationBottomSheet>
     return Container(
       height: 60,
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Row(
+      child: Stack(
         children: [
-          // Spacer for centering drag handle
-          const Spacer(),
-          
-          // Animated drag handle
-          AnimatedBuilder(
-            animation: _pulseAnimation,
-            builder: (context, child) {
-              return Transform.scale(
-                scale: _isDraggedUp ? 1.0 : _pulseAnimation.value,
-                child: Container(
-                  width: 40,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: AppColors.yslBlack.withOpacity(0.3),
-                    borderRadius: BorderRadius.circular(2),
+          // Centered drag handle (aligned with ACTIVITY text below)
+          Center(
+            child: AnimatedBuilder(
+              animation: _pulseAnimation,
+              builder: (context, child) {
+                return Transform.scale(
+                  scale: _isDraggedUp ? 1.0 : _pulseAnimation.value,
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: AppColors.yslBlack.withOpacity(0.3),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
           
-          // Spacer and close button
-          const Spacer(),
-          
-          // Close button
-          GestureDetector(
-            onTap: widget.onClose,
-            child: Container(
-              width: 32,
-              height: 32,
-              decoration: const BoxDecoration(
-                color: AppColors.yslBlack,
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.close,
-                color: AppColors.yslWhite,
-                size: 18,
+          // Close button positioned at top-right
+          Positioned(
+            right: 0,
+            top: 0,
+            bottom: 0,
+            child: Center(
+              child: GestureDetector(
+                onTap: widget.onClose,
+                child: Container(
+                  width: 32,
+                  height: 32,
+                  decoration: const BoxDecoration(
+                    color: AppColors.yslBlack,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.close,
+                    color: AppColors.yslWhite,
+                    size: 18,
+                  ),
+                ),
               ),
             ),
           ),
@@ -328,211 +332,110 @@ class _YslLocationBottomSheetState extends State<YslLocationBottomSheet>
       padding: const EdgeInsets.all(20),
       child: ListView(
         children: [
-          // Location category
-          Text(
-            widget.location.type.name.toUpperCase(),
-            style: AppText.bodySmall.copyWith(
-              color: AppColors.yslBlack.withOpacity(0.6),
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 1.5,
-              fontFamily: 'ITC Avant Garde Gothic Pro',
-            ),
-          ),
-          
-          const SizedBox(height: 8),
-          
-          // Location name
-          Text(
-            widget.location.name.toUpperCase(),
-            style: AppText.titleLarge.copyWith(
-              color: AppColors.yslBlack,
-              fontSize: 28,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 1.0,
-              fontFamily: 'ITC Avant Garde Gothic Pro',
+          // "ACTIVITY" aligned under handle - center aligned
+          Center(
+            child: Text(
+              'ACTIVITY',
+              style: AppText.bodySmall.copyWith(
+                color: AppColors.yslBlack.withOpacity(0.6),
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 1.5,
+              ),
             ),
           ),
           
           const SizedBox(height: 16),
           
-          // Location address
-          Text(
-            '${widget.location.address}, ${widget.location.city}',
-            style: AppText.bodyMedium.copyWith(
-              color: AppColors.yslBlack.withOpacity(0.7),
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-              height: 1.4,
-              fontFamily: 'ITC Avant Garde Gothic Pro',
+          // Location name - centered with biggest AppText font (heroDisplay)
+          Center(
+            child: Text(
+              widget.location.name.toUpperCase(),
+              style: AppText.heroDisplay.copyWith(
+                color: AppColors.yslBlack,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 1.0,
+              ),
+              textAlign: TextAlign.center,
             ),
           ),
           
-          if (widget.location.distance != null && widget.location.distance!.isNotEmpty) ...[
-            const SizedBox(height: 12),
-            
-            // Distance
-            Row(
-              children: [
-                Icon(
-                  Icons.location_on,
-                  size: 16,
-                  color: AppColors.yslBlack.withOpacity(0.6),
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  widget.location.distance!,
-                  style: AppText.bodySmall.copyWith(
-                    color: AppColors.yslBlack.withOpacity(0.6),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    fontFamily: 'ITC Avant Garde Gothic Pro',
-                  ),
-                ),
-              ],
-            ),
-          ],
+          const SizedBox(height: 12),
           
-          const SizedBox(height: 24),
-
-          // Dynamic content blocks from production details
-          if (widget.details != null) ..._buildContentBlocks(widget.details!),
-          if (widget.details == null) ...[
-            Container(
-              width: double.infinity,
-              height: 1,
-              color: AppColors.yslBlack.withOpacity(0.1),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'LOCATION DETAILS COMING SOON',
-              style: AppText.bodySmall.copyWith(
-                color: AppColors.yslBlack.withOpacity(0.4),
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 1.5,
-                fontFamily: 'ITC Avant Garde Gothic Pro',
+          // Location address - lightweight, center aligned
+          Center(
+            child: Text(
+              widget.location.address,
+              style: AppText.bodyMedium.copyWith(
+                color: AppColors.yslBlack.withOpacity(0.6),
+                fontWeight: FontWeight.w300, // Lightweight
+                height: 1.4,
               ),
+              textAlign: TextAlign.center,
             ),
-          ],
+          ),
+          
+          const SizedBox(height: 32),
+          
+          // YSL Carousel component
+          _buildLocationCarousel(),
         ],
       ),
     );
   }
-
-  List<Widget> _buildContentBlocks(LocationDetails details) {
-    final blocks = <Widget>[];
-    for (final b in details.content) {
-      if (b is TextBlock) {
-        blocks.add(
-          Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: Text(
-              b.body,
-              style: AppText.bodyMedium.copyWith(
-                color: AppColors.yslBlack.withOpacity(0.8),
-                height: 1.4,
-              ),
-            ),
-          ),
-        );
-      } else if (b is SlideshowBlock) {
-        final isLocal = b.source == 'local';
-        blocks.add(
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (b.title != null) ...[
-                Text(
-                  b.title!,
-                  style: AppText.bodySmall.copyWith(
-                    color: AppColors.yslBlack,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 8),
-              ],
-              SizedBox(
-                height: 140,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: b.images.length,
-                  separatorBuilder: (_, __) => const SizedBox(width: 8),
-                  itemBuilder: (context, i) {
-                    final src = b.images[i];
-                    return ClipRRect(
-                      borderRadius: BorderRadius.circular(2),
-                      child: isLocal
-                          ? Image.asset(src, height: 140, width: 200, fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) => _imageFallback())
-                          : Image.network(src, height: 140, width: 200, fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) => _imageFallback()),
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(height: 16),
-            ],
-          ),
-        );
-      } else if (b is ImageBlock) {
-        final isLocal = b.source == 'local';
-        blocks.add(
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(2),
-                child: isLocal
-                    ? Image.asset(b.src, fit: BoxFit.cover, errorBuilder: (_, __, ___) => _imageFallback())
-                    : Image.network(b.src, fit: BoxFit.cover, errorBuilder: (_, __, ___) => _imageFallback()),
-              ),
-              if (b.caption != null) ...[
-                const SizedBox(height: 6),
-                Text(
-                  b.caption!,
-                  style: AppText.bodySmall.copyWith(color: AppColors.yslBlack.withOpacity(0.6)),
-                )
-              ],
-              const SizedBox(height: 16),
-            ],
-          ),
-        );
-      } else if (b is VideoBlock) {
-        // Lightweight placeholder for videos for now (no inline player)
-        blocks.add(
-          Container(
-            margin: const EdgeInsets.only(bottom: 16),
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: AppColors.yslBlack.withOpacity(0.06),
-              border: Border.all(color: AppColors.yslBlack.withOpacity(0.2), width: 1),
-            ),
-            child: Row(
-              children: [
-                const Icon(Icons.play_circle_outline, color: AppColors.yslBlack),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    (b.title ?? 'Video'),
-                    style: AppText.bodySmall.copyWith(color: AppColors.yslBlack),
-                  ),
-                ),
-              ],
-            ),
+  
+  /// Build YSL Carousel with location gallery images
+  Widget _buildLocationCarousel() {
+    // Create carousel items from location gallery
+    final carouselItems = <YslCarouselItem>[];
+    
+    // Add gallery images from location details if available
+    if (widget.details?.galleryLocal.isNotEmpty == true) {
+      for (final imagePath in widget.details!.galleryLocal.take(5)) {
+        carouselItems.add(
+          YslCarouselItem(
+            imagePath: imagePath,
+            title: widget.location.name,
+            subtitle: widget.location.address,
           ),
         );
       }
     }
-    return blocks;
-  }
-
-  Widget _imageFallback() {
-    return Container(
-      color: Colors.grey.shade200,
-      width: 200,
-      height: 140,
-      child: const Center(child: Icon(Icons.image_not_supported, color: AppColors.yslBlack)),
+    
+    // Add remote gallery images as fallback
+    if (carouselItems.isEmpty && widget.details?.galleryRemote.isNotEmpty == true) {
+      for (final imageUrl in widget.details!.galleryRemote.take(5)) {
+        carouselItems.add(
+          YslCarouselItem(
+            imagePath: imageUrl,
+            title: widget.location.name,
+            subtitle: widget.location.address,
+          ),
+        );
+      }
+    }
+    
+    // Fallback to location cover image if no gallery available
+    if (carouselItems.isEmpty) {
+      carouselItems.add(
+        YslCarouselItem(
+          imagePath: widget.location.image,
+          title: widget.location.name,
+          subtitle: widget.location.address,
+        ),
+      );
+    }
+    
+    return SizedBox(
+      height: 280,
+      child: YslCarousel(
+        items: carouselItems,
+        height: 280,
+        enableAutoPlay: true,
+        autoPlayDuration: const Duration(seconds: 4),
+        showIndicators: true,
+      ),
     );
   }
+
 }
