@@ -1372,13 +1372,14 @@ if (!isReward && index >= 0 && index < data.locations.length) {
     // Give the toast more time before focusing the next location
     await Future.delayed(const Duration(milliseconds: 1200));
 
-    if (mounted) {
-      // Update selected index to next and animate map
-      setState(() { _selectedLocationIndex = nextIndex; });
-      if (nextIndex < data.locations.length) {
-        _animateMapToLocation(data.locations, nextIndex);
-      }
-    }
+    // Removed forced navigation - let users control their own journey
+    // if (mounted) {
+    //   // Update selected index to next and animate map
+    //   setState(() { _selectedLocationIndex = nextIndex; });
+    //   if (nextIndex < data.locations.length) {
+    //     _animateMapToLocation(data.locations, nextIndex);
+    //   }
+    // }
 
     // Let the toast stay visible longer, then fade out slowly
     await Future.delayed(const Duration(milliseconds: 2400));

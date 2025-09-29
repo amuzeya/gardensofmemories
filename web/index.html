@@ -29,11 +29,51 @@
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <title>ysl_beauty_experience</title>
+  <title>YSL Beauty Experience</title>
   <link rel="manifest" href="manifest.json">
   
   <!-- Google Maps JavaScript API with Advanced Markers -->
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDPCRYDw6K9ii0hGsgGdwoOIEH_HGXpzHk&libraries=marker"></script>
+  
+  <style>
+    /* Remove blue outline from Safari mobile browser */
+    * {
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+    
+    /* Remove focus outlines while maintaining accessibility */
+    *:focus {
+      outline: none !important;
+    }
+    
+    /* Prevent zoom on input focus (iOS Safari) */
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="number"],
+    input[type="tel"],
+    input[type="search"],
+    textarea,
+    select {
+      font-size: 16px !important;
+    }
+    
+    /* Ensure smooth scrolling */
+    html {
+      -webkit-overflow-scrolling: touch;
+    }
+    
+    /* Prevent horizontal scroll */
+    body {
+      overflow-x: hidden;
+    }
+  </style>
 </head>
 <body>
   <script src="flutter_bootstrap.js" async></script>

@@ -132,7 +132,7 @@ class _EnteringExperienceScreenState extends State<EnteringExperienceScreen>
                                 horizontal: 30,
                                 vertical: 50,
                               ),
-                              subtitle: 'MARRAKECH, MOROCCO : \n A VIBRANT HERITAGE',
+                              subtitle: 'MARRAKECH, MOROCCO:\n A VIBRANT HERITAGE',
                               title: 'GARDENS OF MEMORIES, THE SPIRIT OF LIBRE',
                               buttonText: 'LIVE THE LOVE STORY',
                               onButtonPressed: _onEmbraceJourney,

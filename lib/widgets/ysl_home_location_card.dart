@@ -414,7 +414,7 @@ widget.location.name.toUpperCase(),
         child: GestureDetector(
           onTap: widget.isLocked ? null : widget.onExplore,
           child: ScaleTransition(
-            scale: widget.shouldPulseExplore && !widget.isLocked ? _pulseController : AlwaysStoppedAnimation(1.0),
+            scale: AlwaysStoppedAnimation(1.0),
             child: Container(
               height: buttonHeight,
               padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 4),
@@ -452,7 +452,7 @@ widget.location.name.toUpperCase(),
         child: GestureDetector(
           onTap: widget.isLocked ? null : widget.onExplore,
           child: ScaleTransition(
-            scale: widget.shouldPulseExplore && !widget.isLocked ? _pulseController : AlwaysStoppedAnimation(1.0),
+            scale: AlwaysStoppedAnimation(1.0),
             child: Container(
               height: buttonHeight,
               padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: 0), // Remove bottom padding

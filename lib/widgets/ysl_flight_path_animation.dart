@@ -83,7 +83,16 @@ class _YslFlightPathAnimationState extends State<YslFlightPathAnimation>
   void initState() {
     super.initState();
     _setupAnimations();
-    _requestLocationPermission();
+    
+    // Skip flight animation - go directly to location view
+    Future.delayed(const Duration(milliseconds: 500), () {
+      if (mounted) {
+        widget.onFlightCompleted();
+      }
+    });
+    
+    // Comment out location permission request to skip airplane animation
+    // _requestLocationPermission();
   }
 
   void _setupAnimations() {
