@@ -9,7 +9,7 @@ echo "🚀 Starting deployment of YSL Beauty Experience..."
 
 # Configuration
 SERVER="gcloud-allan"
-DOMAIN="gardensofmemories.landng.com"
+DOMAIN="gardernsofmemories.landng.com"
 WEB_ROOT="/var/www/$DOMAIN"
 NGINX_CONF="/etc/nginx/sites-available/$DOMAIN.conf"
 BUILD_DIR="build/web"
@@ -39,9 +39,9 @@ ssh $SERVER << 'EOF'
     echo "🏗️  Setting up directory structure on server..."
     
     # Create web root directory
-    sudo mkdir -p /var/www/gardensofmemories.landng.com
-    sudo chown -R www-data:www-data /var/www/gardensofmemories.landng.com
-    sudo chmod -R 755 /var/www/gardensofmemories.landng.com
+    sudo mkdir -p /var/www/gardernsofmemories.landng.com
+    sudo chown -R www-data:www-data /var/www/gardernsofmemories.landng.com
+    sudo chmod -R 755 /var/www/gardernsofmemories.landng.com
     
     echo "✅ Directory structure created"
 EOF
@@ -53,22 +53,22 @@ echo "📥 Extracting files on server..."
 ssh $SERVER << 'EOF'
     echo "📂 Extracting web files..."
     cd /tmp
-    sudo tar -xzf ~/ysl-beauty-web.tar.gz -C /var/www/gardensofmemories.landng.com/
-    sudo chown -R www-data:www-data /var/www/gardensofmemories.landng.com
-    sudo chmod -R 755 /var/www/gardensofmemories.landng.com
+    sudo tar -xzf ~/ysl-beauty-web.tar.gz -C /var/www/gardernsofmemories.landng.com/
+    sudo chown -R www-data:www-data /var/www/gardernsofmemories.landng.com
+    sudo chmod -R 755 /var/www/gardernsofmemories.landng.com
     rm ~/ysl-beauty-web.tar.gz
     
     echo "✅ Web files extracted and permissions set"
 EOF
 
 echo "📤 Uploading nginx configuration..."
-scp gardensofmemories.landng.com.conf $SERVER:~/
+scp gardernsofmemories.landng.com.conf $SERVER:~/
 
 echo "⚙️  Setting up nginx configuration..."
 ssh $SERVER << 'EOF'
     echo "🔧 Installing nginx configuration..."
-    sudo cp ~/gardensofmemories.landng.com.conf /etc/nginx/sites-available/gardensofmemories.landng.com.conf
-    sudo rm ~/gardensofmemories.landng.com.conf
+    sudo cp ~/gardernsofmemories.landng.com.conf /etc/nginx/sites-available/gardensofmemories.landng.com.conf
+    sudo rm ~/gardernsofmemories.landng.com.conf
     
     # Enable the site
     sudo ln -sf /etc/nginx/sites-available/gardensofmemories.landng.com.conf /etc/nginx/sites-enabled/
@@ -101,7 +101,7 @@ ssh $SERVER << 'EOF'
     
     # Obtain SSL certificate
     echo "🔐 Obtaining SSL certificate for gardensofmemories.landng.com..."
-    sudo certbot --nginx -d gardensofmemories.landng.com --non-interactive --agree-tos --email webmaster@landng.com --redirect
+    sudo certbot --nginx -d gardernsofmemories.landng.com --non-interactive --agree-tos --email webmaster@landng.com --redirect
     
     if [ $? -eq 0 ]; then
         echo "✅ SSL certificate installed successfully"
@@ -121,11 +121,11 @@ rm ysl-beauty-web.tar.gz
 echo ""
 echo "🎉 Deployment Complete!"
 echo "🌐 Your YSL Beauty Experience app is now available at:"
-echo "   HTTP:  http://gardensofmemories.landng.com"
-echo "   HTTPS: https://gardensofmemories.landng.com"
+echo "   HTTP:  http://gardernsofmemories.landng.com"
+echo "   HTTPS: https://gardernsofmemories.landng.com"
 echo ""
 echo "📊 Next steps:"
 echo "  1. Test the application in your browser"
 echo "  2. Verify SSL certificate is working"
-echo "  3. Check nginx logs if needed: sudo tail -f /var/log/nginx/gardensofmemories.landng.com_*.log"
+echo "  3. Check nginx logs if needed: sudo tail -f /var/log/nginx/gardernsofmemories.landng.com_*.log"
 echo ""
