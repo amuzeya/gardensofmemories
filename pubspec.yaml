@@ -88,6 +88,7 @@ flutter:
     - assets/data/
     - assets/data/home/carousel.json
     - assets/data/home/content.json
+    - assets/data/home/location_details.prod.json
     - assets/data/home/locations.json
     - assets/data/home/map.json
     - assets/data/home/offers.json

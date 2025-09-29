@@ -1,0 +1,266 @@
+{
+  "trip": {
+    "id": 681,
+    "slug": "gardens-of-memories--the-spirit-of-libre-1",
+    "title": "Gardens of Memories 33f The Spirit of Libre ",
+    "city": "Marrakech",
+    "country": "Morocco"
+  },
+  "locations": [
+    {
+      "id": "loc_1150",
+      "name": "Jardin Majorelle",
+      "address": "Rue Yves St Laurent, Marrakech 40090, Morocco",
+      "city": "Marrakech",
+      "lat": 31.6412031,
+      "lng": -8.0032397,
+      "coverImage": "assets/images/prod/jardin_majorelle.jpg",
+      "galleryRemote": [
+        "https://img.landng.com/org_1755463856676_cropped-image-1755463845172.jpg",
+        "https://img.landng.com/org_1755463856963_cropped-image-1755463851356.jpg"
+      ],
+      "galleryLocal": [
+        "assets/Jardin Majorelle (Activity)/JardinMajorelle 2.jpg",
+        "assets/Jardin Majorelle (Activity)/JardinMajorelle 3.jpg",
+        "assets/Jardin Majorelle (Activity)/JardinMajorelle 4.jpg",
+        "assets/Jardin Majorelle (Activity)/JardinMajorelle 5.jpg",
+        "assets/Jardin Majorelle (Activity)/JardinMajorelle 6.jpg",
+        "assets/Jardin Majorelle (Activity)/JardinMajorelle 7.jpg"
+      ],
+      "videosLocal": [
+        "assets/Jardin Majorelle (Activity)/JardinMajorelle 1.mp4",
+        "assets/Jardin Majorelle (Activity)/JardinMajorelle 8.mp4",
+        "assets/Jardin Majorelle (Activity)/JardinMajorelle 9.mp4",
+        "assets/Jardin Majorelle (Activity)/JardinMajorelle 10.mp4",
+        "assets/Jardin Majorelle (Activity)/JardinMajorelle11.mp4"
+      ],
+      "videosRemote": [
+        "https://img.landng.com/video_1755463856490_JardinMajorelle 10.mp4"
+      ],
+      "content": [
+        {
+          "type": "text",
+          "body": "A cobalt oasis where Yves listened to Marrakech in colordl4dl4dpalms, bamboo, and the geometry of shadow and light. Nature as muse. Culture as silhouette."
+        },
+        {
+          "type": "slideshow",
+          "title": "Gallery",
+          "source": "remote",
+          "images": [
+            "https://img.landng.com/org_1755463856676_cropped-image-1755463845172.jpg",
+            "https://img.landng.com/org_1755463856963_cropped-image-1755463851356.jpg"
+          ]
+        },
+        {
+          "type": "slideshow",
+          "title": "On-device Gallery",
+          "source": "local",
+          "images": [
+            "assets/Jardin Majorelle (Activity)/JardinMajorelle 2.jpg",
+            "assets/Jardin Majorelle (Activity)/JardinMajorelle 3.jpg",
+            "assets/Jardin Majorelle (Activity)/JardinMajorelle 4.jpg"
+          ]
+        },
+        {
+          "type": "video",
+          "title": "Jardin Majorelle Video",
+          "source": "local",
+          "src": "assets/Jardin Majorelle (Activity)/JardinMajorelle 1.mp4"
+        }
+      ]
+    },
+    {
+      "id": "loc_1151",
+      "name": "Yves Saint Laurent Museum",
+      "address": "Rue Yves St Laurent, Marrakech 40000, Morocco",
+      "city": "Marrakech",
+      "lat": 31.6425934,
+      "lng": -8.0031422,
+      "coverImage": "assets/images/prod/ysl_museum.jpg",
+      "galleryRemote": [
+        "https://img.landng.com/org_1755465553237_cropped-image-1755465538969.jpg",
+        "https://img.landng.com/org_1755465552961_cropped-image-1755465533498.jpg",
+        "https://img.landng.com/org_1755465553081_cropped-image-1755465534711.jpg",
+        "https://img.landng.com/org_1755465552766_cropped-image-1755465515247.jpg",
+        "https://img.landng.com/org_1755465552705_cropped-image-1755465509456.jpg"
+      ],
+      "galleryLocal": [
+        "assets/YSL Museum (Activity)/ysl musee 1.jpg",
+        "assets/YSL Museum (Activity)/ysl musee 2.jpg",
+        "assets/YSL Museum (Activity)/ysl musee 3.jpg",
+        "assets/YSL Museum (Activity)/ysl musee 4.jpg",
+        "assets/YSL Museum (Activity)/ysl musee 5.jpg",
+        "assets/YSL Museum (Activity)/ysl musee 6.jpg",
+        "assets/YSL Museum (Activity)/ysl musee 7.jpg",
+        "assets/YSL Museum (Activity)/ysl musee 8.jpg",
+        "assets/YSL Museum (Activity)/ysl musee 9.jpg",
+        "assets/YSL Museum (Activity)/ysl musee 10.jpg"
+      ],
+      "videosLocal": [],
+      "videosRemote": [],
+      "content": [
+        {
+          "type": "text",
+          "body": "Archives, textures, silhouettesdl4dl4dan intimate choreography of couture and memory. The house; studied, distilled, alive."
+        },
+        {
+          "type": "slideshow",
+          "title": "Gallery",
+          "source": "remote",
+          "images": [
+            "https://img.landng.com/org_1755465553237_cropped-image-1755465538969.jpg",
+            "https://img.landng.com/org_1755465552961_cropped-image-1755465533498.jpg",
+            "https://img.landng.com/org_1755465553081_cropped-image-1755465534711.jpg"
+          ]
+        },
+        {
+          "type": "slideshow",
+          "title": "On-device Gallery",
+          "source": "local",
+          "images": [
+            "assets/YSL Museum (Activity)/ysl musee 1.jpg",
+            "assets/YSL Museum (Activity)/ysl musee 2.jpg",
+            "assets/YSL Museum (Activity)/ysl musee 3.jpg"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "loc_1153",
+      "name": "Ourika Gardens",
+      "address": "95JG+78 Ourika, Morocco",
+      "city": "Marrakech",
+      "lat": 31.380651,
+      "lng": -7.824132,
+      "coverImage": "assets/images/prod/ourika_gardens.jpg",
+      "galleryRemote": [
+        "https://img.landng.com/org_1755465744843_cropped-image-1755465718299.jpg",
+        "https://img.landng.com/org_1755465745307_cropped-image-1755465722415.jpg",
+        "https://img.landng.com/org_1755465745086_cropped-image-1755465719466.jpg",
+        "https://img.landng.com/org_1755465744650_cropped-image-1755465716546.jpg",
+        "https://img.landng.com/org_1755465745669_cropped-image-1755465728232.jpg",
+        "https://img.landng.com/org_1755465744494_cropped-image-1755465712395.jpg"
+      ],
+      "galleryLocal": [
+        "assets/Ourika Gardens (Activity)/ourika 3.jpg",
+        "assets/Ourika Gardens (Activity)/ourika 4.jpg",
+        "assets/Ourika Gardens (Activity)/ourika 5.jpg",
+        "assets/Ourika Gardens (Activity)/ourika 6.jpg",
+        "assets/Ourika Gardens (Activity)/ourika 7.jpg",
+        "assets/Ourika Gardens (Activity)/ourika 8.jpg",
+        "assets/Ourika Gardens (Activity)/ourika 9.jpg",
+        "assets/Ourika Gardens (Activity)/ourika 10.jpg",
+        "assets/Ourika Gardens (Activity)/ourika 11.jpg",
+        "assets/Ourika Gardens (Activity)/ourika 12.jpg",
+        "assets/Ourika Gardens (Activity)/ourika 13.jpg"
+      ],
+      "videosLocal": [
+        "assets/Ourika Gardens (Activity)/ourika 1.mp4",
+        "assets/Ourika Gardens (Activity)/ourika 2.mp4"
+      ],
+      "videosRemote": [],
+      "content": [
+        {
+          "type": "text",
+          "body": "The Ourika Community Gardens embody YSL Beautys innovative approach to sourcing. A place of ecosystem restoration, innovation, and thriving nature, it provides many of our essential ingredients while creating a positive social impact on the surrounding communities."
+        },
+        {
+          "type": "slideshow",
+          "title": "Gallery",
+          "source": "remote",
+          "images": [
+            "https://img.landng.com/org_1755465744843_cropped-image-1755465718299.jpg",
+            "https://img.landng.com/org_1755465745307_cropped-image-1755465722415.jpg",
+            "https://img.landng.com/org_1755465745086_cropped-image-1755465719466.jpg"
+          ]
+        },
+        {
+          "type": "slideshow",
+          "title": "On-device Gallery",
+          "source": "local",
+          "images": [
+            "assets/Ourika Gardens (Activity)/ourika 10.jpg",
+            "assets/Ourika Gardens (Activity)/ourika 11.jpg",
+            "assets/Ourika Gardens (Activity)/ourika 12.jpg"
+          ]
+        },
+        {
+          "type": "video",
+          "title": "Ourika Gardens Video",
+          "source": "local",
+          "src": "assets/Ourika Gardens (Activity)/ourika 1.mp4"
+        }
+      ]
+    },
+    {
+      "id": "loc_519",
+      "name": "La Mamounia",
+      "address": "Avenue Bab Jdid, Marrakesh 40040, Morocco",
+      "city": "Marrakech",
+      "lat": 31.6215239,
+      "lng": -7.997488,
+      "coverImage": "assets/images/prod/la_mamounia.jpg",
+      "galleryRemote": [
+        "https://img.landng.com/org_1755466299841_cropped-image-1755466284293.jpg",
+        "https://img.landng.com/org_1755466299456_cropped-image-1755466281677.jpg",
+        "https://img.landng.com/org_1755466300110_cropped-image-1755466291210.jpg",
+        "https://img.landng.com/org_1755466299110_cropped-image-1755466278444.jpg",
+        "https://img.landng.com/org_1755466299251_cropped-image-1755466280377.jpg",
+        "https://img.landng.com/org_1755466299696_cropped-image-1755466282997.jpg"
+      ],
+      "galleryLocal": [
+        "assets/La Mamounia (Accomodation)/lamamounia 2.jpg",
+        "assets/La Mamounia (Accomodation)/lamamounia 3.jpg",
+        "assets/La Mamounia (Accomodation)/lamamounia 4.jpg",
+        "assets/La Mamounia (Accomodation)/lamamounia 5.jpg",
+        "assets/La Mamounia (Accomodation)/lamamounia 6.jpg",
+        "assets/La Mamounia (Accomodation)/lamamounia 7.jpg",
+        "assets/La Mamounia (Accomodation)/lamamounia 7(1).jpg",
+        "assets/La Mamounia (Accomodation)/lamamounia 8.jpg",
+        "assets/La Mamounia (Accomodation)/lamamounia 9.jpg",
+        "assets/La Mamounia (Accomodation)/lamamounia 10.jpg",
+        "assets/La Mamounia (Accomodation)/lamamounia 11.jpg"
+      ],
+      "videosLocal": [
+        "assets/La Mamounia (Accomodation)/lamamounia 1.mp4",
+        "assets/La Mamounia (Accomodation)/lamamounia 12.mp4",
+        "assets/La Mamounia (Accomodation)/lamamounia 13.mp4"
+      ],
+      "videosRemote": [
+        "https://img.landng.com/video_1755466299028_lamamounia 12.mp4"
+      ],
+      "content": [
+        {
+          "type": "text",
+          "body": "Courtyards perfumed with jasmine and citrus, carved stone and secret pools. A sanctuary YSL returned to oftendl4dl4dwhere time lingered, and luxury whispered behind every arch."
+        },
+        {
+          "type": "slideshow",
+          "title": "Gallery",
+          "source": "remote",
+          "images": [
+            "https://img.landng.com/org_1755466299841_cropped-image-1755466284293.jpg",
+            "https://img.landng.com/org_1755466299456_cropped-image-1755466281677.jpg",
+            "https://img.landng.com/org_1755466300110_cropped-image-1755466291210.jpg"
+          ]
+        },
+        {
+          "type": "slideshow",
+          "title": "On-device Gallery",
+          "source": "local",
+          "images": [
+            "assets/La Mamounia (Accomodation)/lamamounia 10.jpg",
+            "assets/La Mamounia (Accomodation)/lamamounia 11.jpg",
+            "assets/La Mamounia (Accomodation)/lamamounia 9.jpg"
+          ]
+        },
+        {
+          "type": "video",
+          "title": "La Mamounia Video",
+          "source": "local",
+          "src": "assets/La Mamounia (Accomodation)/lamamounia 1.mp4"
+        }
+      ]
+    }
+  ]
+}
