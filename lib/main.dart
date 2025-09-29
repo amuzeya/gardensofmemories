@@ -8,6 +8,7 @@ import 'screens/entering_experience_screen.dart';
 import 'screens/component_library_screen.dart';
 import 'screens/data_validation_screen.dart';
 import 'screens/home_page.dart' as home;
+import 'widgets/font_verification_widget.dart';
 
 void main() {
   // Ensure Flutter bindings are initialized
@@ -71,6 +72,10 @@ class YSLBeautyApp extends StatelessWidget {
           case '/dev-data':
             return MaterialPageRoute(
               builder: (_) => const DataValidationScreen(),
+            );
+          case '/fonts':
+            return MaterialPageRoute(
+              builder: (_) => const FontVerificationWidget(),
             );
           default:
             // Default to splash screen instead of component library

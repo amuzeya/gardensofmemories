@@ -275,7 +275,7 @@ class _SplashScreenState extends State<SplashScreen>
 
           // Loading indicator while video initializes
           if (!_showContent)
-            const Center(
+             Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
