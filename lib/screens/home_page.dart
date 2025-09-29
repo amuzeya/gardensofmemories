@@ -26,6 +26,7 @@ import '../widgets/ysl_location_card.dart';
 import '../widgets/ysl_home_location_card.dart';
 import '../widgets/ysl_google_map_background.dart';
 import '../widgets/ysl_location_bottom_sheet.dart';
+import '../models/location_details.dart';
 import '../widgets/ysl_flight_path_animation.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../widgets/ysl_toggle_switch.dart';
@@ -45,6 +46,7 @@ class _HomeData {
   final List<HomeContentCard> cards;
   final List<HomeProduct> products;
   final List<HomeQuote> quotes;
+  final Map<String, LocationDetails> detailsById;
 
   const _HomeData({
     required this.map,
@@ -54,6 +56,7 @@ class _HomeData {
     required this.cards,
     required this.products,
     required this.quotes,
+    required this.detailsById,
   });
 }
 
@@ -429,6 +432,7 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
     final cards = await _repo.loadContentCards();
     final products = await _repo.loadProducts();
     final quotes = await _repo.loadQuotes();
+    final detailsById = await _repo.loadLocationDetails();
     return _HomeData(
       map: map,
       offers: offers,
@@ -437,6 +441,7 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
       cards: cards,
       products: products,
       quotes: quotes,
+      detailsById: detailsById,
     );
   }
 
@@ -744,9 +749,10 @@ if (!isReward && index >= 0 && index < data.locations.length) {
           ),
           
         // Location bottom sheet overlay for regular locations
-        if (_selectedLocationIndex < _rewardIndex)
+          if (_selectedLocationIndex < _rewardIndex)
           YslLocationBottomSheet(
             location: data.locations[_selectedLocationIndex],
+            details: data.detailsById[data.locations[_selectedLocationIndex].id],
             isVisible: _showBottomSheet,
             onClose: () {
               // Smooth sequence: close -> unlock -> toast -> focus next
@@ -986,6 +992,7 @@ if (!isReward && index >= 0 && index < data.locations.length) {
           if (data.locations.isNotEmpty && _selectedLocationIndex < data.locations.length)
             YslLocationBottomSheet(
               location: data.locations[_selectedLocationIndex],
+              details: data.detailsById[data.locations[_selectedLocationIndex].id],
               isVisible: _showBottomSheet,
               onClose: () {
                 // Close and unlock next location (same logic as map view)

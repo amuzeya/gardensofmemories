@@ -11,6 +11,7 @@ import '../models/home_carousel_item.dart';
 import '../models/home_content_card.dart';
 import '../models/home_product.dart';
 import '../models/home_quote.dart';
+import '../models/location_details.dart';
 
 class HomeRepository {
   final AssetBundle bundle;
@@ -87,5 +88,19 @@ class HomeRepository {
         .whereType<Map<String, dynamic>>()
         .map(HomeQuote.fromJson)
         .toList(growable: false);
+  }
+
+  Future<Map<String, LocationDetails>> loadLocationDetails({String fileName = 'location_details.prod.json'}) async {
+    final obj = await _loadObject(fileName);
+    final list = (obj['locations'] as List? ?? const []);
+    final detailsList = list
+        .whereType<Map<String, dynamic>>()
+        .map(LocationDetails.fromJson)
+        .toList(growable: false);
+    final map = <String, LocationDetails>{};
+    for (final d in detailsList) {
+      map[d.id] = d;
+    }
+    return map;
   }
 }

@@ -8,15 +8,18 @@ import 'package:animations/animations.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text.dart';
 import '../models/home_location.dart';
+import '../models/location_details.dart';
 
 class YslLocationBottomSheet extends StatefulWidget {
   final HomeLocation location;
+  final LocationDetails? details;
   final VoidCallback? onClose;
   final bool isVisible;
 
   const YslLocationBottomSheet({
     super.key,
     required this.location,
+    this.details,
     this.onClose,
     this.isVisible = false,
   });
@@ -321,8 +324,7 @@ class _YslLocationBottomSheetState extends State<YslLocationBottomSheet>
   Widget _buildLocationContent() {
     return Padding(
       padding: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: ListView(
         children: [
           // Location category
           Text(
@@ -389,40 +391,146 @@ class _YslLocationBottomSheetState extends State<YslLocationBottomSheet>
             ),
           ],
           
-          const SizedBox(height: 32),
-          
-          // Placeholder for future content
-          Container(
-            width: double.infinity,
-            height: 1,
-            color: AppColors.yslBlack.withOpacity(0.1),
-          ),
-          
-          const SizedBox(height: 20),
-          
-          Text(
-            'LOCATION DETAILS COMING SOON',
-            style: AppText.bodySmall.copyWith(
-              color: AppColors.yslBlack.withOpacity(0.4),
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 1.5,
-              fontFamily: 'ITC Avant Garde Gothic Pro',
+          const SizedBox(height: 24),
+
+          // Dynamic content blocks from production details
+          if (widget.details != null) ..._buildContentBlocks(widget.details!),
+          if (widget.details == null) ...[
+            Container(
+              width: double.infinity,
+              height: 1,
+              color: AppColors.yslBlack.withOpacity(0.1),
             ),
-          ),
-          
-          Text(
-            'Images, videos, exclusive offers, and interactive content will be added here.',
-            style: AppText.bodySmall.copyWith(
-              color: AppColors.yslBlack.withOpacity(0.4),
-              fontSize: 11,
-              fontWeight: FontWeight.w300,
-              height: 1.4,
-              fontFamily: 'ITC Avant Garde Gothic Pro',
+            const SizedBox(height: 16),
+            Text(
+              'LOCATION DETAILS COMING SOON',
+              style: AppText.bodySmall.copyWith(
+                color: AppColors.yslBlack.withOpacity(0.4),
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 1.5,
+                fontFamily: 'ITC Avant Garde Gothic Pro',
+              ),
             ),
-          ),
+          ],
         ],
       ),
+    );
+  }
+
+  List<Widget> _buildContentBlocks(LocationDetails details) {
+    final blocks = <Widget>[];
+    for (final b in details.content) {
+      if (b is TextBlock) {
+        blocks.add(
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: Text(
+              b.body,
+              style: AppText.bodyMedium.copyWith(
+                color: AppColors.yslBlack.withOpacity(0.8),
+                height: 1.4,
+              ),
+            ),
+          ),
+        );
+      } else if (b is SlideshowBlock) {
+        final isLocal = b.source == 'local';
+        blocks.add(
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (b.title != null) ...[
+                Text(
+                  b.title!,
+                  style: AppText.bodySmall.copyWith(
+                    color: AppColors.yslBlack,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 8),
+              ],
+              SizedBox(
+                height: 140,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: b.images.length,
+                  separatorBuilder: (_, __) => const SizedBox(width: 8),
+                  itemBuilder: (context, i) {
+                    final src = b.images[i];
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(2),
+                      child: isLocal
+                          ? Image.asset(src, height: 140, width: 200, fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) => _imageFallback())
+                          : Image.network(src, height: 140, width: 200, fit: BoxFit.cover,
+                              errorBuilder: (_, __, ___) => _imageFallback()),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
+          ),
+        );
+      } else if (b is ImageBlock) {
+        final isLocal = b.source == 'local';
+        blocks.add(
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(2),
+                child: isLocal
+                    ? Image.asset(b.src, fit: BoxFit.cover, errorBuilder: (_, __, ___) => _imageFallback())
+                    : Image.network(b.src, fit: BoxFit.cover, errorBuilder: (_, __, ___) => _imageFallback()),
+              ),
+              if (b.caption != null) ...[
+                const SizedBox(height: 6),
+                Text(
+                  b.caption!,
+                  style: AppText.bodySmall.copyWith(color: AppColors.yslBlack.withOpacity(0.6)),
+                )
+              ],
+              const SizedBox(height: 16),
+            ],
+          ),
+        );
+      } else if (b is VideoBlock) {
+        // Lightweight placeholder for videos for now (no inline player)
+        blocks.add(
+          Container(
+            margin: const EdgeInsets.only(bottom: 16),
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: AppColors.yslBlack.withOpacity(0.06),
+              border: Border.all(color: AppColors.yslBlack.withOpacity(0.2), width: 1),
+            ),
+            child: Row(
+              children: [
+                const Icon(Icons.play_circle_outline, color: AppColors.yslBlack),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    (b.title ?? 'Video'),
+                    style: AppText.bodySmall.copyWith(color: AppColors.yslBlack),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+    }
+    return blocks;
+  }
+
+  Widget _imageFallback() {
+    return Container(
+      color: Colors.grey.shade200,
+      width: 200,
+      height: 140,
+      child: const Center(child: Icon(Icons.image_not_supported, color: AppColors.yslBlack)),
     );
   }
 }

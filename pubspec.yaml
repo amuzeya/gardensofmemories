@@ -95,6 +95,7 @@ flutter:
     - assets/data/home/products.json
     - assets/data/home/quotes.json
     - assets/images/
+    - assets/images/prod/
     - assets/images/exclusive_offer/main_banner.png
     - assets/images/frame_845083630.png
     - assets/images/pins/pin_a.png
