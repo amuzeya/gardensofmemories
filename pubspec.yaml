@@ -95,12 +95,12 @@ flutter:
     - assets/data/home/products.json
     - assets/data/home/quotes.json
     - assets/images/
-    - assets/images/prod/
     - assets/images/exclusive_offer/main_banner.png
     - assets/images/frame_845083630.png
     - assets/images/pins/pin_a.png
     - assets/images/pins/pin_b.png
     - assets/images/pins/pin_c.png
+    - assets/images/prod/
     - assets/splash_screen_ourika.mp4
     - assets/svgs/
     - assets/svgs/icons/
@@ -112,6 +112,7 @@ flutter:
     - assets/svgs/icons/pinB_white.png
     - assets/svgs/icons/pinC.png
     - assets/svgs/icons/pinC_white.png
+    - assets/svgs/icons/pinD_black.png
     - assets/svgs/icons/pinD_white.png
     - assets/svgs/icons/pin_a.svg
     - assets/svgs/icons/pin_arrive.svg
@@ -128,27 +129,27 @@ flutter:
   # YSL Beauty Experience - Custom Fonts
   # Extracted from Figma designs for pixel-perfect typography
   fonts:
-    # Arial font family with multiple weights
-    - family: Arial
+    - family: Arial-Bold
+      fonts:
+        - asset: assets/fonts/Arial/Arial-Bold.ttf
+    - family: Arial-Regular
       fonts:
         - asset: assets/fonts/Arial/Arial-Regular.ttf
-          weight: 400
-        - asset: assets/fonts/Arial/Arial-Bold.ttf
-          weight: 700
-    
-    # ITC Avant Garde Gothic Pro - Primary brand font with full weight range
-    - family: ITC Avant Garde Gothic Pro
+    - family: ITCAvantGardeStd-Bk
+      fonts:
+        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Bk.ttf
+    - family: ITCAvantGardeStd-Bold
+      fonts:
+        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Bold.ttf
+    - family: ITCAvantGardeStd-Demi
+      fonts:
+        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Demi.ttf
+    - family: ITCAvantGardeStd-Md
+      fonts:
+        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Md.ttf
+    - family: ITCAvantGardeStd-XLt
       fonts:
         - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-XLt.ttf
-          weight: 200  # Extra Light
-        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Bk.ttf
-          weight: 300  # Book (Light)
-        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Md.ttf
-          weight: 500  # Medium
-        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Demi.ttf
-          weight: 600  # Demi (Semi-Bold)
-        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-Bold.ttf
-          weight: 700  # Bold
   
   # Note: Font files need to be manually added to the assets/fonts/ directory
   # See FONTS_SETUP.md for detailed instructions on acquiring these fonts

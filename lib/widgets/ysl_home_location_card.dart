@@ -182,7 +182,7 @@ return widget.isVertical
                 if (constraints.maxHeight > 120) // Only show description if height allows
                   Flexible(
                   child: Text(
-widget.location.address,
+                    widget.location.listingDescription ?? widget.location.address,
                       style: AppText.bodySmall.copyWith(
 color: widget.isReward ? AppColors.yslWhite.withValues(alpha: 0.7) : AppColors.yslBlack.withValues(alpha: 0.65),
                         height: 1.3,
@@ -266,7 +266,7 @@ widget.location.imagePath!,
                 // Description text
                 Expanded(
                   child: Text(
-                    widget.location.address,
+                    widget.location.listingDescription ?? widget.location.address,
                     style: AppText.bodySmall.copyWith(
                       color: AppColors.yslBlack.withValues(alpha: 0.65), // Lighter text
                       height: 1.3,

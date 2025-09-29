@@ -13,6 +13,7 @@ import '../constants/assets.dart';
 class YslLocationData {
   final String name;
   final String address;
+  final String? listingDescription;
   final String? city;
   final String? distance;
   final String? hours;
@@ -25,6 +26,7 @@ class YslLocationData {
   const YslLocationData({
     required this.name,
     required this.address,
+    this.listingDescription,
     this.city,
     this.distance,
     this.hours,

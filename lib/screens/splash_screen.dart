@@ -237,21 +237,21 @@ class _SplashScreenState extends State<SplashScreen>
                                 const SizedBox(height: 24),
 
                                 // Brand World Subtitle
-                                Text(
-                                  'BRAND WORLD EXPERIENCE',
-                                  style: AppText.displaySubtitle.copyWith(
-                                    color: AppColors.yslWhite.withValues(alpha: 0.9),
-                                    letterSpacing: 2.0,
-                                    shadows: [
-                                      Shadow(
-                                        color: Colors.black.withValues(alpha: 0.6),
-                                        offset: const Offset(0, 1),
-                                        blurRadius: 2,
-                                      ),
-                                    ],
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
+                                // Text(
+                                //   'BRAND WORLD EXPERIENCE',
+                                //   style: AppText.displaySubtitle.copyWith(
+                                //     color: AppColors.yslWhite.withValues(alpha: 0.9),
+                                //     letterSpacing: 2.0,
+                                //     shadows: [
+                                //       Shadow(
+                                //         color: Colors.black.withValues(alpha: 0.6),
+                                //         offset: const Offset(0, 1),
+                                //         blurRadius: 2,
+                                //       ),
+                                //     ],
+                                //   ),
+                                //   textAlign: TextAlign.center,
+                                // ),
 
                                 const SizedBox(height: 16),
 
@@ -305,23 +305,27 @@ class _SplashScreenState extends State<SplashScreen>
 
           // Loading indicator while video initializes
           if (!_showContent)
-             Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.yslWhite),
-                    strokeWidth: 2,
-                  ),
-                  SizedBox(height: 16),
-                  Text(
-                    'Loading Experience...',
-                    style: AppText.bodyMedium.copyWith(
-                      color: AppColors.yslWhite,
-                      letterSpacing: 1.2,
+             Align(
+               alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.all(50.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(AppColors.yslWhite),
+                      strokeWidth: 2,
                     ),
-                  ),
-                ],
+                    SizedBox(height: 16),
+                    Text(
+                      'Loading...',
+                      style: AppText.bodyMedium.copyWith(
+                        color: AppColors.yslWhite,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
         ],

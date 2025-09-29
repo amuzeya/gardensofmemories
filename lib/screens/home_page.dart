@@ -543,15 +543,16 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
     final screenWidth = MediaQuery.of(context).size.width;
     _deviceType = YslResponsiveUtils.getDeviceType(screenWidth);
     
-    // Map locations to widget data
+    // Map locations to widget data with listing descriptions from details
     final baseLocations = data.locations
-        .map(toYslLocationData)
+        .map((location) => toYslLocationDataWithDetails(location, data.detailsById[location.id]))
         .toList(growable: false);
 
     // Append reward as a pseudo-location at the end
     final reward = YslLocationData(
       name: 'YSL LIBRE FRAGRANCE',
       address: 'Complete the journey to unlock your reward.',
+      listingDescription: 'Complete the journey to unlock your reward.',
       city: null,
       distance: null,
       hours: null,
@@ -780,14 +781,11 @@ final rewardLocked = _unlockedCount < data.locations.length;
                 final isLocked = (!isReward && index > _unlockedCount) || (isReward && rewardLocked);
                 if (isLocked) return;
 
-if (!isReward && index >= 0 && index < data.locations.length) {
-                  final location = data.locations[index];
-                  print('🗺 Selected location: ${location.name} at (${ location.lat}, ${location.lng})');
-                  setState(() { _selectedLocationIndex = index; });
-                  _animateMapToLocation(data.locations, index);
-                } else if (isReward) {
+                // Only update selection without auto-zooming - let user control navigation
+                setState(() { _selectedLocationIndex = index; });
+                
+                if (isReward) {
                   setState(() {
-                    _selectedLocationIndex = _rewardIndex;
                     _showBottomSheet = true;
                   });
                 }
@@ -1463,11 +1461,18 @@ if (!isReward && index >= 0 && index < data.locations.length) {
   }
 
   void _onExploreFromCard(int index) {
-    // Ignore if locked
+    // Ignore if locked - fixed logic to allow newly unlocked locations
     final isReward = index == _rewardIndex;
     final rewardLocked = _unlockedCount < _rewardIndex;
+    // Fix: Allow current location to be explored (use >= instead of >)
     final isLocked = (!isReward && index > _unlockedCount) || (isReward && rewardLocked);
-    if (isLocked) return;
+    
+    print('🔒 Explore check: index=$index, isReward=$isReward, unlockedCount=$_unlockedCount, isLocked=$isLocked');
+    
+    if (isLocked) {
+      print('❌ Explore blocked - location is locked');
+      return;
+    }
 
     setState(() {
       _selectedLocationIndex = index;

@@ -1,0 +1,8 @@
+Use the new attribute I added to the location_details.prod.json listingDescription field use that as
+ the description when listing the location in the List View of the home page
+
+
+When the location is still locked in List View mode do not show the Explore button instead show a faint but visible
+"Explore previous location to unlock." use the lightest weight of our ITC Avant Garde Gothic  application font.
+
+

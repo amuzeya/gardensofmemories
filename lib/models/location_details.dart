@@ -3,6 +3,7 @@
 
 class LocationDetails {
   final String id; // matches HomeLocation.id
+  final String? listingDescription; // short description for list view
   final String? coverImage; // local asset path
   final List<String> galleryRemote; // remote URLs
   final List<String> galleryLocal; // local asset paths
@@ -12,6 +13,7 @@ class LocationDetails {
 
   const LocationDetails({
     required this.id,
+    this.listingDescription,
     this.coverImage,
     this.galleryRemote = const [],
     this.galleryLocal = const [],
@@ -27,6 +29,7 @@ class LocationDetails {
         .toList();
     return LocationDetails(
       id: json['id'] as String,
+      listingDescription: json['listingDescription'] as String?,
       coverImage: json['coverImage'] as String?,
       galleryRemote: _toStringList(json['galleryRemote']),
       galleryLocal: _toStringList(json['galleryLocal']),

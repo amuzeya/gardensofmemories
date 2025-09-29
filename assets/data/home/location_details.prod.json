@@ -14,6 +14,7 @@
       "city": "Marrakech",
       "lat": 31.6412031,
       "lng": -8.0032397,
+      "listingDescription": "Yves Saint Laurent's creative retreat, a place that inspired his bold ideas and use of color.",
       "coverImage": "assets/images/prod/jardin_majorelle.jpg",
       "galleryRemote": [
         "https://img.landng.com/org_1755463856676_cropped-image-1755463845172.jpg",
@@ -76,6 +77,7 @@
       "city": "Marrakech",
       "lat": 31.6425934,
       "lng": -8.0031422,
+      "listingDescription": "A preservation and safeguard of heritage by the Fondation Pierre Bergé – Yves Saint Laurent.",
       "coverImage": "assets/images/prod/ysl_museum.jpg",
       "galleryRemote": [
         "https://img.landng.com/org_1755465553237_cropped-image-1755465538969.jpg",
@@ -126,79 +128,13 @@
       ]
     },
     {
-      "id": "loc_1153",
-      "name": "Ourika Gardens",
-      "address": "95JG+78 Ourika, Morocco",
-      "city": "Marrakech",
-      "lat": 31.380651,
-      "lng": -7.824132,
-      "coverImage": "assets/images/prod/ourika_gardens.jpg",
-      "galleryRemote": [
-        "https://img.landng.com/org_1755465744843_cropped-image-1755465718299.jpg",
-        "https://img.landng.com/org_1755465745307_cropped-image-1755465722415.jpg",
-        "https://img.landng.com/org_1755465745086_cropped-image-1755465719466.jpg",
-        "https://img.landng.com/org_1755465744650_cropped-image-1755465716546.jpg",
-        "https://img.landng.com/org_1755465745669_cropped-image-1755465728232.jpg",
-        "https://img.landng.com/org_1755465744494_cropped-image-1755465712395.jpg"
-      ],
-      "galleryLocal": [
-        "assets/Ourika Gardens (Activity)/ourika 3.jpg",
-        "assets/Ourika Gardens (Activity)/ourika 4.jpg",
-        "assets/Ourika Gardens (Activity)/ourika 5.jpg",
-        "assets/Ourika Gardens (Activity)/ourika 6.jpg",
-        "assets/Ourika Gardens (Activity)/ourika 7.jpg",
-        "assets/Ourika Gardens (Activity)/ourika 8.jpg",
-        "assets/Ourika Gardens (Activity)/ourika 9.jpg",
-        "assets/Ourika Gardens (Activity)/ourika 10.jpg",
-        "assets/Ourika Gardens (Activity)/ourika 11.jpg",
-        "assets/Ourika Gardens (Activity)/ourika 12.jpg",
-        "assets/Ourika Gardens (Activity)/ourika 13.jpg"
-      ],
-      "videosLocal": [
-        "assets/Ourika Gardens (Activity)/ourika 1.mp4",
-        "assets/Ourika Gardens (Activity)/ourika 2.mp4"
-      ],
-      "videosRemote": [],
-      "content": [
-        {
-          "type": "text",
-          "body": "The Ourika Community Gardens embody YSL Beauty's innovative approach to sourcing. A place of ecosystem restoration, innovation, and thriving nature, it provides many of our essential ingredients while creating a positive social impact on the surrounding communities."
-        },
-        {
-          "type": "slideshow",
-          "title": "Gallery",
-          "source": "remote",
-          "images": [
-            "https://img.landng.com/org_1755465744843_cropped-image-1755465718299.jpg",
-            "https://img.landng.com/org_1755465745307_cropped-image-1755465722415.jpg",
-            "https://img.landng.com/org_1755465745086_cropped-image-1755465719466.jpg"
-          ]
-        },
-        {
-          "type": "slideshow",
-          "title": "On-device Gallery",
-          "source": "local",
-          "images": [
-            "assets/Ourika Gardens (Activity)/ourika 10.jpg",
-            "assets/Ourika Gardens (Activity)/ourika 11.jpg",
-            "assets/Ourika Gardens (Activity)/ourika 12.jpg"
-          ]
-        },
-        {
-          "type": "video",
-          "title": "Ourika Gardens Video",
-          "source": "local",
-          "src": "assets/Ourika Gardens (Activity)/ourika 1.mp4"
-        }
-      ]
-    },
-    {
       "id": "loc_519",
       "name": "La Mamounia",
       "address": "Avenue Bab Jdid, Marrakesh 40040, Morocco",
       "city": "Marrakech",
       "lat": 31.6215239,
       "lng": -7.997488,
+      "listingDescription": "A story of love and peace with artists, Pierre Bergé and Yves Saint-Laurent, since 1966.",
       "coverImage": "assets/images/prod/la_mamounia.jpg",
       "galleryRemote": [
         "https://img.landng.com/org_1755466299841_cropped-image-1755466284293.jpg",
@@ -261,6 +197,75 @@
           "src": "assets/La Mamounia (Accomodation)/lamamounia 1.mp4"
         }
       ]
+    },
+    {
+      "id": "loc_1153",
+      "name": "Ourika Gardens",
+      "address": "95JG+78 Ourika, Morocco",
+      "city": "Marrakech",
+      "lat": 31.380651,
+      "lng": -7.824132,
+      "listingDescription": "Driven by  legacy, a place of change\ntoday and for the future.",
+      "coverImage": "assets/images/prod/ourika_gardens.jpg",
+      "galleryRemote": [
+        "https://img.landng.com/org_1755465744843_cropped-image-1755465718299.jpg",
+        "https://img.landng.com/org_1755465745307_cropped-image-1755465722415.jpg",
+        "https://img.landng.com/org_1755465745086_cropped-image-1755465719466.jpg",
+        "https://img.landng.com/org_1755465744650_cropped-image-1755465716546.jpg",
+        "https://img.landng.com/org_1755465745669_cropped-image-1755465728232.jpg",
+        "https://img.landng.com/org_1755465744494_cropped-image-1755465712395.jpg"
+      ],
+      "galleryLocal": [
+        "assets/Ourika Gardens (Activity)/ourika 3.jpg",
+        "assets/Ourika Gardens (Activity)/ourika 4.jpg",
+        "assets/Ourika Gardens (Activity)/ourika 5.jpg",
+        "assets/Ourika Gardens (Activity)/ourika 6.jpg",
+        "assets/Ourika Gardens (Activity)/ourika 7.jpg",
+        "assets/Ourika Gardens (Activity)/ourika 8.jpg",
+        "assets/Ourika Gardens (Activity)/ourika 9.jpg",
+        "assets/Ourika Gardens (Activity)/ourika 10.jpg",
+        "assets/Ourika Gardens (Activity)/ourika 11.jpg",
+        "assets/Ourika Gardens (Activity)/ourika 12.jpg",
+        "assets/Ourika Gardens (Activity)/ourika 13.jpg"
+      ],
+      "videosLocal": [
+        "assets/Ourika Gardens (Activity)/ourika 1.mp4",
+        "assets/Ourika Gardens (Activity)/ourika 2.mp4"
+      ],
+      "videosRemote": [],
+      "content": [
+        {
+          "type": "text",
+          "body": "The Ourika Community Gardens embody YSL Beauty's innovative approach to sourcing. A place of ecosystem restoration, innovation, and thriving nature, it provides many of our essential ingredients while creating a positive social impact on the surrounding communities."
+        },
+        {
+          "type": "slideshow",
+          "title": "Gallery",
+          "source": "remote",
+          "images": [
+            "https://img.landng.com/org_1755465744843_cropped-image-1755465718299.jpg",
+            "https://img.landng.com/org_1755465745307_cropped-image-1755465722415.jpg",
+            "https://img.landng.com/org_1755465745086_cropped-image-1755465719466.jpg"
+          ]
+        },
+        {
+          "type": "slideshow",
+          "title": "On-device Gallery",
+          "source": "local",
+          "images": [
+            "assets/Ourika Gardens (Activity)/ourika 10.jpg",
+            "assets/Ourika Gardens (Activity)/ourika 11.jpg",
+            "assets/Ourika Gardens (Activity)/ourika 12.jpg"
+          ]
+        },
+        {
+          "type": "video",
+          "title": "Ourika Gardens Video",
+          "source": "local",
+          "src": "assets/Ourika Gardens (Activity)/ourika 1.mp4"
+        }
+      ]
     }
+
   ]
 }
