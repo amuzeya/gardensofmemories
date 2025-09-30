@@ -99,6 +99,7 @@ class MapAnimationUtils {
     onCompleted?.call();
   }
   
+
   /// Fallback simple animation if cinematic fails
   static Future<void> _fallbackAnimation(
     GoogleMapController controller,
@@ -187,4 +188,5 @@ class MapAnimationUtils {
       print('Error smooth zooming: $e');
     }
   }
+
 }
