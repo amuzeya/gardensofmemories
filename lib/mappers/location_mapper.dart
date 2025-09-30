@@ -46,15 +46,18 @@ YslLocationData toYslLocationDataWithDetails(HomeLocation src, LocationDetails? 
   // Assign pin by JSON order if index provided; else map from source
   PinVariation pin;
   if (index != null) {
-    switch (index % 3) {
+    switch (index % 4) {
       case 0:
         pin = PinVariation.pinA;
         break;
       case 1:
         pin = PinVariation.pinB;
         break;
+      case 2:
+        pin = PinVariation.pinC;
+        break;
       default:
-        pin = PinVariation.pinC; // We only have A/B/C for cards
+        pin = PinVariation.pinD;
     }
   } else {
     pin = _mapPin(src.pin);

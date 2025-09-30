@@ -503,17 +503,11 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
       finalZoom: 17.0,
       origin: _userLatLng, // Start from user's location when available
       onCompleted: () {
-        // Let user appreciate the location for a moment before showing details
-        Future.delayed(const Duration(milliseconds: 1200), () {
-          if (!mounted) return;
-          // Do not auto-open for first location; pulse Explore instead
-          if (index == 0 && _unlockedCount == 0) {
-            setState(() { _pulseFirstExplore = true; });
-            return;
-          }
-          print('📝 Elegantly showing bottom sheet for: ${selectedLocation.name}');
-          setState(() { _showBottomSheet = true; });
-        });
+        // Do not auto-open bottom sheet after fly-to.
+        // Optionally pulse Explore for the very first location to guide the user.
+        if (index == 0 && _unlockedCount == 0 && mounted) {
+          setState(() { _pulseFirstExplore = true; });
+        }
       },
     );
   }
@@ -835,14 +829,12 @@ final rewardLocked = _unlockedCount < data.locations.length;
                 final isLocked = (!isReward && index > _unlockedCount) || (isReward && rewardLocked);
                 if (isLocked) return;
 
-                // Only update selection without auto-zooming - let user control navigation
-                setState(() { _selectedLocationIndex = index; });
-                
-                if (isReward) {
-                  setState(() {
-                    _showBottomSheet = true;
-                  });
-                }
+                // Update selection and fly to the selected location
+                setState(() { 
+                  _selectedLocationIndex = index; 
+                  _showBottomSheet = false; // ensure map can animate
+                });
+                _animateMapToLocation(data.locations, index);
               },
             ),
           ),

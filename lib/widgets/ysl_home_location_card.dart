@@ -603,15 +603,14 @@ widget.location.name.toUpperCase(),
   }
 
   Widget _buildPinIcon() {
-    // You can switch between SVG and circular badge here
+    // Render SVG for A/B/C, PNG for D
+    final path = _getPinAssetPath();
     return SizedBox(
       width: 28,
       height: 28,
-      child: SvgPicture.asset(
-        _getPinAssetPath(),
-        width: 28,
-        height: 28,
-      ),
+      child: path.endsWith('.svg')
+          ? SvgPicture.asset(path, width: 28, height: 28)
+          : Image.asset(path, width: 28, height: 28, fit: BoxFit.contain),
     );
     // Alternative: return _buildCircularBadge(_getPinLetter());
   }
@@ -625,6 +624,8 @@ widget.location.name.toUpperCase(),
         return 'B';
       case PinVariation.pinC:
         return 'C';
+      case PinVariation.pinD:
+        return 'D';
     }
   }
 
@@ -636,6 +637,8 @@ widget.location.name.toUpperCase(),
         return 'assets/svgs/icons/pin_b.svg';
       case PinVariation.pinC:
         return 'assets/svgs/icons/pin_c.svg';
+      case PinVariation.pinD:
+        return 'assets/svgs/icons/pinD_black.png';
     }
   }
 }

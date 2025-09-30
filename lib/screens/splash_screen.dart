@@ -172,20 +172,11 @@ class _SplashScreenState extends State<SplashScreen>
               ),
             )
           else
-            // Elegant botanical gradient fallback while video loads
-            Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  stops: [0.0, 0.3, 0.6, 1.0],
-                  colors: [
-                    Color(0xFF2D4A2D), // Rich botanical green
-                    Color(0xFF1F3A1F), // Deep forest green
-                    Color(0xFF1A2A1A), // Dark botanical
-                    Color(0xFF0D0D0D), // Deep black
-                  ],
-                ),
+            // Placeholder image while video loads (on-brand)
+            SizedBox.expand(
+              child: Image.asset(
+                'assets/images/splash_placeholder.png',
+                fit: BoxFit.cover,
               ),
             ),
 

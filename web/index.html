@@ -35,6 +35,7 @@
   
   <!-- Preload splash video to avoid white screen -->
   <link rel="preload" href="assets/splash_screen_ourika.mp4" as="video" type="video/mp4">
+  <link rel="preload" href="assets/images/splash_placeholder.png" as="image" type="image/png">
   
   <!-- Google Maps JavaScript API with Advanced Markers -->
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDPCRYDw6K9ii0hGsgGdwoOIEH_HGXpzHk&libraries=marker"></script>
@@ -45,7 +46,7 @@
       position: fixed;
       inset: 0;
       z-index: 9999;
-      background: #000;
+      background: #000 url('assets/images/splash_placeholder.png') center / cover no-repeat;
     }
     #preload-video-overlay video {
       width: 100vw;

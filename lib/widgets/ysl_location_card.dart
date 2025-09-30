@@ -51,6 +51,7 @@ enum PinVariation {
   pinA,
   pinB,
   pinC,
+  pinD,
 }
 
 /// YSL Location Card Widget
@@ -185,11 +186,18 @@ class YslLocationCard extends StatelessWidget {
         SizedBox(
           width: 20,
           height: 20,
-          child: SvgPicture.asset(
-            _getPinAssetPath(),
-            width: 20,
-            height: 20,
-          ),
+          child: _getPinAssetPath().endsWith('.svg')
+              ? SvgPicture.asset(
+                  _getPinAssetPath(),
+                  width: 20,
+                  height: 20,
+                )
+              : Image.asset(
+                  _getPinAssetPath(),
+                  width: 20,
+                  height: 20,
+                  fit: BoxFit.contain,
+                ),
         ),
         
         const SizedBox(width: 8),
@@ -268,6 +276,9 @@ class YslLocationCard extends StatelessWidget {
         return Assets.iconPinB;
       case PinVariation.pinC:
         return Assets.iconPinC;
+      case PinVariation.pinD:
+        // Use PNG black icon for D
+        return Assets.pinD;
     }
   }
 }
