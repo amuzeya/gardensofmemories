@@ -236,18 +236,31 @@ if (widget.viewType == YslCardViewType.listView) {
           height: 120,
           child: ClipRect(
 child: widget.location.imagePath != null
-                ? Image.asset(
-widget.location.imagePath!,
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                    height: 120,
-                    errorBuilder: (context, error, stackTrace) {
-                      return Container(
-                        color: Colors.grey.shade200,
-                        child: const Icon(Icons.image, color: AppColors.yslBlack),
-                      );
-                    },
-                  )
+                ? (widget.location.imagePath!.startsWith('http')
+                    ? Image.network(
+                        widget.location.imagePath!,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: 120,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: Colors.grey.shade200,
+                            child: const Icon(Icons.image, color: AppColors.yslBlack),
+                          );
+                        },
+                      )
+                    : Image.asset(
+                        widget.location.imagePath!,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: 120,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            color: Colors.grey.shade200,
+                            child: const Icon(Icons.image, color: AppColors.yslBlack),
+                          );
+                        },
+                      ))
                 : Container(
                     color: Colors.grey.shade200,
                     child: const Icon(Icons.image, color: AppColors.yslBlack),
@@ -306,18 +319,31 @@ imageFilter: ui.ImageFilter.blur(sigmaX: sigma, sigmaY: sigma),
                 );
               },
 child: widget.location.imagePath != null
-                  ? Image.asset(
-widget.location.imagePath!,
-                      fit: BoxFit.cover,
-                      width: imageSize,
-                      height: imageSize,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          color: Colors.grey.shade200,
-                          child: const Icon(Icons.image, color: AppColors.yslBlack),
-                        );
-                      },
-                    )
+                  ? (widget.location.imagePath!.startsWith('http')
+                      ? Image.network(
+                          widget.location.imagePath!,
+                          fit: BoxFit.cover,
+                          width: imageSize,
+                          height: imageSize,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              color: Colors.grey.shade200,
+                              child: const Icon(Icons.image, color: AppColors.yslBlack),
+                            );
+                          },
+                        )
+                      : Image.asset(
+                          widget.location.imagePath!,
+                          fit: BoxFit.cover,
+                          width: imageSize,
+                          height: imageSize,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              color: Colors.grey.shade200,
+                              child: const Icon(Icons.image, color: AppColors.yslBlack),
+                            );
+                          },
+                        ))
                   : Container(
                       color: Colors.grey.shade200,
                       child: const Icon(Icons.image, color: AppColors.yslBlack),

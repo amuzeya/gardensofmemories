@@ -4,6 +4,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../data/home_repository.dart';
 import '../mappers/location_mapper.dart';
@@ -105,6 +106,9 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
   // Google Maps controller for cinematic animations
   GoogleMapController? _mapController;
   
+  // User location (for starting flight from user's position)
+  LatLng? _userLatLng;
+  
   // Bottom sheet state
   bool _showBottomSheet = false;
   
@@ -126,6 +130,8 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
     _future = _load();
     _setupAnimations();
     _startImmersiveTimer();
+    // Kick off user location request
+    _initUserLocation();
   }
   
   void _setupAnimations() {
@@ -395,6 +401,31 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
     });
   }
   
+  Future<void> _initUserLocation() async {
+    try {
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        print('Location services are disabled.');
+        return;
+      }
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+      }
+      if (permission == LocationPermission.denied || permission == LocationPermission.deniedForever) {
+        print('Location permission denied.');
+        return;
+      }
+      final pos = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.low);
+      setState(() {
+        _userLatLng = LatLng(pos.latitude, pos.longitude);
+      });
+      print('📍 User location: ${_userLatLng!.latitude}, ${_userLatLng!.longitude}');
+    } catch (e) {
+      print('Error getting user location: $e');
+    }
+  }
+
   void _forceResetImmersiveMode() {
     // Method to completely reset immersive mode (for debugging or special interactions)
     setState(() {
@@ -470,6 +501,7 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
       _mapController!,
       selectedLocation,
       finalZoom: 17.0,
+      origin: _userLatLng, // Start from user's location when available
       onCompleted: () {
         // Let user appreciate the location for a moment before showing details
         Future.delayed(const Duration(milliseconds: 1200), () {
@@ -551,7 +583,9 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
     
     // Map locations to widget data with listing descriptions from details
     final baseLocations = data.locations
-        .map((location) => toYslLocationDataWithDetails(location, data.detailsById[location.id]))
+        .asMap()
+        .entries
+        .map((e) => toYslLocationDataWithDetails(e.value, data.detailsById[e.value.id], index: e.key))
         .toList(growable: false);
 
     // Append reward as a pseudo-location at the end
@@ -635,7 +669,12 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
                   onMapReady: (controller) {
                     _mapController = controller;
                     print('Map controller ready for animations');
-                    Future.delayed(const Duration(milliseconds: 1500), () {
+                    // Try to start after obtaining user location (or timeout)
+                    Future(() async {
+                      try {
+                        await _initUserLocation();
+                      } catch (_) {}
+                      await Future.delayed(const Duration(milliseconds: 800));
                       if (!mounted) return;
                       if (_showBottomSheet) return; // Do not move map while sheet is open
                       if (data.locations.isNotEmpty) {

@@ -42,7 +42,24 @@ YslLocationData toYslLocationData(HomeLocation src) {
 }
 
 /// Enhanced mapper that includes listing description from LocationDetails
-YslLocationData toYslLocationDataWithDetails(HomeLocation src, LocationDetails? details) {
+YslLocationData toYslLocationDataWithDetails(HomeLocation src, LocationDetails? details, {int? index}) {
+  // Assign pin by JSON order if index provided; else map from source
+  PinVariation pin;
+  if (index != null) {
+    switch (index % 3) {
+      case 0:
+        pin = PinVariation.pinA;
+        break;
+      case 1:
+        pin = PinVariation.pinB;
+        break;
+      default:
+        pin = PinVariation.pinC; // We only have A/B/C for cards
+    }
+  } else {
+    pin = _mapPin(src.pin);
+  }
+
   return YslLocationData(
     name: src.name,
     address: src.address,
@@ -51,7 +68,7 @@ YslLocationData toYslLocationDataWithDetails(HomeLocation src, LocationDetails? 
     distance: src.distance,
     isOpen: src.isOpen,
     type: _mapType(src.type),
-    pinVariation: _mapPin(src.pin),
+    pinVariation: pin,
     imagePath: src.image,
   );
 }

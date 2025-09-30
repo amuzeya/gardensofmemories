@@ -33,6 +33,7 @@ class AssetsRes {
   static const String PIN_A = 'assets/images/pins/pin_a.png';
   static const String PIN_B = 'assets/images/pins/pin_b.png';
   static const String PIN_C = 'assets/images/pins/pin_c.png';
+  static const String SPLASH_PLACEHOLDER = 'assets/images/splash_placeholder.png';
   static const String SPLASH_SCREEN_OURIKA = 'assets/splash_screen_ourika.mp4';
   static const String PLANE = 'assets/svgs/icons/Plane.png';
   static const String DEST_PIN = 'assets/svgs/icons/dest_pin.png';

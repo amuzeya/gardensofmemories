@@ -26,17 +26,34 @@
   <meta name="apple-mobile-web-app-title" content="ysl_beauty_experience">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
+  <!-- Favicons: Use YSL logo -->
+  <link rel="icon" type="image/svg+xml" href="assets/svgs/logos/state_logo_beaut_on.svg" />
+  <link rel="alternate icon" type="image/png" href="favicon.png" />
 
   <title>YSL Beauty Experience</title>
   <link rel="manifest" href="manifest.json">
   
+  <!-- Preload splash video to avoid white screen -->
+  <link rel="preload" href="assets/splash_screen_ourika.mp4" as="video" type="video/mp4">
   
   <!-- Google Maps JavaScript API with Advanced Markers -->
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDPCRYDw6K9ii0hGsgGdwoOIEH_HGXpzHk&libraries=marker"></script>
   
   <style>
+    body { background:#000; }
+    #preload-video-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #000;
+    }
+    #preload-video-overlay video {
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      display: block;
+      pointer-events: none;
+    }
     /* Remove blue outline from Safari mobile browser */
     * {
       -webkit-tap-highlight-color: transparent;
@@ -77,6 +94,25 @@
   </style>
 </head>
 <body>
+  <!-- Fullscreen preload video to avoid white screen before Flutter initializes -->
+  <div id="preload-video-overlay">
+    <video id="preload-video" autoplay muted playsinline loop src="assets/splash_screen_ourika.mp4"></video>
+  </div>
+  
+  <script>
+    // Hide preload video as soon as Flutter paints its first frame
+    window.addEventListener('flutter-first-frame', function () {
+      var overlay = document.getElementById('preload-video-overlay');
+      if (overlay) {
+        overlay.style.opacity = '0';
+        overlay.style.transition = 'opacity 300ms ease-out';
+        setTimeout(function () {
+          if (overlay && overlay.parentNode) overlay.parentNode.removeChild(overlay);
+        }, 320);
+      }
+    });
+  </script>
+
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

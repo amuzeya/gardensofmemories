@@ -102,6 +102,7 @@ flutter:
     - assets/images/pins/pin_b.png
     - assets/images/pins/pin_c.png
     - assets/images/prod/
+    - assets/images/splash_placeholder.png
     - assets/splash_screen_ourika.mp4
     - assets/svgs/
     - assets/svgs/icons/

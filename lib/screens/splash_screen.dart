@@ -222,6 +222,7 @@ class _SplashScreenState extends State<SplashScreen>
 
                             // YSL Brand Identity
                             Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 // YSL Logo
                                 SvgPicture.asset(
@@ -234,7 +235,7 @@ class _SplashScreenState extends State<SplashScreen>
                                   ),
                                 ),
                                 
-                                const SizedBox(height: 24),
+                                //const SizedBox(height: 24),
 
                                 // Brand World Subtitle
                                 // Text(
@@ -253,7 +254,7 @@ class _SplashScreenState extends State<SplashScreen>
                                 //   textAlign: TextAlign.center,
                                 // ),
 
-                                const SizedBox(height: 16),
+                               // const SizedBox(height: 16),
 
                                 // Botanical/Fragrance subtitle
                                 // Text(
@@ -308,27 +309,64 @@ class _SplashScreenState extends State<SplashScreen>
              Align(
                alignment: Alignment.bottomCenter,
               child: Padding(
-                padding: const EdgeInsets.all(50.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(AppColors.yslWhite),
-                      strokeWidth: 2,
-                    ),
-                    SizedBox(height: 16),
-                    Text(
-                      'Loading...',
-                      style: AppText.bodyMedium.copyWith(
-                        color: AppColors.yslWhite,
-                        letterSpacing: 1.2,
-                      ),
-                    ),
-                  ],
-                ),
+                padding: const EdgeInsets.all(32.0),
+                child: _DotsLoader(color: AppColors.yslWhite),
               ),
             ),
         ],
+      ),
+    );
+  }
+}
+
+/// Minimal animated ellipsis loader ("..."), aligned with YSL minimalism
+class _DotsLoader extends StatefulWidget {
+  final Color color;
+  const _DotsLoader({required this.color});
+
+  @override
+  State<_DotsLoader> createState() => _DotsLoaderState();
+}
+
+class _DotsLoaderState extends State<_DotsLoader> with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  int _dots = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 900),
+    )..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          _controller.reverse();
+        } else if (status == AnimationStatus.dismissed) {
+          _controller.forward();
+        }
+      })
+     ..addListener(() {
+        final t = (_controller.value * 3).floor();
+        if (t != _dots) setState(() => _dots = t);
+      })
+     ..forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final dotsText = '.' * (_dots + 1);
+    return Text(
+      'Loading$dotsText',
+      style: AppText.bodySmallLight.copyWith(
+        color: widget.color,
+        letterSpacing: 3,
+        fontWeight: FontWeight.w200,
       ),
     );
   }

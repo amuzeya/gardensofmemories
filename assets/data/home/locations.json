@@ -1,22 +1,6 @@
 {
   "locations": [
     {
-      "id": "loc_1150",
-      "name": "Jardin Majorelle",
-      "address": "Rue Yves St Laurent, Marrakech 40090, Morocco",
-      "city": "Marrakech",
-      "isOpen": true,
-      "type": "experience",
-      "pin": "pin_a",
-      "lat": 31.6412031,
-      "lng": -8.0032397,
-      "image": "assets/images/prod/jardin_majorelle.jpg",
-      "gallery": [
-        "https://img.landng.com/org_1755463856676_cropped-image-1755463845172.jpg",
-        "https://img.landng.com/org_1755463856963_cropped-image-1755463851356.jpg"
-      ]
-    },
-    {
       "id": "loc_1151",
       "name": "Yves Saint Laurent Museum",
       "address": "Rue Yves St Laurent, Marrakech 40000, Morocco",
@@ -35,26 +19,24 @@
         "https://img.landng.com/org_1755465552705_cropped-image-1755465509456.jpg"
       ]
     },
+
     {
-      "id": "loc_1153",
-      "name": "Ourika Gardens",
-      "address": "95JG+78 Ourika, Morocco",
+      "id": "loc_1150",
+      "name": "Jardin Majorelle",
+      "address": "Rue Yves St Laurent, Marrakech 40090, Morocco",
       "city": "Marrakech",
       "isOpen": true,
       "type": "experience",
-      "pin": "pin_c",
-      "lat": 31.380651,
-      "lng": -7.824132,
-      "image": "assets/images/prod/ourika_gardens.jpg",
+      "pin": "pin_a",
+      "lat": 31.6412031,
+      "lng": -8.0032397,
+      "image": "assets/images/prod/jardin_majorelle.jpg",
       "gallery": [
-        "https://img.landng.com/org_1755465744843_cropped-image-1755465718299.jpg",
-        "https://img.landng.com/org_1755465745307_cropped-image-1755465722415.jpg",
-        "https://img.landng.com/org_1755465745086_cropped-image-1755465719466.jpg",
-        "https://img.landng.com/org_1755465744650_cropped-image-1755465716546.jpg",
-        "https://img.landng.com/org_1755465745669_cropped-image-1755465728232.jpg",
-        "https://img.landng.com/org_1755465744494_cropped-image-1755465712395.jpg"
+        "https://img.landng.com/org_1755463856676_cropped-image-1755463845172.jpg",
+        "https://img.landng.com/org_1755463856963_cropped-image-1755463851356.jpg"
       ]
     },
+
     {
       "id": "loc_519",
       "name": "La Mamounia",
@@ -73,6 +55,27 @@
         "https://img.landng.com/org_1755466299110_cropped-image-1755466278444.jpg",
         "https://img.landng.com/org_1755466299251_cropped-image-1755466280377.jpg",
         "https://img.landng.com/org_1755466299696_cropped-image-1755466282997.jpg"
+      ]
+    },
+
+    {
+      "id": "loc_1153",
+      "name": "Ourika Gardens",
+      "address": "95JG+78 Ourika, Morocco",
+      "city": "Marrakech",
+      "isOpen": true,
+      "type": "experience",
+      "pin": "pin_c",
+      "lat": 31.380651,
+      "lng": -7.824132,
+      "image": "assets/images/prod/ourika_gardens.jpg",
+      "gallery": [
+        "https://img.landng.com/org_1755465744843_cropped-image-1755465718299.jpg",
+        "https://img.landng.com/org_1755465745307_cropped-image-1755465722415.jpg",
+        "https://img.landng.com/org_1755465745086_cropped-image-1755465719466.jpg",
+        "https://img.landng.com/org_1755465744650_cropped-image-1755465716546.jpg",
+        "https://img.landng.com/org_1755465745669_cropped-image-1755465728232.jpg",
+        "https://img.landng.com/org_1755465744494_cropped-image-1755465712395.jpg"
       ]
     }
   ]

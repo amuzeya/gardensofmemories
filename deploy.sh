@@ -9,6 +9,7 @@ echo "🚀 Starting deployment of YSL Beauty Experience..."
 
 # Configuration
 SERVER="gcloud-allan"
+
 DOMAIN="gardernsofmemories.landng.com"
 WEB_ROOT="/var/www/$DOMAIN"
 NGINX_CONF="/etc/nginx/sites-available/$DOMAIN.conf"

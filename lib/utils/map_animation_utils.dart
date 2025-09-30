@@ -13,6 +13,7 @@ class MapAnimationUtils {
     GoogleMapController controller,
     HomeLocation location, {
     double finalZoom = 17.0,
+    LatLng? origin, // Optional starting point for the flight
   }) async {
     try {
       print('🎬 Starting cinematic flight to ${location.name}');
@@ -20,11 +21,12 @@ class MapAnimationUtils {
       final targetLat = location.lat;
       final targetLng = location.lng;
       
-      // Stage 1: Pull back to overview to see the journey (Marrakech overview)
+      // Stage 1: Pull back to overview starting from origin (user location) if provided
+      final LatLng overviewTarget = origin ?? const LatLng(31.629472, -7.981084); // Marrakech center fallback
       await controller.animateCamera(
         CameraUpdate.newCameraPosition(
           CameraPosition(
-            target: const LatLng(31.629472, -7.981084), // Marrakech center
+            target: overviewTarget,
             zoom: 11.5,
             tilt: 0.0,
             bearing: 0.0,
@@ -90,8 +92,9 @@ class MapAnimationUtils {
     HomeLocation location, {
     double finalZoom = 17.0,
     VoidCallback? onCompleted,
+    LatLng? origin,
   }) async {
-    await cinematicFlyToLocation(controller, location, finalZoom: finalZoom);
+    await cinematicFlyToLocation(controller, location, finalZoom: finalZoom, origin: origin);
     // Trigger callback after animation completes
     onCompleted?.call();
   }
