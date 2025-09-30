@@ -31,6 +31,7 @@ import '../models/location_details.dart';
 import '../widgets/ysl_flight_path_animation.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../widgets/ysl_toggle_switch.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePageScreen extends StatefulWidget {
   const HomePageScreen({super.key});
@@ -115,6 +116,9 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
   // Gamified flight path animation state
   bool _showFlightPath = true;
   bool _flightCompleted = false;
+  
+  // Reward bottom sheet drag state (min 60%, max 95% of screen height)
+  double _rewardSheetHeightFactor = 0.60;
   
   // Hero content entrance animation controllers
   late AnimationController _heroEntranceController;
@@ -1432,76 +1436,216 @@ final rewardLocked = _unlockedCount < data.locations.length;
     }
   }
 
-  // Simple black reward bottom sheet
+  // Exclusive offer bottom sheet - LIBRE EAU DE PARFUM
   Widget _buildRewardBottomSheet() {
+    const offerUrl = 'https://www.yslbeauty.fr/offer-page.html';
+
+    final screenHeight = MediaQuery.of(context).size.height;
+    final minFactor = 0.60;
+    final maxFactor = 0.95;
+
+    // Compute large image height (full-bleed), within safe bounds
+    double imageHeight = screenHeight * 0.7;
+    if (imageHeight < 500) imageHeight = 500;
+    if (imageHeight > 600) imageHeight = 600;
+
     return Positioned(
       left: 0,
       right: 0,
       bottom: 0,
-      child: Container(
-        height: MediaQuery.of(context).size.height * 0.6,
-        decoration: const BoxDecoration(
-          color: AppColors.yslBlack,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(16),
-            topRight: Radius.circular(16),
+      child: GestureDetector(
+        onPanUpdate: (details) {
+          setState(() {
+            _rewardSheetHeightFactor = (_rewardSheetHeightFactor - details.delta.dy / screenHeight)
+                .clamp(minFactor, maxFactor);
+          });
+        },
+        onPanEnd: (details) {
+          // Snap to nearest state (min or max)
+          final mid = (minFactor + maxFactor) / 2;
+          setState(() {
+            _rewardSheetHeightFactor = (_rewardSheetHeightFactor < mid) ? minFactor : maxFactor;
+          });
+        },
+        child: Container(
+          height: screenHeight * _rewardSheetHeightFactor,
+          decoration: const BoxDecoration(
+            color: AppColors.yslBlack,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(16),
+              topRight: Radius.circular(16),
+            ),
           ),
-        ),
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                const Spacer(),
-                GestureDetector(
-                  onTap: () { setState(() { _showBottomSheet = false; }); },
-                  child: const Icon(Icons.close, color: AppColors.yslWhite, size: 20),
+          padding: EdgeInsets.zero,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Drag handle
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(2),
+                  ),
                 ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Text(
-              'YSL LIBRE FRAGRANCE',
-              style: AppText.titleLarge.copyWith(
-                color: AppColors.yslWhite,
-                fontWeight: FontWeight.w700,
-                fontSize: 22,
-                fontFamily: 'ITC Avant Garde Gothic Pro',
               ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              'Complete the journey to unlock your reward.',
-              style: AppText.bodyMedium.copyWith(
-                color: AppColors.yslWhite.withOpacity(0.7),
-                fontSize: 14,
-                fontFamily: 'ITC Avant Garde Gothic Pro',
+
+              const SizedBox(height: 12),
+
+              // Close button
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Row(
+                  children: [
+                    const Spacer(),
+                    GestureDetector(
+                      onTap: () { setState(() { _showBottomSheet = false; }); },
+                      child: const Icon(Icons.close, color: AppColors.yslWhite, size: 20),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            const Spacer(),
-            SizedBox(
-              width: double.infinity,
-              child: Container(
-                height: 44,
-                color: AppColors.yslWhite,
+
+              const SizedBox(height: 12),
+
+              // Scrollable content to avoid overflow at compact height
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // Subtitle (aligned with title)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        child: Center(
+                          child: Text(
+                            'EXCLUSIVE OFFER',
+                            style: AppText.bodySmall.copyWith(
+                              color: AppColors.yslWhite.withOpacity(0.9),
+                              fontWeight: FontWeight.w300,
+                              letterSpacing: 1.2,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 8),
+
+                      // Title
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        child: Center(
+                          child: Text(
+                            'LIBRE EAU DE PARFUM',
+                            style: AppText.titleLarge.copyWith(
+                              color: AppColors.yslWhite,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 22,
+                              fontFamily: 'ITC Avant Garde Gothic Pro',
+                              letterSpacing: 1.0,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(height: 16),
+
+                      // Exclusive offer image (same as top banner)
+                      SizedBox(
+                        width: double.infinity,
+                        height: 393,
+                        child: Image.asset(
+                          'assets/images/exclusive_offer/main_banner.png',
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+
+                      // Offer line (bold, centered, with top/bottom padding)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
+                        child: Center(
+                          child: Text(
+                            'Enjoy 20% off and free delivery on your first online purchase — CODE: YSL20',
+                            textAlign: TextAlign.center,
+                            style: AppText.bodyLarge.copyWith(
+                              color: AppColors.yslWhite,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.6,
+                              height: 1.3,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      // Offer description between offer line and CTA
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        child: Center(
+                          child: Text(
+                            'Discover the captivating duality of Libre, from fresh hesperidic top notes to a warm, sensual base of vanilla and cedar — the essence of confidence, freedom, and timeless elegance.',
+                            textAlign: TextAlign.center,
+                            style: AppText.bodyMedium.copyWith(
+                              color: AppColors.yslWhite.withOpacity(0.9),
+                              height: 1.5,
+                              fontSize: 16,
+                              fontFamily: 'ITC Avant Garde Gothic Pro',
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 12),
+
+              // CTA (not full width, healthy horizontal padding)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: Center(
-                  child: Text(
-                    'UNLOCK MY REWARD',
-                    style: AppText.bodyMedium.copyWith(
-                      color: AppColors.yslBlack,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 1.0,
-                      fontFamily: 'ITC Avant Garde Gothic Pro',
+                  child: GestureDetector(
+                    onTap: () => _openUrl(offerUrl),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 28.0, vertical: 10.0),
+                      decoration: const BoxDecoration(
+                        color: AppColors.yslWhite,
+                        borderRadius: BorderRadius.zero,
+                      ),
+                      child: Text(
+                        'SHOP LIBRE',
+                        style: AppText.bodyMedium.copyWith(
+                          color: AppColors.yslBlack,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 1.0,
+                          fontFamily: 'ITC Avant Garde Gothic Pro',
+                        ),
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+
+              // Extra bottom spacing beneath CTA
+              const SizedBox(height: 32),
+            ],
+          ),
         ),
       ),
     );
+  }
+  Future<void> _openUrl(String url) async {
+    try {
+      final uri = Uri.parse(url);
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      }
+    } catch (_) {}
   }
 
   void _onExploreFromCard(int index) {

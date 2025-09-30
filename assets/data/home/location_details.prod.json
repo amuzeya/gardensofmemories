@@ -15,11 +15,11 @@
       "lat": 31.6412031,
       "lng": -8.0032397,
       "type": "activity",
-      "listingDescription": "Yves Saint Laurent's creative retreat, a place that inspired his bold ideas and use of color.",
-      "detailedDescription": "Stepping into the Majorelle Garden is like entering a dream suspended in color. The intensity of Majorelle blue, the rustle of palms, the reflection of sky on still water—it is a place where time slows down and the senses awaken. Carefully preserved by Yves Saint Laurent and Pierre Bergé, the garden stands today as a testament to beauty, patience, and the profound link between nature and artistic vision.",
+      "listingDescription": "Electric blue walls. Lush palms. A sanctuary where YSL dreamed in color.",
+      "detailedDescription": "Electric blue walls. Lush palms. Exotic blooms. Jardin Majorelle was Yves Saint Laurent's refuge, where he found the freedom to dream. This garden became his sanctuary, a place of pure inspiration. Today, it remains a living work of art for those who seek their own path to creativity.",
       "cta": {
         "text": "RESERVE TICKETS",
-        "url": "https://tickets.jardinmajorelle.com/visite"
+        "url": "https://www.jardinmajorelle.com/en/"
       },
       "coverImage": "assets/images/prod/jardin_majorelle.jpg",
       "galleryRemote": [
@@ -84,11 +84,11 @@
       "lat": 31.6425934,
       "lng": -8.0031422,
       "type": "Activity",
-      "listingDescription": "A preservation and safeguard of heritage by the Fondation Pierre Bergé – Yves Saint Laurent.",
-      "detailedDescription": "Enter the sacred archive of creativity where every stitch tells a story. The museum houses the complete legacy of Yves Saint Laurent—sketches, fabrics, and finished masterpieces that redefined fashion. Here, in the stillness of preservation, you can trace the evolution of a genius who transformed cloth into poetry and silhouette into revolution.",
+      "listingDescription": "A monument to YSL’s revolutionary vision — sketches, fabrics, inspirations preserved.",
+      "detailedDescription": "In the heart of Marrakech, the YSL Museum stands as a monument to Yves Saint Laurent's revolutionary vision. His sketches, fabrics, and inspirations are preserved here. Each piece tells the story of an artist who transformed fashion into modern elegance. A place where his legacy lives on, inspiring those who dare to break boundaries.",
       "cta": {
-        "text": "BOOK VISIT",
-        "url": "https://www.museeyslmarrakech.com/en/practical-information"
+        "text": "PLAN YOUR VISIT",
+        "url": "https://www.museeyslmarrakech.com/en/votre-visite/"
       },
       "coverImage": "assets/images/prod/ysl_museum.jpg",
       "galleryRemote": [
@@ -147,11 +147,11 @@
       "lat": 31.6215239,
       "lng": -7.997488,
       "type": "Hotel",
-      "listingDescription": "A story of love and peace with artists, Pierre Bergé and Yves Saint-Laurent, since 1966.",
-      "detailedDescription": "Within the walls of La Mamounia, time moves differently. This legendary palace hotel has been a sanctuary for artists, writers, and visionaries for over a century. For Yves Saint Laurent and Pierre Bergé, it was more than accommodation—it was a second home where inspiration bloomed in gardens scented with orange blossoms and creativity flourished in rooms steeped in Moroccan craftsmanship.",
+      "listingDescription": "A legendary palace where tradition and luxury awakened YSL’s vision.",
+      "detailedDescription": "Behind the walls of La Mamounia, Yves Saint Laurent discovered the soul of Morocco. Jasmine-scented courtyards. Moorish architecture. Secret gardens. This legendary palace awakened his senses and fueled his passion for beauty. A place where tradition and luxury intertwine, where his vision was born.",
       "cta": {
         "text": "RESERVE STAY",
-        "url": "https://www.mamounia.com/en/"
+        "url": "https://mamounia.com/en/accommodation/"
       },
       "coverImage": "assets/images/prod/la_mamounia.jpg",
       "galleryRemote": [
@@ -224,11 +224,11 @@
       "lat": 31.380651,
       "lng": -7.824132,
       "type": "Activity",
-      "listingDescription": "Driven by legacy, a place of change today and for the future.",
-      "detailedDescription": "In the Atlas Mountains, where ancient Berber traditions meet modern sustainability, the Ourika Community Gardens represent YSL Beauty’s commitment to ethical sourcing and environmental restoration. This living laboratory cultivates the precious ingredients that give life to YSL fragrances while nurturing the land and supporting local communities. It is innovation rooted in respect—a testament to beauty that gives back.",
+      "listingDescription": "A living laboratory at the foot of the Atlas — regenerative, visionary, audacious.",
+      "detailedDescription": "Since 2014, at the foot of the Atlas Mountains in Morocco, Yves Saint Laurent Beauté has cultivated a place of transformation: the Ourika Community Gardens. The garden plants are grown by a women's cooperative, whose independence inspires change throughout the valley. The botanical species we cultivate, using organic and regenerative farming methods, defy the most extreme climates to create more sustainable innovations. The biodiversity we help restore extends beyond our walls. LIBRE. AUDACIOUS. VISIONARY.",
       "cta": {
         "text": "LEARN MORE",
-        "url": "https://www.yslbeauty.com/sustainability"
+        "url": "https://www.yslbeauty.com/int/ourika-community-gardens.html"
       },
       "coverImage": "assets/images/prod/ourika_gardens.jpg",
       "galleryRemote": [
