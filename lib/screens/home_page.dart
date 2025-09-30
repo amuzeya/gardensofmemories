@@ -1101,7 +1101,7 @@ final rewardLocked = _unlockedCount < data.locations.length;
               ),
             ),
             
-          // Location bottom sheet overlay (same as map view)
+          // Location bottom sheet overlay (non-reward)
           if (data.locations.isNotEmpty && _selectedLocationIndex < data.locations.length)
             YslLocationBottomSheet(
               location: data.locations[_selectedLocationIndex],
@@ -1117,6 +1117,10 @@ final rewardLocked = _unlockedCount < data.locations.length;
                 }
               },
             ),
+
+          // Reward bottom sheet overlay (show when reward card selected and unlocked)
+          if (_showBottomSheet && _selectedLocationIndex == _rewardIndex)
+            _buildRewardBottomSheet(),
         ],
       ),
     );
@@ -1564,6 +1568,8 @@ final rewardLocked = _unlockedCount < data.locations.length;
                         ),
                       ),
 
+                      const SizedBox(height: 12),
+
                       // Offer line (bold, centered, with top/bottom padding)
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
@@ -1592,7 +1598,7 @@ final rewardLocked = _unlockedCount < data.locations.length;
                             style: AppText.bodyMedium.copyWith(
                               color: AppColors.yslWhite.withOpacity(0.9),
                               height: 1.5,
-                              fontSize: 16,
+                              fontSize: 13,
                               fontFamily: 'ITC Avant Garde Gothic Pro',
                             ),
                           ),
