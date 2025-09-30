@@ -5,6 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:animations/animations.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text.dart';
 import '../models/home_location.dart';
@@ -329,7 +330,7 @@ class _YslLocationBottomSheetState extends State<YslLocationBottomSheet>
 
   Widget _buildLocationContent() {
     return Padding(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.only(top: 12, bottom: 12),
       child: ListView(
         children: [
           // "ACTIVITY" aligned under handle - center aligned
@@ -345,7 +346,7 @@ class _YslLocationBottomSheetState extends State<YslLocationBottomSheet>
             ),
           ),
           
-          const SizedBox(height: 16),
+          const SizedBox(height: 8),
           
           // Location name - centered with biggest AppText font (heroDisplay)
           Center(
@@ -360,7 +361,7 @@ class _YslLocationBottomSheetState extends State<YslLocationBottomSheet>
             ),
           ),
           
-          const SizedBox(height: 12),
+          const SizedBox(height: 8),
           
           // Location address - lightweight, center aligned
           Center(
@@ -375,10 +376,19 @@ class _YslLocationBottomSheetState extends State<YslLocationBottomSheet>
             ),
           ),
           
-          const SizedBox(height: 32),
+          const SizedBox(height: 12),
           
           // YSL Carousel component
           _buildLocationCarousel(),
+          
+          const SizedBox(height: 16),
+          
+          // Detailed description and CTA section
+          if (widget.details?.detailedDescription != null)
+            _buildDetailedContent(),
+          
+          // Bottom spacing to ensure content is not cut off
+          const SizedBox(height: 40),
         ],
       ),
     );
@@ -396,7 +406,6 @@ class _YslLocationBottomSheetState extends State<YslLocationBottomSheet>
           YslCarouselItem(
             imagePath: imagePath,
             title: widget.location.name,
-            subtitle: widget.location.address,
           ),
         );
       }
@@ -409,7 +418,6 @@ class _YslLocationBottomSheetState extends State<YslLocationBottomSheet>
           YslCarouselItem(
             imagePath: imageUrl,
             title: widget.location.name,
-            subtitle: widget.location.address,
           ),
         );
       }
@@ -421,21 +429,85 @@ class _YslLocationBottomSheetState extends State<YslLocationBottomSheet>
         YslCarouselItem(
           imagePath: widget.location.image,
           title: widget.location.name,
-          subtitle: widget.location.address,
         ),
       );
     }
     
     return SizedBox(
-      height: 280,
+      height: 400,
       child: YslCarousel(
         items: carouselItems,
-        height: 280,
-        enableAutoPlay: true,
+        height: 500,
+        enableAutoPlay: false,
         autoPlayDuration: const Duration(seconds: 4),
         showIndicators: true,
       ),
     );
+  }
+  
+  /// Build detailed description and CTA section
+  Widget _buildDetailedContent() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // Detailed description paragraph
+          Text(
+            widget.details!.detailedDescription!,
+            style: AppText.bodyMedium.copyWith(
+              color: AppColors.yslBlack,
+              fontWeight: FontWeight.w300,
+              height: 1.5,
+              fontSize: 14,
+            ),
+            textAlign: TextAlign.center,
+          ),
+          
+          const SizedBox(height: 16),
+          
+          // CTA Button
+          if (widget.details?.cta != null)
+            GestureDetector(
+              onTap: () => _launchURL(widget.details!.cta!.url),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 32, 
+                  vertical: 12
+                ),
+                decoration: const BoxDecoration(
+                  color: AppColors.yslBlack,
+                  borderRadius: BorderRadius.zero, // Hard edges
+                ),
+                child: Text(
+                  widget.details!.cta!.text,
+                  style: AppText.button.copyWith(
+                    color: AppColors.yslWhite,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                    letterSpacing: 1.2,
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+  
+  /// Launch URL for CTA button
+  void _launchURL(String url) async {
+    try {
+      final uri = Uri.parse(url);
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      } else {
+        print('Could not launch URL: $url');
+      }
+    } catch (e) {
+      print('Error launching URL: $e');
+    }
   }
 
 }

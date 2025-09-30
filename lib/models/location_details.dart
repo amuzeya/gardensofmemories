@@ -4,6 +4,8 @@
 class LocationDetails {
   final String id; // matches HomeLocation.id
   final String? listingDescription; // short description for list view
+  final String? detailedDescription; // detailed paragraph for bottom sheet
+  final LocationCTA? cta; // call-to-action button
   final String? coverImage; // local asset path
   final List<String> galleryRemote; // remote URLs
   final List<String> galleryLocal; // local asset paths
@@ -14,6 +16,8 @@ class LocationDetails {
   const LocationDetails({
     required this.id,
     this.listingDescription,
+    this.detailedDescription,
+    this.cta,
     this.coverImage,
     this.galleryRemote = const [],
     this.galleryLocal = const [],
@@ -30,6 +34,8 @@ class LocationDetails {
     return LocationDetails(
       id: json['id'] as String,
       listingDescription: json['listingDescription'] as String?,
+      detailedDescription: json['detailedDescription'] as String?,
+      cta: json['cta'] != null ? LocationCTA.fromJson(json['cta']) : null,
       coverImage: json['coverImage'] as String?,
       galleryRemote: _toStringList(json['galleryRemote']),
       galleryLocal: _toStringList(json['galleryLocal']),
@@ -107,4 +113,21 @@ class VideoBlock extends ContentBlock {
   final String? title;
   const VideoBlock({required this.source, required this.src, this.title})
       : super('video');
+}
+
+class LocationCTA {
+  final String text;
+  final String url;
+  
+  const LocationCTA({
+    required this.text,
+    required this.url,
+  });
+  
+  factory LocationCTA.fromJson(Map<String, dynamic> json) {
+    return LocationCTA(
+      text: json['text'] as String? ?? '',
+      url: json['url'] as String? ?? '',
+    );
+  }
 }

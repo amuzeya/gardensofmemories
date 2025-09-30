@@ -53,6 +53,7 @@ dependencies:
   
   # Animations package for elegant flight path animations
   animations: ^2.0.11
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:
@@ -106,6 +107,7 @@ flutter:
     - assets/svgs/icons/
     - assets/svgs/icons/Plane.png
     - assets/svgs/icons/dest_pin.png
+    - assets/svgs/icons/icons_small-arrow.svg
     - assets/svgs/icons/pinA.png
     - assets/svgs/icons/pinA_white.png
     - assets/svgs/icons/pinB.png
@@ -116,6 +118,7 @@ flutter:
     - assets/svgs/icons/pinD_white.png
     - assets/svgs/icons/pin_a.svg
     - assets/svgs/icons/pin_arrive.svg
+    - assets/svgs/icons/small_arrow_left.svg
     - assets/svgs/logos/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg

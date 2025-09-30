@@ -20,6 +20,7 @@ class Assets {
   static const String pinA = 'assets/svgs/icons/pinA.png';
   static const String pinB = 'assets/svgs/icons/pinB.png';
   static const String pinC = 'assets/svgs/icons/pinC.png';
+  static const String pinD = 'assets/svgs/icons/pinD_black.png';
   static const String pinAWhite = 'assets/svgs/icons/pinA_white.png';
   static const String pinBWhite = 'assets/svgs/icons/pinB_white.png';
   static const String pinCWhite = 'assets/svgs/icons/pinC_white.png';

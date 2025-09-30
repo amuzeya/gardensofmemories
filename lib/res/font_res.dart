@@ -10,6 +10,7 @@ class FontRes {
   static const String PROJECT_VERSION = '1.0.0+1';
   static const String ARIAL_BOLD = 'Arial-Bold';
   static const String ARIAL_REGULAR = 'Arial-Regular';
+  static const String ITCAVANTGARDEGOTHICPRO_LIGHT = 'ITCAvantGardeGothicPro-Light';
   static const String ITCAVANTGARDESTD_BK = 'ITCAvantGardeStd-Bk';
   static const String ITCAVANTGARDESTD_BOLD = 'ITCAvantGardeStd-Bold';
   static const String ITCAVANTGARDESTD_DEMI = 'ITCAvantGardeStd-Demi';

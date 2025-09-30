@@ -44,6 +44,8 @@ class YslCarousel extends StatefulWidget {
   final bool showIndicators;
   final ValueChanged<int>? onPageChanged;
   final YslCarouselLayout layout;
+  // When true, the carousel height adapts to the intrinsic image height (width = 100%).
+  final bool useIntrinsicImageHeight;
 
   const YslCarousel({
     super.key,
@@ -56,6 +58,7 @@ class YslCarousel extends StatefulWidget {
     this.showIndicators = true,
     this.onPageChanged,
     this.layout = YslCarouselLayout.standard,
+    this.useIntrinsicImageHeight = false,
   });
 
   @override
@@ -69,6 +72,7 @@ class _YslCarouselState extends State<YslCarousel> {
   final Map<int, VideoPlayerController> _videoControllers = {};
   bool _isAutoPlayPaused = false;
   final Map<int, bool> _videoStates = {}; // Track video playing state
+  final Map<int, double> _imageAspectRatios = {}; // index -> width/height
 
   @override
   void initState() {
@@ -161,6 +165,13 @@ class _YslCarouselState extends State<YslCarousel> {
       _currentIndex = index;
     });
 
+    // Preload aspect ratio for current image when using intrinsic height
+    if (widget.useIntrinsicImageHeight) {
+      if (index >= 0 && index < widget.items.length) {
+        _ensureImageAspectRatio(index, widget.items[index]);
+      }
+    }
+
     // Handle video playback
     _videoControllers.forEach((key, controller) {
       if (key == index) {
@@ -179,6 +190,33 @@ class _YslCarouselState extends State<YslCarousel> {
       _stopAutoPlay();
       _startAutoPlay();
     }
+  }
+
+  void _ensureImageAspectRatio(int index, YslCarouselItem item) {
+    if (_imageAspectRatios.containsKey(index)) return;
+    final path = item.imagePath;
+    if (path == null) return;
+
+    final ImageProvider provider = path.startsWith('http')
+        ? NetworkImage(path)
+        : AssetImage(path) as ImageProvider;
+
+    final ImageStream stream = provider.resolve(const ImageConfiguration());
+    late final ImageStreamListener listener;
+    listener = ImageStreamListener((ImageInfo info, bool sync) {
+      final width = info.image.width.toDouble();
+      final height = info.image.height.toDouble();
+      if (height > 0) {
+        setState(() {
+          _imageAspectRatios[index] = width / height; // width/height
+        });
+      }
+      stream.removeListener(listener);
+    }, onError: (Object error, StackTrace? stackTrace) {
+      // Ignore errors, keep fallback height
+      stream.removeListener(listener);
+    });
+    stream.addListener(listener);
   }
 
   void _toggleAutoPlay() {
@@ -216,38 +254,44 @@ class _YslCarouselState extends State<YslCarousel> {
 
   @override
   Widget build(BuildContext context) {
+    // Determine display height: either fixed or based on current image aspect ratio
+    double displayHeight = widget.height;
+    if (widget.useIntrinsicImageHeight) {
+      final width = MediaQuery.of(context).size.width;
+      final ar = _imageAspectRatios[_currentIndex];
+      if (ar != null && ar > 0) {
+        // ar = width/height => height = width / ar
+        displayHeight = width / ar;
+      }
+    }
+
     return Container(
-      height: widget.height,
+      height: displayHeight,
       decoration: BoxDecoration(
         color: widget.backgroundColor,
         borderRadius: BorderRadius.zero,
       ),
-      child: Column(
+      child: Stack(
         children: [
-          // Carousel Content
-          Expanded(
-            child: PageView.builder(
-              controller: _pageController,
-              itemCount: widget.items.length,
-              onPageChanged: _onPageChanged,
-              itemBuilder: (context, index) {
-                return _buildCarouselItem(index, widget.items[index]);
-              },
-            ),
+          // Carousel Content - Full height
+          PageView.builder(
+            controller: _pageController,
+            itemCount: widget.items.length,
+            onPageChanged: _onPageChanged,
+            itemBuilder: (context, index) {
+              // Preload aspect ratio for this index
+              _ensureImageAspectRatio(index, widget.items[index]);
+              return _buildCarouselItem(index, widget.items[index]);
+            },
           ),
 
-          // User Controls
+          // Combined Controls and Indicators Row - Overlaid at bottom
           if (widget.items.length > 1)
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              child: _buildUserControls(),
-            ),
-
-          // Indicators
-          if (widget.showIndicators && widget.items.length > 1)
-            Container(
-              padding: const EdgeInsets.only(bottom: 20),
-              child: _buildIndicators(),
+            Positioned(
+              bottom: 8,
+              left: 0,
+              right: 0,
+              child: _buildCombinedControlsRow(),
             ),
         ],
       ),
@@ -256,9 +300,7 @@ class _YslCarouselState extends State<YslCarousel> {
 
   Widget _buildCarouselItem(int index, YslCarouselItem item) {
     return Container(
-      padding: widget.layout == YslCarouselLayout.videoFocused
-          ? const EdgeInsets.symmetric(horizontal: 8, vertical: 16)
-          : (widget.padding ?? const EdgeInsets.all(20)),
+      padding: EdgeInsets.zero, // Full width - no padding
       child: widget.layout == YslCarouselLayout.videoFocused
           ? _buildVideoFocusedLayout(index, item)
           : _buildStandardLayout(index, item),
@@ -373,7 +415,7 @@ class _YslCarouselState extends State<YslCarousel> {
           width: double.infinity,
           child: Image.asset(
             item.imagePath!,
-            fit: BoxFit.cover,
+            fit: BoxFit.cover, // Restore original behavior
             width: double.infinity,
             errorBuilder: (context, error, stackTrace) {
               return Container(
@@ -446,19 +488,19 @@ class _YslCarouselState extends State<YslCarousel> {
           ],
 
           // Title
-          Text(
-            item.title.toUpperCase(),
-            style: AppText.titleLarge.copyWith(
-              color: AppColors.yslBlack,
-              letterSpacing: 1.0,
-              fontFamily: 'ITC Avant Garde Gothic Pro',
-              fontWeight: FontWeight.w700,
-              fontSize: 18,
-            ),
-            textAlign: TextAlign.center,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
+          // Text(
+          //   item.title.toUpperCase(),
+          //   style: AppText.titleLarge.copyWith(
+          //     color: AppColors.yslBlack,
+          //     letterSpacing: 1.0,
+          //     fontFamily: 'ITC Avant Garde Gothic Pro',
+          //     fontWeight: FontWeight.w700,
+          //     fontSize: 18,
+          //   ),
+          //   textAlign: TextAlign.center,
+          //   maxLines: 2,
+          //   overflow: TextOverflow.ellipsis,
+          // ),
 
           // Subtitle
           if (item.subtitle != null) ...[
@@ -506,35 +548,35 @@ class _YslCarouselState extends State<YslCarousel> {
       children: [
         // Intro Text
         if (item.introText != null) ...[
-          Text(
-            item.introText!.toUpperCase(),
-            style: AppText.bodySmall.copyWith(
-              color: AppColors.yslBlack,
-              letterSpacing: 1.0,
-              fontFamily: 'ITC Avant Garde Gothic Pro',
-              fontWeight: FontWeight.w500,
-            ),
-            textAlign: TextAlign.center,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          const SizedBox(height: 6),
+          // Text(
+          //   item.introText!.toUpperCase(),
+          //   style: AppText.bodySmall.copyWith(
+          //     color: AppColors.yslBlack,
+          //     letterSpacing: 1.0,
+          //     fontFamily: 'ITC Avant Garde Gothic Pro',
+          //     fontWeight: FontWeight.w500,
+          //   ),
+          //   textAlign: TextAlign.center,
+          //   maxLines: 1,
+          //   overflow: TextOverflow.ellipsis,
+          // ),
+          // const SizedBox(height: 6),
         ],
 
         // Title
-        Text(
-          item.title.toUpperCase(),
-          style: AppText.titleLarge.copyWith(
-            color: AppColors.yslBlack,
-            letterSpacing: 1.0,
-            fontFamily: 'ITC Avant Garde Gothic Pro',
-            fontWeight: FontWeight.w700,
-            fontSize: 20,
-          ),
-          textAlign: TextAlign.center,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-        ),
+        // Text(
+        //   item.title.toUpperCase(),
+        //   style: AppText.titleLarge.copyWith(
+        //     color: AppColors.yslBlack,
+        //     letterSpacing: 1.0,
+        //     fontFamily: 'ITC Avant Garde Gothic Pro',
+        //     fontWeight: FontWeight.w700,
+        //     fontSize: 20,
+        //   ),
+        //   textAlign: TextAlign.center,
+        //   maxLines: 2,
+        //   overflow: TextOverflow.ellipsis,
+        // ),
       ],
     );
   }
@@ -582,6 +624,58 @@ class _YslCarouselState extends State<YslCarousel> {
     );
   }
 
+  Widget _buildCombinedControlsRow() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        // Previous slide button (left arrow)
+        GestureDetector(
+          onTap: _currentIndex > 0 ? () {
+            final prevIndex = _currentIndex > 0 
+                ? _currentIndex - 1 
+                : widget.items.length - 1;
+            _goToSlide(prevIndex);
+          } : null,
+          child: Container(
+            padding: const EdgeInsets.all(0),
+            child: Icon(
+              Icons.arrow_back_ios,
+              color: _currentIndex > 0 
+                  ? AppColors.yslBlack 
+                  : AppColors.yslBlack.withOpacity(0.3),
+              size: 16,
+            ),
+          ),
+        ),
+        
+        const SizedBox(width: 20),
+        
+        // Indicators in center
+        _buildIndicators(),
+        
+        const SizedBox(width: 20),
+        
+        // Next slide button (right arrow)
+        GestureDetector(
+          onTap: _currentIndex < widget.items.length - 1 ? () {
+            final nextIndex = (_currentIndex + 1) % widget.items.length;
+            _goToSlide(nextIndex);
+          } : null,
+          child: Container(
+            padding: const EdgeInsets.all(8),
+            child: Icon(
+              Icons.arrow_forward_ios,
+              color: _currentIndex < widget.items.length - 1 
+                  ? AppColors.yslBlack 
+                  : AppColors.yslBlack.withOpacity(0.3),
+              size: 16,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildUserControls() {
     return Row(
       children: [
@@ -593,82 +687,26 @@ class _YslCarouselState extends State<YslCarousel> {
                 : widget.items.length - 1;
             _goToSlide(prevIndex);
           },
-          child: Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              border: Border.all(color: AppColors.yslBlack, width: 1),
-              borderRadius: BorderRadius.zero,
-            ),
-            child: const Icon(
-              Icons.arrow_back_ios,
-              color: AppColors.yslBlack,
-              size: 16,
-            ),
+          child: const Icon(
+            Icons.arrow_back_ios,
+            color: AppColors.yslBlack,
+            size: 16,
           ),
         ),
-        
+
         const SizedBox(width: 12),
-        
-        // Auto-play toggle
-        GestureDetector(
-          onTap: _toggleAutoPlay,
-          child: Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: _isAutoPlayPaused ? AppColors.yslWhite : AppColors.yslBlack,
-              border: Border.all(color: AppColors.yslBlack, width: 1),
-              borderRadius: BorderRadius.zero,
-            ),
-            child: Icon(
-              _isAutoPlayPaused ? Icons.play_arrow : Icons.pause,
-              color: _isAutoPlayPaused ? AppColors.yslBlack : AppColors.yslWhite,
-              size: 16,
-            ),
-          ),
-        ),
-        
-        const Spacer(),
-        
-        // Slide counter - flexible to prevent overflow
-        Flexible(
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-            decoration: BoxDecoration(
-              border: Border.all(color: AppColors.yslBlack, width: 1),
-              borderRadius: BorderRadius.zero,
-            ),
-            child: Text(
-              '${_currentIndex + 1}/${widget.items.length}',
-              style: const TextStyle(
-                color: AppColors.yslBlack,
-                fontSize: 11,
-                fontFamily: 'ITC Avant Garde Gothic Pro',
-                fontWeight: FontWeight.w500,
-              ),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ),
-        
-        const SizedBox(width: 12),
-        
+
+
         // Next slide button
         GestureDetector(
           onTap: () {
             final nextIndex = (_currentIndex + 1) % widget.items.length;
             _goToSlide(nextIndex);
           },
-          child: Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              border: Border.all(color: AppColors.yslBlack, width: 1),
-              borderRadius: BorderRadius.zero,
-            ),
-            child: const Icon(
-              Icons.arrow_forward_ios,
-              color: AppColors.yslBlack,
-              size: 16,
-            ),
+          child: const Icon(
+            Icons.arrow_forward_ios,
+            color: AppColors.yslBlack,
+            size: 16,
           ),
         ),
       ],

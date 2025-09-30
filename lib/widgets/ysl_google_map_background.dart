@@ -21,6 +21,7 @@ class YslGoogleMapBackground extends StatefulWidget {
   final void Function(GoogleMapController)? onMapReady;
   final EdgeInsetsGeometry? padding;
   final int? selectedLocationIndex;
+  final bool interactionEnabled;
 
   const YslGoogleMapBackground({
     super.key,
@@ -30,6 +31,7 @@ class YslGoogleMapBackground extends StatefulWidget {
     this.onMapReady,
     this.padding,
     this.selectedLocationIndex,
+    this.interactionEnabled = true,
   });
 
   @override
@@ -52,6 +54,12 @@ class _YslGoogleMapBackgroundState extends State<YslGoogleMapBackground> {
       {
         "color": "#f5f5f5"
       }
+    ]
+  },
+  {
+    "featureType": "poi",
+    "stylers": [
+      { "visibility": "off" }
     ]
   },
   {
@@ -235,6 +243,10 @@ class _YslGoogleMapBackgroundState extends State<YslGoogleMapBackground> {
         imageConfig,
         Assets.pinC,
       );
+      _customMarkerIcons['pinD'] = await BitmapDescriptor.fromAssetImage(
+        imageConfig,
+        Assets.pinD,
+      );
       
       // Load white markers (inactive state)
       _customMarkerIconsWhite['pinA'] = await BitmapDescriptor.fromAssetImage(
@@ -248,6 +260,10 @@ class _YslGoogleMapBackgroundState extends State<YslGoogleMapBackground> {
       _customMarkerIconsWhite['pinC'] = await BitmapDescriptor.fromAssetImage(
         imageConfig,
         Assets.pinCWhite,
+      );
+      _customMarkerIconsWhite['pinD'] = await BitmapDescriptor.fromAssetImage(
+        imageConfig,
+        Assets.pinDWhite,
       );
       
       print('PNG marker icons loaded - Black: ${_customMarkerIcons.keys}, White: ${_customMarkerIconsWhite.keys}');
@@ -269,7 +285,13 @@ class _YslGoogleMapBackgroundState extends State<YslGoogleMapBackground> {
     _markers = widget.locations.asMap().entries.map((entry) {
       final index = entry.key;
       final location = entry.value;
-      final pinType = location.pin.name; // pin_a, pin_b, pin_c
+      // Assign pin type by index order: A, B, C, D, then repeat
+      final pinType = switch (index % 4) {
+        0 => 'pinA',
+        1 => 'pinB',
+        2 => 'pinC',
+        _ => 'pinD',
+      };
       
       // Determine if this marker should be selected (black) or inactive (white)
       final isSelected = widget.selectedLocationIndex != null && 
@@ -335,12 +357,15 @@ class _YslGoogleMapBackgroundState extends State<YslGoogleMapBackground> {
         tiltGesturesEnabled: false, // Flat view only
         mapType: MapType.normal,
         // Subtle zoom and scroll
-        zoomGesturesEnabled: true,
-        scrollGesturesEnabled: true,
+        zoomGesturesEnabled: widget.interactionEnabled,
+        scrollGesturesEnabled: widget.interactionEnabled,
         // Hide all POI labels and markers for clean look
         buildingsEnabled: false,
         trafficEnabled: false,
         indoorViewEnabled: false,
+        // Disable all info windows/tooltips
+        onTap: (_) {}, // Consume tap events to prevent default tooltips
+        onLongPress: (_) {}, // Disable long press tooltips
       ),
     );
   }

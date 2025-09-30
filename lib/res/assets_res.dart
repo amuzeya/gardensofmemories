@@ -36,6 +36,7 @@ class AssetsRes {
   static const String SPLASH_SCREEN_OURIKA = 'assets/splash_screen_ourika.mp4';
   static const String PLANE = 'assets/svgs/icons/Plane.png';
   static const String DEST_PIN = 'assets/svgs/icons/dest_pin.png';
+  static const String ICONS_SMALL_ARROW = 'assets/svgs/icons/icons_small-arrow.svg';
   static const String PINA = 'assets/svgs/icons/pinA.png';
   static const String PINA_WHITE = 'assets/svgs/icons/pinA_white.png';
   static const String PINB = 'assets/svgs/icons/pinB.png';
@@ -46,4 +47,5 @@ class AssetsRes {
   static const String PIND_WHITE = 'assets/svgs/icons/pinD_white.png';
   static const String PIN_A = 'assets/svgs/icons/pin_a.svg';
   static const String PIN_ARRIVE = 'assets/svgs/icons/pin_arrive.svg';
+  static const String SMALL_ARROW_LEFT = 'assets/svgs/icons/small_arrow_left.svg';
 }

@@ -443,6 +443,12 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
   }
   
   void _animateMapToLocation(List<HomeLocation> locations, int index) {
+    // Do not move map while bottom sheet is open - keep state exactly as user left it
+    if (_showBottomSheet) {
+      print('⏸️ Map frozen: bottom sheet open, skipping camera animation');
+      return;
+    }
+
     // Only animate if we have a map controller and valid index
     if (_mapController == null || 
         index < 0 || 
@@ -616,49 +622,60 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
       children: [
         // Full-screen YSL-branded Google Maps background with interaction tracking
         Positioned.fill(
-          child: GestureDetector(
-            onTap: _onMapInteraction,
-            onPanStart: (_) => _onMapInteraction(),
-            child: YslGoogleMapBackground(
-              config: data.map, 
-              locations: data.locations,
-              selectedLocationIndex: _selectedLocationIndex,
-              onMapReady: (controller) {
-                _mapController = controller;
-                print('Map controller ready for animations');
-                // Automatically fly to first location after map loads
-                Future.delayed(const Duration(milliseconds: 1500), () {
-                  if (data.locations.isNotEmpty) {
-                    print('🚀 Auto-flying to first location: ${data.locations.first.name}');
-                    _animateMapToLocation(data.locations, 0);
-                  }
-                });
-              },
-              onMarkerTap: (location) {
-                _onMapInteraction(); // Track interaction
-                
-                // Find the index of the tapped location in our data
-                final locationIndex = data.locations.indexWhere((loc) => loc.id == location.id);
-                
-                if (locationIndex != -1) {
-                  // Locking rule: ignore taps on locked markers
-                  if (locationIndex > _unlockedCount) return;
-                  // Update the selected location index to sync the slider
-                  setState(() {
-                    _selectedLocationIndex = locationIndex;
-                  });
-                  
-                  // Show feedback with location info
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Selected ${location.name} - ${location.type.name.toUpperCase()}'),
-                      backgroundColor: AppColors.yslBlack,
-                      duration: const Duration(seconds: 1),
+          child: Stack(
+            children: [
+              // Google Maps
+              IgnorePointer(
+                ignoring: _showBottomSheet,
+                child: YslGoogleMapBackground(
+                  config: data.map, 
+                  locations: data.locations,
+                  selectedLocationIndex: _selectedLocationIndex,
+                  interactionEnabled: !_showBottomSheet,
+                  onMapReady: (controller) {
+                    _mapController = controller;
+                    print('Map controller ready for animations');
+                    Future.delayed(const Duration(milliseconds: 1500), () {
+                      if (!mounted) return;
+                      if (_showBottomSheet) return; // Do not move map while sheet is open
+                      if (data.locations.isNotEmpty) {
+                        print('🚀 Auto-flying to first location: ${data.locations.first.name}');
+                        _animateMapToLocation(data.locations, 0);
+                      }
+                    });
+                  },
+                  onMarkerTap: _showBottomSheet ? null : (location) {
+                    _onMapInteraction();
+                    final locationIndex = data.locations.indexWhere((loc) => loc.id == location.id);
+                    if (locationIndex != -1) {
+                      if (locationIndex > _unlockedCount) return;
+                      setState(() {
+                        _selectedLocationIndex = locationIndex;
+                      });
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Selected ${location.name} - ${location.type.name.toUpperCase()}'),
+                          backgroundColor: AppColors.yslBlack,
+                          duration: const Duration(seconds: 1),
+                        ),
+                      );
+                    }
+                  },
+                ),
+              ),
+              
+              // Complete interaction blocker when bottom sheet is open
+              if (_showBottomSheet)
+                Positioned.fill(
+                  child: Container(
+                    color: Colors.transparent,
+                    child: AbsorbPointer(
+                      absorbing: true,
+                      child: Container(),
                     ),
-                  );
-                }
-              },
-            ),
+                  ),
+                ),
+            ],
           ),
         ),
 
@@ -679,7 +696,7 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
                     margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                     padding: EdgeInsets.symmetric(
                       horizontal: heroParams.padding.horizontal,
-                      vertical: _isImmersiveMode ? 16.0 : heroParams.padding.vertical,
+                      vertical: 16.0, // Always use compact padding
                     ),
                     decoration: BoxDecoration(
                       color: AppColors.yslWhite.withValues(alpha: 0.85),
@@ -693,9 +710,7 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
                         ),
                       ],
                     ),
-                    child: _isImmersiveMode 
-                        ? _buildMinimalisticHeader(context)
-                        : _buildHeroHeaderContent(context),
+                    child: _buildMinimalisticHeader(context),
                   );
                 },
               ),
@@ -1003,9 +1018,9 @@ final rewardLocked = _unlockedCount < data.locations.length;
                 margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
                 padding: EdgeInsets.symmetric(
                   horizontal: heroParams.padding.horizontal,
-                  vertical: _isImmersiveMode ? 16.0 : heroParams.padding.vertical,
+                  vertical: 16.0, // Always compact padding
                 ),
-                decoration: _isImmersiveMode ? BoxDecoration(
+                decoration: BoxDecoration(
                   color: AppColors.yslWhite.withValues(alpha: 0.95),
                   border: Border.all(color: Colors.black12, width: 1),
                   borderRadius: BorderRadius.zero,
@@ -1016,10 +1031,8 @@ final rewardLocked = _unlockedCount < data.locations.length;
                       offset: const Offset(0, 4),
                     ),
                   ],
-                ) : null,
-                child: _isImmersiveMode 
-                    ? _buildMinimalisticHeader(context)
-                    : _buildHeroHeaderContent(context),
+                ),
+                child: _buildMinimalisticHeader(context)
               ),
 
               // Add spacing to prevent toggle overlap when in immersive mode

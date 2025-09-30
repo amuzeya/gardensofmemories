@@ -256,42 +256,42 @@ class _SplashScreenState extends State<SplashScreen>
                                 const SizedBox(height: 16),
 
                                 // Botanical/Fragrance subtitle
-                                Text(
-                                  'DISCOVER THE ESSENCE OF LUXURY',
-                                  style: AppText.bodyLarge.copyWith(
-                                    color: AppColors.yslWhite.withValues(alpha: 0.8),
-                                    letterSpacing: 1.5,
-                                    shadows: [
-                                      Shadow(
-                                        color: Colors.black.withValues(alpha: 0.6),
-                                        offset: const Offset(0, 1),
-                                        blurRadius: 2,
-                                      ),
-                                    ],
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
+                                // Text(
+                                //   'DISCOVER THE ESSENCE OF LUXURY',
+                                //   style: AppText.bodyLarge.copyWith(
+                                //     color: AppColors.yslWhite.withValues(alpha: 0.8),
+                                //     letterSpacing: 1.5,
+                                //     shadows: [
+                                //       Shadow(
+                                //         color: Colors.black.withValues(alpha: 0.6),
+                                //         offset: const Offset(0, 1),
+                                //         blurRadius: 2,
+                                //       ),
+                                //     ],
+                                //   ),
+                                //   textAlign: TextAlign.center,
+                                // ),
                               ],
                             ),
 
                             const Spacer(flex: 2),
 
                             // Botanical hint
-                            Text(
-                              'AN IMMERSIVE JOURNEY AWAITS',
-                              style: AppText.bodySmall.copyWith(
-                                color: AppColors.yslWhite.withValues(alpha: 0.7),
-                                letterSpacing: 1.2,
-                                shadows: [
-                                  Shadow(
-                                    color: Colors.black.withValues(alpha: 0.6),
-                                    offset: const Offset(0, 1),
-                                    blurRadius: 2,
-                                  ),
-                                ],
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
+                            // Text(
+                            //   'AN IMMERSIVE JOURNEY AWAITS',
+                            //   style: AppText.bodySmall.copyWith(
+                            //     color: AppColors.yslWhite.withValues(alpha: 0.7),
+                            //     letterSpacing: 1.2,
+                            //     shadows: [
+                            //       Shadow(
+                            //         color: Colors.black.withValues(alpha: 0.6),
+                            //         offset: const Offset(0, 1),
+                            //         blurRadius: 2,
+                            //       ),
+                            //     ],
+                            //   ),
+                            //   textAlign: TextAlign.center,
+                            // ),
 
                             const Spacer(flex: 1),
                           ],
