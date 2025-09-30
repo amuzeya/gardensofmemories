@@ -103,8 +103,37 @@
 <body>
   <!-- Fullscreen preload video to avoid white screen before Flutter initializes -->
   <div id="preload-video-overlay">
-    <video id="preload-video" autoplay muted playsinline loop src="assets/splash_screen_ourika.mp4"></video>
+    <video id="preload-video" autoplay muted playsinline webkit-playsinline x5-playsinline preload="auto" loop poster="assets/images/splash_placeholder.png" src="assets/splash_screen_ourika.mp4"></video>
   </div>
+  
+  <script>
+    // Force autoplay for the preload video on all browsers
+    (function() {
+      var vid = document.getElementById('preload-video');
+      if (!vid) return;
+      try {
+        vid.muted = true;
+        vid.defaultMuted = true;
+        vid.setAttribute('muted', '');
+        vid.setAttribute('playsinline', '');
+        vid.setAttribute('webkit-playsinline', '');
+        var tryPlay = function() {
+          var p = vid.play();
+          if (p && typeof p.catch === 'function') {
+            p.catch(function(){ setTimeout(tryPlay, 250); });
+          }
+        };
+        // Try immediately and on readiness events
+        tryPlay();
+        ['loadedmetadata','loadeddata','canplay','canplaythrough'].forEach(function(evt){
+          vid.addEventListener(evt, tryPlay, { once: false });
+        });
+        document.addEventListener('visibilitychange', function(){
+          if (document.visibilityState !== 'hidden') tryPlay();
+        });
+      } catch (e) {}
+    })();
+  </script>
   
   <script>
     // Hide preload video as soon as Flutter paints its first frame
