@@ -20,6 +20,7 @@ import '../theme/app_colors.dart';
 import '../theme/app_text.dart';
 import '../utils/responsive_utils.dart';
 import '../utils/map_animation_utils.dart';
+import '../config/feature_flags.dart';
 
 import '../widgets/ysl_exclusive_offer_banner.dart';
 import '../widgets/ysl_location_slider.dart';
@@ -101,6 +102,9 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
   bool _isImmersiveMode = false;
   bool _hasInteracted = false;
   
+// When a card is tapped, we first fly to the location, then open the sheet on animation completion
+  bool _openSheetAfterFly = false;
+  
   // Timer for automatic immersive transition
   Timer? _immersiveTimer;
   
@@ -118,7 +122,7 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
   bool _flightCompleted = false;
   
   // Reward bottom sheet drag state (min 60%, max 95% of screen height)
-  double _rewardSheetHeightFactor = 0.60;
+  double _rewardSheetHeightFactor = 0.95;
   
   // Hero content entrance animation controllers
   late AnimationController _heroEntranceController;
@@ -506,10 +510,15 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
       selectedLocation,
       finalZoom: 17.0,
       origin: _userLatLng, // Start from user's location when available
-      onCompleted: () {
-        // Do not auto-open bottom sheet after fly-to.
-        // Optionally pulse Explore for the very first location to guide the user.
-        if (index == 0 && _unlockedCount == 0 && mounted) {
+onCompleted: () {
+        // After flying, open sheet if a card tap requested it
+        if (mounted && _openSheetAfterFly) {
+          setState(() {
+            _showBottomSheet = true;
+            _openSheetAfterFly = false;
+          });
+        } else if (index == 0 && _unlockedCount == 0 && mounted) {
+          // Optionally pulse Explore for the very first location to guide the user.
           setState(() { _pulseFirstExplore = true; });
         }
       },
@@ -684,8 +693,8 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
                   onMarkerTap: _showBottomSheet ? null : (location) {
                     _onMapInteraction();
                     final locationIndex = data.locations.indexWhere((loc) => loc.id == location.id);
-                    if (locationIndex != -1) {
-                      if (locationIndex > _unlockedCount) return;
+if (locationIndex != -1) {
+                      if (!FeatureFlags.disableLocks && locationIndex > _unlockedCount) return;
                       setState(() {
                         _selectedLocationIndex = locationIndex;
                       });
@@ -808,7 +817,9 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
           bottom: 0,
           child: SafeArea(
             top: false,
-            child: YslLocationSlider(
+child: Container(
+              color: Colors.transparent, // ensure slider area captures taps, blocking map underneath
+              child: YslLocationSlider(
               locations: yslLocations,
               height: sliderParams.height,
               cardWidth: sliderParams.cardWidth,
@@ -826,21 +837,22 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
               rewardIndex: _rewardIndex,
               onExplore: (index) => _onExploreFromCard(index),
               pulseIndex: (_unlockedCount == 0 && _selectedLocationIndex == 0 && _pulseFirstExplore) ? 0 : null,
-              onLocationSelected: (index) {
+onLocationTap: () { setState(() { _openSheetAfterFly = true; }); },
+onLocationSelected: (index) {
                 print('🎯 Slider changed to index: $index');
                 final isReward = index == _rewardIndex;
-final rewardLocked = _unlockedCount < data.locations.length;
+                final rewardLocked = _unlockedCount < data.locations.length;
                 final isLocked = (!isReward && index > _unlockedCount) || (isReward && rewardLocked);
-                if (isLocked) return;
+                if (!FeatureFlags.disableLocks && isLocked) return;
 
-                // Update selection and fly to the selected location
+// Update selection and fly map; if card tap, open sheet after the fly completes
                 setState(() { 
                   _selectedLocationIndex = index; 
                   _showBottomSheet = false; // ensure map can animate
                 });
                 _animateMapToLocation(data.locations, index);
               },
-            ),
+            )),
           ),
         ),
         
@@ -869,10 +881,11 @@ final rewardLocked = _unlockedCount < data.locations.length;
             location: data.locations[_selectedLocationIndex],
             details: data.detailsById[data.locations[_selectedLocationIndex].id],
             isVisible: _showBottomSheet,
-            onClose: () {
+            startExpanded: true,
+onClose: () {
               // Smooth sequence: close -> unlock -> toast -> focus next
               setState(() { _showBottomSheet = false; });
-              if (_unlockedCount == _selectedLocationIndex) {
+              if (!FeatureFlags.disableLocks && _unlockedCount == _selectedLocationIndex) {
                 _unlockedCount++;
                 _runUnlockSequence(data, _unlockedCount);
               }
@@ -1107,14 +1120,15 @@ final rewardLocked = _unlockedCount < data.locations.length;
               location: data.locations[_selectedLocationIndex],
               details: data.detailsById[data.locations[_selectedLocationIndex].id],
               isVisible: _showBottomSheet,
-              onClose: () {
-                // Close and unlock next location (same logic as map view)
-                setState(() { _showBottomSheet = false; });
-                if (_selectedLocationIndex < _rewardIndex &&
-                    _unlockedCount == _selectedLocationIndex) {
-                  _unlockedCount++;
-                  _runUnlockSequence(data, _unlockedCount);
-                }
+onClose: () {
+              // Close and unlock next location (same logic as map view)
+              setState(() { _showBottomSheet = false; });
+              if (!FeatureFlags.disableLocks &&
+                  _selectedLocationIndex < _rewardIndex &&
+                  _unlockedCount == _selectedLocationIndex) {
+                _unlockedCount++;
+                _runUnlockSequence(data, _unlockedCount);
+              }
               },
             ),
 
@@ -1301,9 +1315,9 @@ final rewardLocked = _unlockedCount < data.locations.length;
       separatorBuilder: (context, index) => SizedBox(height: listParams.itemSpacing),
       itemBuilder: (context, index) {
         final location = yslLocations[index];
-        final isReward = index == _rewardIndex;
+final isReward = index == _rewardIndex;
         final rewardLocked = _unlockedCount < _rewardIndex;
-        final isLocked = (!isReward && index > _unlockedCount) || (isReward && rewardLocked);
+        final isLocked = !FeatureFlags.disableLocks && ((!isReward && index > _unlockedCount) || (isReward && rewardLocked));
         
         return YslHomeLocationCard(
           location: location,
@@ -1339,9 +1353,9 @@ final rewardLocked = _unlockedCount < data.locations.length;
       itemCount: yslLocations.length,
       itemBuilder: (context, index) {
         final location = yslLocations[index];
-        final isReward = index == _rewardIndex;
+final isReward = index == _rewardIndex;
         final rewardLocked = _unlockedCount < _rewardIndex;
-        final isLocked = (!isReward && index > _unlockedCount) || (isReward && rewardLocked);
+        final isLocked = !FeatureFlags.disableLocks && ((!isReward && index > _unlockedCount) || (isReward && rewardLocked));
         
         return YslHomeLocationCard(
           location: location,
@@ -1656,10 +1670,10 @@ final rewardLocked = _unlockedCount < data.locations.length;
 
   void _onExploreFromCard(int index) {
     // Ignore if locked - fixed logic to allow newly unlocked locations
-    final isReward = index == _rewardIndex;
+final isReward = index == _rewardIndex;
     final rewardLocked = _unlockedCount < _rewardIndex;
     // Fix: Allow current location to be explored (use >= instead of >)
-    final isLocked = (!isReward && index > _unlockedCount) || (isReward && rewardLocked);
+    final isLocked = !FeatureFlags.disableLocks && ((!isReward && index > _unlockedCount) || (isReward && rewardLocked));
     
     print('🔒 Explore check: index=$index, isReward=$isReward, unlockedCount=$_unlockedCount, isLocked=$isLocked');
     
@@ -1671,6 +1685,9 @@ final rewardLocked = _unlockedCount < data.locations.length;
     setState(() {
       _selectedLocationIndex = index;
       _showBottomSheet = true;
+      if (index == _rewardIndex) {
+        _rewardSheetHeightFactor = 0.95; // open reward sheet fully by default
+      }
       if (index == 0) _pulseFirstExplore = false;
     });
   }

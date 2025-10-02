@@ -43,3 +43,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# YSL deployment artifacts
+ysl-beauty-web-unlocked.tar.gz
+ysl-beauty-web*.tar.gz

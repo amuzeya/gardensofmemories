@@ -84,8 +84,9 @@ class _YslHomeLocationCardState extends State<YslHomeLocationCard>
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-onTap: widget.onTap,
+return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+ onTap: widget.onTap,
       child: Container(
 width: widget.width,
 height: widget.height,

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import '../constants/assets.dart';
 import '../utils/responsive_utils.dart';
+import '../config/feature_flags.dart';
 import 'ysl_location_card.dart';
 import 'ysl_home_location_card.dart';
 
@@ -309,12 +310,13 @@ class _YslLocationSliderState extends State<YslLocationSlider> {
           controller: _pageController,
           padEnds: false,
           itemCount: widget.locations.length,
-          onPageChanged: (index) {
-            // Locking: prevent navigating to locked items
+onPageChanged: (index) {
+            // Locking: prevent navigating to locked items (bypassed when FeatureFlags.disableLocks is true)
+            final locksDisabled = FeatureFlags.disableLocks;
             final isReward = widget.rewardIndex != null && index == widget.rewardIndex;
             final rewardLocked = isReward && widget.unlockedCount < (widget.rewardIndex ?? 0);
             final isLocked = (!isReward && index > widget.unlockedCount) || rewardLocked;
-            if (isLocked) {
+            if (!locksDisabled && isLocked) {
               // Snap back to previous allowed page
               Future.microtask(() => _pageController?.animateToPage(
                     _currentSelectedIndex,
@@ -352,15 +354,16 @@ class _YslLocationSliderState extends State<YslLocationSlider> {
     final cardWidth = _responsiveParams?.cardWidth ?? widget.cardWidth;
     final height = _responsiveParams?.height ?? widget.height;
     
-    final isReward = widget.rewardIndex != null && index == widget.rewardIndex;
+final isReward = widget.rewardIndex != null && index == widget.rewardIndex;
     final rewardLocked = isReward && widget.unlockedCount < (widget.rewardIndex ?? 0);
-    final isLocked = (!isReward && index > widget.unlockedCount) || rewardLocked;
+    final isLockedRaw = (!isReward && index > widget.unlockedCount) || rewardLocked;
+    final isLocked = FeatureFlags.disableLocks ? false : isLockedRaw;
 
-    return GestureDetector(
+return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: () {
-        if (isLocked) return; // Ignore taps on locked cards
+        if (isLocked) return; // Ignore taps on locked cards when locks are enabled
         _onCardTapped(index);
-        widget.onLocationTap?.call();
       },
       child: SizedBox(
         width: cardWidth,
@@ -390,7 +393,10 @@ class _YslLocationSliderState extends State<YslLocationSlider> {
     );
   }
   
-  void _onCardTapped(int index) {
+void _onCardTapped(int index) {
+    // Ensure card tap intent is registered BEFORE selection callback
+    widget.onLocationTap?.call();
+
     setState(() {
       _currentSelectedIndex = index;
     });

@@ -17,6 +17,8 @@ class YslLocationBottomSheet extends StatefulWidget {
   final LocationDetails? details;
   final VoidCallback? onClose;
   final bool isVisible;
+  // When true, the sheet starts fully expanded instead of half-height.
+  final bool startExpanded;
 
   const YslLocationBottomSheet({
     super.key,
@@ -24,6 +26,7 @@ class YslLocationBottomSheet extends StatefulWidget {
     this.details,
     this.onClose,
     this.isVisible = false,
+    this.startExpanded = true,
   });
 
   @override
@@ -92,14 +95,30 @@ class _YslLocationBottomSheetState extends State<YslLocationBottomSheet>
     }
   }
 
-  void _showBottomSheet() {
+void _showBottomSheet() {
+    // If startExpanded, open fully and stop pulsing the handle
+    if (widget.startExpanded) {
+      setState(() {
+        _dragPosition = 0.05; // Nearly full screen
+        _isDraggedUp = true;
+        _dragScale = 1.0;
+      });
+      _pulseController.stop();
+    } else {
+      // Half-height default
+      setState(() {
+        _dragPosition = 0.5;
+        _isDraggedUp = false;
+      });
+      // Start pulsing after slide completes
+      Future.delayed(const Duration(milliseconds: 800), () {
+        if (mounted) {
+          _pulseController.repeat(reverse: true);
+        }
+      });
+    }
+    // Keep fade/scale transition for entrance
     _slideController.forward();
-    // Start pulsing after slide completes
-    Future.delayed(const Duration(milliseconds: 800), () {
-      if (mounted) {
-        _pulseController.repeat(reverse: true);
-      }
-    });
   }
 
   void _hideBottomSheet() {
