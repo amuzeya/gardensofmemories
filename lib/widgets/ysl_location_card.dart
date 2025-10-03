@@ -186,18 +186,11 @@ class YslLocationCard extends StatelessWidget {
         SizedBox(
           width: 20,
           height: 20,
-          child: _getPinAssetPath().endsWith('.svg')
-              ? SvgPicture.asset(
-                  _getPinAssetPath(),
-                  width: 20,
-                  height: 20,
-                )
-              : Image.asset(
-                  _getPinAssetPath(),
-                  width: 20,
-                  height: 20,
-                  fit: BoxFit.contain,
-                ),
+          child: SvgPicture.asset(
+            _getPinAssetPath(),
+            width: 20,
+            height: 20,
+          ),
         ),
         
         const SizedBox(width: 8),
@@ -277,8 +270,8 @@ class YslLocationCard extends StatelessWidget {
       case PinVariation.pinC:
         return Assets.iconPinC;
       case PinVariation.pinD:
-        // Use PNG black icon for D
-        return Assets.pinD;
+        // Use SVG icon for D (crisp rendering)
+        return Assets.iconPinD;
     }
   }
 }

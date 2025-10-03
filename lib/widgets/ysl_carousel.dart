@@ -207,9 +207,11 @@ class _YslCarouselState extends State<YslCarousel> {
       final width = info.image.width.toDouble();
       final height = info.image.height.toDouble();
       if (height > 0) {
-        setState(() {
-          _imageAspectRatios[index] = width / height; // width/height
-        });
+        if (mounted) {
+          setState(() {
+            _imageAspectRatios[index] = width / height; // width/height
+          });
+        }
       }
       stream.removeListener(listener);
     }, onError: (Object error, StackTrace? stackTrace) {

@@ -497,25 +497,28 @@ class _HomePageScreenState extends State<HomePageScreen> with TickerProviderStat
     
     final selectedLocation = locations[index];
     
-    print('🎯 Initiating cinematic flight to: ${selectedLocation.name}');
+    print('🎯 Initiating smooth flight to: ${selectedLocation.name}');
     
     // Hide bottom sheet during animation
     setState(() {
       _showBottomSheet = false;
     });
     
-    // Use cinematic multi-stage animation with callback for bottom sheet
-    MapAnimationUtils.cinematicFlyToLocationWithCallback(
+    // Use elegant two-stage animation for smooth, luxury experience
+    MapAnimationUtils.elegantFlyToLocationWithCallback(
       _mapController!,
       selectedLocation,
       finalZoom: 17.0,
-      origin: _userLatLng, // Start from user's location when available
-onCompleted: () {
-        // After flying, open sheet if a card tap requested it
+      onCompleted: () {
+        // After flying, wait a moment then open sheet if a card tap requested it
         if (mounted && _openSheetAfterFly) {
-          setState(() {
-            _showBottomSheet = true;
-            _openSheetAfterFly = false;
+          Future.delayed(const Duration(milliseconds: 400), () {
+            if (mounted) {
+              setState(() {
+                _showBottomSheet = true;
+                _openSheetAfterFly = false;
+              });
+            }
           });
         } else if (index == 0 && _unlockedCount == 0 && mounted) {
           // Optionally pulse Explore for the very first location to guide the user.
@@ -817,9 +820,25 @@ if (locationIndex != -1) {
           bottom: 0,
           child: SafeArea(
             top: false,
-child: Container(
-              color: Colors.transparent, // ensure slider area captures taps, blocking map underneath
-              child: YslLocationSlider(
+            child: AbsorbPointer(
+              absorbing: false, // Allow slider interactions
+              child: Container(
+                color: Colors.transparent,
+                child: Stack(
+                  children: [
+                    // Invisible blocker to prevent map interactions in slider area
+                    Positioned.fill(
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        // Block all gestures by consuming them
+                        onTap: () {}, // This single callback is enough to block interactions
+                        child: Container(
+                          color: Colors.transparent,
+                        ),
+                      ),
+                    ),
+                    // Location slider on top
+                    YslLocationSlider(
               locations: yslLocations,
               height: sliderParams.height,
               cardWidth: sliderParams.cardWidth,
@@ -837,22 +856,36 @@ child: Container(
               rewardIndex: _rewardIndex,
               onExplore: (index) => _onExploreFromCard(index),
               pulseIndex: (_unlockedCount == 0 && _selectedLocationIndex == 0 && _pulseFirstExplore) ? 0 : null,
-onLocationTap: () { setState(() { _openSheetAfterFly = true; }); },
+onLocationTap: () { 
+                // Card tapped - should trigger elegant flight and open sheet
+                print('✨ Card tapped - will trigger elegant flight and sheet opening');
+                setState(() { 
+                  _openSheetAfterFly = true;
+                  _showBottomSheet = false; // Ensure clean state for animation
+                });
+                // Trigger elegant flight to the currently selected location
+                _animateMapToLocation(data.locations, _selectedLocationIndex);
+              },
 onLocationSelected: (index) {
-                print('🎯 Slider changed to index: $index');
+                print('📱 Slider changed to index: $index (no map movement)');
                 final isReward = index == _rewardIndex;
                 final rewardLocked = _unlockedCount < data.locations.length;
                 final isLocked = (!isReward && index > _unlockedCount) || (isReward && rewardLocked);
                 if (!FeatureFlags.disableLocks && isLocked) return;
 
-// Update selection and fly map; if card tap, open sheet after the fly completes
+                // Card slide should only update selection, no map movement
                 setState(() { 
                   _selectedLocationIndex = index; 
-                  _showBottomSheet = false; // ensure map can animate
+                  _showBottomSheet = false; // Close any open bottom sheet
+                  // Do NOT set _openSheetAfterFly - no automatic sheet opening on slide
                 });
-                _animateMapToLocation(data.locations, index);
+                // Do NOT call _animateMapToLocation - no map movement on slide
               },
-            )),
+            ),
+                  ],
+                ),
+              ),
+            ),
           ),
         ),
         
@@ -1670,7 +1703,7 @@ final isReward = index == _rewardIndex;
 
   void _onExploreFromCard(int index) {
     // Ignore if locked - fixed logic to allow newly unlocked locations
-final isReward = index == _rewardIndex;
+    final isReward = index == _rewardIndex;
     final rewardLocked = _unlockedCount < _rewardIndex;
     // Fix: Allow current location to be explored (use >= instead of >)
     final isLocked = !FeatureFlags.disableLocks && ((!isReward && index > _unlockedCount) || (isReward && rewardLocked));
@@ -1682,13 +1715,25 @@ final isReward = index == _rewardIndex;
       return;
     }
 
+    print('✨ Explore button tapped - triggering elegant flight and sheet opening');
+    
+    // Set flag to open sheet after flight, then trigger the selection logic
     setState(() {
-      _selectedLocationIndex = index;
-      _showBottomSheet = true;
+      _openSheetAfterFly = true; // This will open sheet after flight completes
       if (index == _rewardIndex) {
         _rewardSheetHeightFactor = 0.95; // open reward sheet fully by default
       }
       if (index == 0) _pulseFirstExplore = false;
+    });
+    
+    // Use the same elegant flight system by triggering location selection
+    // This will call onLocationSelected which handles the flight animation
+    _future.then((data) {
+      setState(() { 
+        _selectedLocationIndex = index; 
+        _showBottomSheet = false; // ensure map can animate
+      });
+      _animateMapToLocation(data.locations, index);
     });
   }
 }

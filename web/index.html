@@ -98,6 +98,21 @@
     body {
       overflow-x: hidden;
     }
+
+    /* Hide Google Maps default UI controls for a clean YSL look (keep attribution) */
+    .gm-bundled-control, /* zoom + pegman container */
+    .gm-fullscreen-control, /* fullscreen button */
+    .gm-style-mtc, /* map type control */
+    .gm-svpc /* street view pegman */ {
+      display: none !important;
+    }
+    /* Also hide any remaining standalone zoom buttons (old UI variants) */
+    .gmnoprint .gm-control-active.gm-zoom-control,
+    .gm-zoom-control {
+      display: none !important;
+    }
+    /* Preserve required Google attribution and logo */
+    .gm-style .gm-style-cc { display: block !important; }
   </style>
 </head>
 <body>

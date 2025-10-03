@@ -604,14 +604,12 @@ widget.location.name.toUpperCase(),
   }
 
   Widget _buildPinIcon() {
-    // Render SVG for A/B/C, PNG for D
+    // Render SVG for all pins (A/B/C/D)
     final path = _getPinAssetPath();
     return SizedBox(
       width: 28,
       height: 28,
-      child: path.endsWith('.svg')
-          ? SvgPicture.asset(path, width: 28, height: 28)
-          : Image.asset(path, width: 28, height: 28, fit: BoxFit.contain),
+      child: SvgPicture.asset(path, width: 28, height: 28),
     );
     // Alternative: return _buildCircularBadge(_getPinLetter());
   }
@@ -639,7 +637,7 @@ widget.location.name.toUpperCase(),
       case PinVariation.pinC:
         return 'assets/svgs/icons/pin_c.svg';
       case PinVariation.pinD:
-        return 'assets/svgs/icons/pinD_black.png';
+        return 'assets/svgs/icons/pin_d.svg';
     }
   }
 }

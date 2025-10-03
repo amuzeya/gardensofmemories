@@ -17,10 +17,14 @@ class Assets {
   static const String iconPinA = 'assets/svgs/icons/pin_a.svg';
   static const String iconPinB = 'assets/svgs/icons/pin_b.svg';
   static const String iconPinC = 'assets/svgs/icons/pin_c.svg';
+  static const String iconPinD = 'assets/svgs/icons/pin_d.svg';
+  static const String iconPinDWhite = 'assets/svgs/icons/pinD_white.svg';
+  static const String iconPinOffer = 'assets/svgs/icons/pin_offer.svg';
   static const String pinA = 'assets/svgs/icons/pinA.png';
   static const String pinB = 'assets/svgs/icons/pinB.png';
   static const String pinC = 'assets/svgs/icons/pinC.png';
-  static const String pinD = 'assets/svgs/icons/pinD_black.png';
+  static const String pinD = 'assets/svgs/icons/pinD.png'; // Clean version without background
+  static const String pinDOld = 'assets/svgs/icons/pinD_black.png'; // Old blurry version
   static const String pinAWhite = 'assets/svgs/icons/pinA_white.png';
   static const String pinBWhite = 'assets/svgs/icons/pinB_white.png';
   static const String pinCWhite = 'assets/svgs/icons/pinC_white.png';

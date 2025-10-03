@@ -115,10 +115,14 @@ flutter:
     - assets/svgs/icons/pinB_white.png
     - assets/svgs/icons/pinC.png
     - assets/svgs/icons/pinC_white.png
-    - assets/svgs/icons/pinD_black.png
+    - assets/svgs/icons/pinD.png
     - assets/svgs/icons/pinD_white.png
+    - assets/svgs/icons/pinD_white.svg
     - assets/svgs/icons/pin_a.svg
     - assets/svgs/icons/pin_arrive.svg
+    - assets/svgs/icons/pin_d.svg
+    - assets/svgs/icons/pin_d_white.svg
+    - assets/svgs/icons/pin_offer.svg
     - assets/svgs/icons/small_arrow_left.svg
     - assets/svgs/logos/
   #   - images/a_dot_burr.jpeg
@@ -141,7 +145,7 @@ flutter:
           weight: 700
     - family: ITC Avant Garde Gothic Pro
       fonts:
-        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeStd-XLt.ttf
+        - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeGothicPro-Light.ttf
           weight: 200
         - asset: assets/fonts/ITC_Avant_Garde_Gothic_Pro/ITCAvantGardeGothicPro-Light.ttf
           weight: 300

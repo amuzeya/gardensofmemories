@@ -243,9 +243,10 @@ class _YslGoogleMapBackgroundState extends State<YslGoogleMapBackground> {
         imageConfig,
         Assets.pinC,
       );
+      // Use bigger Pin D PNG asset for better visual impact
       _customMarkerIcons['pinD'] = await BitmapDescriptor.fromAssetImage(
         imageConfig,
-        Assets.pinD,
+        Assets.pinDOld, // Bigger version for better visibility on map
       );
       
       // Load white markers (inactive state)
@@ -263,7 +264,13 @@ class _YslGoogleMapBackgroundState extends State<YslGoogleMapBackground> {
       );
       _customMarkerIconsWhite['pinD'] = await BitmapDescriptor.fromAssetImage(
         imageConfig,
-        Assets.pinDWhite,
+        Assets.pinDWhite, // White version matches the size
+      );
+      
+      // Load exclusive offer pin icon
+      _customMarkerIcons['offer'] = await BitmapDescriptor.fromAssetImage(
+        imageConfig,
+        Assets.iconPinOffer,
       );
       
       print('PNG marker icons loaded - Black: ${_customMarkerIcons.keys}, White: ${_customMarkerIconsWhite.keys}');
@@ -282,7 +289,8 @@ class _YslGoogleMapBackgroundState extends State<YslGoogleMapBackground> {
   void _initializeMarkers() {
     print('Initializing markers for ${widget.locations.length} locations...');
     
-    _markers = widget.locations.asMap().entries.map((entry) {
+    // Create location markers
+    final locationMarkers = widget.locations.asMap().entries.map((entry) {
       final index = entry.key;
       final location = entry.value;
       // Assign pin type by index order: A, B, C, D, then repeat
@@ -318,9 +326,31 @@ class _YslGoogleMapBackgroundState extends State<YslGoogleMapBackground> {
         // Disable default Google Maps info window / tooltips
         infoWindow: const InfoWindow(title: '', snippet: ''),
       );
-    }).toSet();
+    });
+
+    // Create exclusive offer markers for reward locations (Pin D locations)
+    final offerMarkers = widget.locations.asMap().entries.where((entry) {
+      final index = entry.key;
+      return index % 4 == 3; // Pin D locations
+    }).map((entry) {
+      final location = entry.value;
+      
+      return Marker(
+        markerId: MarkerId('${location.id}_offer'),
+        position: LatLng(
+          location.lat + 0.0005, // Slight offset to position near main pin
+          location.lng + 0.0005,
+        ),
+        onTap: () => widget.onMarkerTap?.call(location),
+        icon: _customMarkerIcons['offer'] ?? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueYellow),
+        infoWindow: const InfoWindow(title: '', snippet: ''),
+      );
+    });
     
-    print('Created ${_markers.length} markers with selection-based colors');
+    // Combine location markers and offer markers
+    _markers = {...locationMarkers, ...offerMarkers};
+    
+    print('Created ${_markers.length} markers (${locationMarkers.length} location + ${offerMarkers.length} offer)');
     
     // Update state to show markers on map
     if (mounted) {
@@ -353,12 +383,15 @@ class _YslGoogleMapBackgroundState extends State<YslGoogleMapBackground> {
         mapToolbarEnabled: false, // Remove Google branding toolbar
         zoomControlsEnabled: false, // Clean interface
         myLocationButtonEnabled: false, // No location button
+        myLocationEnabled: false, // Hide user location dot
         rotateGesturesEnabled: false, // Keep map oriented north
         tiltGesturesEnabled: false, // Flat view only
         mapType: MapType.normal,
-        // Subtle zoom and scroll
-        zoomGesturesEnabled: widget.interactionEnabled,
-        scrollGesturesEnabled: widget.interactionEnabled,
+        liteModeEnabled: false, // Ensure full map functionality
+        fortyFiveDegreeImageryEnabled: false, // No 3D buildings
+        // Enable map interactions outside of slider area
+        zoomGesturesEnabled: widget.interactionEnabled, // Allow zoom when not blocked
+        scrollGesturesEnabled: widget.interactionEnabled, // Allow pan when not blocked
         // Hide all POI labels and markers for clean look
         buildingsEnabled: false,
         trafficEnabled: false,
